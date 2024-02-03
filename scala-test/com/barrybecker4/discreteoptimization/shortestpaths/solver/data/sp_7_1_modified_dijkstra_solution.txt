@@ -1,0 +1,2 @@
+Infinity
+0.0 32.0 48.0 Infinity Infinity 48.0 29.0
