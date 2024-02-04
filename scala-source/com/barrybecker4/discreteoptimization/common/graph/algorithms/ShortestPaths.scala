@@ -1,6 +1,8 @@
 package com.barrybecker4.discreteoptimization.common.graph.algorithms
 
+import com.barrybecker4.discreteoptimization.common.graph.Path
 import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedEdge
+
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 
@@ -15,15 +17,18 @@ case class ShortestPaths(numNodes: Int, source: Int) {
   private val distTo = ArrayBuffer.fill(numNodes)(Double.PositiveInfinity)
   distTo(source) = 0.0
   
-  def pathNodesToVertex(vertex: Int): Seq[Int] = {
-    val path = pathToVertex(vertex)
-    if (path.isEmpty) Seq.empty
+  def pathNodesToVertex(vertex: Int): List[Int] = {
+    val path = findPathToVertex(vertex)
+    if (path.isEmpty) List()
     else {
       val start: Int = path.head.source
       val nodes = path.map(_.destination)
       start +: nodes
     }
   }
+
+  def pathToVertex(vertex: Int): Path =
+    Path(distToVertex(vertex), pathNodesToVertex(vertex))
   
   def isBetterEdge(edge: DirectedEdge): Boolean = 
     distTo(edge.source) + edge.weight < distTo(edge.destination)
@@ -37,7 +42,7 @@ case class ShortestPaths(numNodes: Int, source: Int) {
 
   /** @return sequence of edges which form the path from source vertex to vertex
    */
-  private def pathToVertex(vertex: Int): Seq[DirectedEdge] = {
+  private def findPathToVertex(vertex: Int): List[DirectedEdge] = {
 
     @tailrec
     def go(list: List[DirectedEdge], v: Int): List[DirectedEdge] =
@@ -46,7 +51,7 @@ case class ShortestPaths(numNodes: Int, source: Int) {
         case None => list
       }
 
-    if (hasPath(vertex)) go(List(), vertex) else Seq()
+    if (hasPath(vertex)) go(List(), vertex) else List()
   }
 
   private def hasPath(v: Int): Boolean = edgeTo(v).isDefined

@@ -34,7 +34,7 @@ class GraphViewerFrame(inputGraph: Graph, title: String = "") extends JFrame("Gr
   private def createMenu(): Unit = {
     val myMenuBar: JMenuBar = new JMenuBar()
     val fileMenu = new JMenu("File")
-    val openItem = new JMenuItem("Open")
+    val openItem = new JMenuItem("Open Graph")
     fileMenu.add(openItem)
     myMenuBar.add(fileMenu)
     setJMenuBar(myMenuBar)
@@ -47,6 +47,7 @@ class GraphViewerFrame(inputGraph: Graph, title: String = "") extends JFrame("Gr
     viewer = new GraphViewer(graph)
     this.setTitle(title)
 
+    // If the graph nodes have location data, don't use an layout
     if (graph.getNode(0).hasAttribute("xy")) viewer.disableAutoLayout()
     else viewer.enableAutoLayout(SpringBox()) //SpringBox()) // LinLog()
 
@@ -62,15 +63,12 @@ class GraphViewerFrame(inputGraph: Graph, title: String = "") extends JFrame("Gr
     val returnValue = fileChooser.showOpenDialog(GraphViewerFrame.this)
     if (returnValue == JFileChooser.APPROVE_OPTION) {
       val selectedFile = fileChooser.getSelectedFile
-      // Now you can use the selected file to load the graph
-      // Add here the logic to load the graph from the file
       println("Selected file: " + selectedFile.getAbsolutePath)
-      // For example:
-      // graph.read(selectedFile.getAbsolutePath)
-      val source: Source = Source.fromFile(selectedFile.getAbsolutePath)
       val name = selectedFile.getName
-      println("Name = " + name)
+      
+      val source: Source = Source.fromFile(selectedFile.getAbsolutePath)
       val digraph = PARSER.parse(source, name)
+      
       val graph = GraphStreamAdapter(digraph).createGraph()
       setGraph(graph, name)
     }

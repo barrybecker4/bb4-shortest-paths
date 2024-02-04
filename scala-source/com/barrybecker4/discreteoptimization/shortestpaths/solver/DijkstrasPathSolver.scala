@@ -1,7 +1,7 @@
 package com.barrybecker4.discreteoptimization.shortestpaths.solver
 
 import com.barrybecker4.common.format.FormatUtil
-import com.barrybecker4.discreteoptimization.common.graph.Graph
+import com.barrybecker4.discreteoptimization.common.graph.{Graph, Path}
 import com.barrybecker4.discreteoptimization.common.graph.algorithms.DijkstrasAlgorithm
 import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
 import com.barrybecker4.discreteoptimization.shortestpaths.model.ShortestPathsSolution
@@ -22,8 +22,9 @@ class DijkstrasPathSolver extends ShortestPathsSolver {
 
     val pathCalc = new DijkstrasAlgorithm(graph).findShortestPaths(0)
 
-    val pathCosts = Range(0, graph.numVertices).map(v => pathCalc.distToVertex(v))
-    val solution = ShortestPathsSolution(pathCosts.sum, pathCosts.toArray)
+    val paths = Range(0, graph.numVertices).map(pathCalc.pathToVertex).toList
+    val totalCost = paths.map(_.weight).sum
+    val solution = ShortestPathsSolution(totalCost, paths)
 
     solution
   }

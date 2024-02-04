@@ -4,7 +4,7 @@ import com.barrybecker4.discreteoptimization.shortestpaths.solver.{BaseSolverSui
 
 class DijkstrasPathSolverSuite extends BaseSolverSuite {
 
-  val update = false
+  val update = true
   
   test("sp_4_1") {
     verify("sp_4_1", update)
