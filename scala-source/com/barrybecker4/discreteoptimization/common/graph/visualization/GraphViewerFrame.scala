@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.common.graph.visualization
 
-import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraphParser
+import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedGraph, DirectedGraphParser}
 import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphViewerFrame.{PARSER, PREFIX}
 import com.barrybecker4.discreteoptimization.common.graph.visualization.{GraphStreamAdapter, GraphViewer}
 import operations_research.pdlp.Solvers.AdaptiveLinesearchParamsOrBuilder
@@ -41,7 +41,7 @@ class GraphViewerFrame(inputGraph: Graph, title: String = "") extends JFrame("Gr
     openItem.addActionListener(_ => loadGraph())
   }
 
-  private def setGraph(graph: Graph, title: String): Unit = {
+  protected def setGraph(graph: Graph, title: String): Unit = {
     if (viewer != null)
       remove(viewer.getViewPanel)
     viewer = new GraphViewer(graph)
@@ -63,15 +63,20 @@ class GraphViewerFrame(inputGraph: Graph, title: String = "") extends JFrame("Gr
     val returnValue = fileChooser.showOpenDialog(GraphViewerFrame.this)
     if (returnValue == JFileChooser.APPROVE_OPTION) {
       val selectedFile = fileChooser.getSelectedFile
-      println("Selected file: " + selectedFile.getAbsolutePath)
-      val name = selectedFile.getName
-
-      val source: Source = Source.fromFile(selectedFile.getAbsolutePath)
-      val digraph = PARSER.parse(source, name)
-
+      val digraph = loadGraphFromFile(selectedFile)
       val graph = GraphStreamAdapter(digraph).createGraph()
-      setGraph(graph, name)
+      setGraph(graph, selectedFile.getName)
     }
+  }
+
+  protected def loadGraphFromFile(file: File): DirectedGraph = {
+    val name = file.getName
+    val source: Source = Source.fromFile(file.getAbsolutePath)
+    PARSER.parse(source, name)
+  }
+
+  protected def loadGraphFromName(name: String): DirectedGraph = {
+    loadGraphFromFile(new File(PREFIX + name))
   }
 }
 
