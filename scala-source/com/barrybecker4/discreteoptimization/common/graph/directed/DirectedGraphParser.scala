@@ -1,4 +1,4 @@
-package com.barrybecker4.discreteoptimization.shortestpaths.model
+package com.barrybecker4.discreteoptimization.common.graph.directed
 
 import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraph}
 import com.barrybecker4.discreteoptimization.common.{Location, Parser}
