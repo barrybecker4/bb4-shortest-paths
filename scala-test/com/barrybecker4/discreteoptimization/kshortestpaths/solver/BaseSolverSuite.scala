@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.kshortestpaths.solver
 
-import com.barrybecker4.discreteoptimization.common.graph.Graph
+import com.barrybecker4.discreteoptimization.common.graph.{Graph, GraphTstUtil}
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution
 import com.barrybecker4.discreteoptimization.kshortestpaths.solver.KShortestPathsSolver
 import com.barrybecker4.discreteoptimization.kshortestpaths.KShortedPathsTstUtil
@@ -19,7 +19,7 @@ abstract class BaseSolverSuite extends AnyFunSuite {
 
   def verify(problemName: String, destination: Int, k: Int, update: Boolean): Unit = {
     print(s"running $problemName ...")
-    val graph = ShortedPathsTstUtil.getGraph(problemName)
+    val graph = GraphTstUtil.getGraph(problemName)
  
     val actual: KShortestPathsSolution = createSolver().findPaths(graph, 0, destination, k)
     val fileName = getFileName(problemName)

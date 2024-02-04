@@ -19,7 +19,8 @@ case class ShortestPaths(numNodes: Int, source: Int) {
   
   def pathNodesToVertex(vertex: Int): List[Int] = {
     val path = findPathToVertex(vertex)
-    if (path.isEmpty) List()
+    if (vertex == source) List(source)
+    else if (path.isEmpty) List()
     else {
       val start: Int = path.head.source
       val nodes = path.map(_.destination)
