@@ -15,7 +15,7 @@ import scala.io.Source
 
 
 object GraphViewerFrame {
-  private val PREFIX = "scala-test/com/barrybecker4/discreteoptimization/shortestpaths/solver/data/"
+  private val PREFIX = "scala-test/com/barrybecker4/discreteoptimization/common/graph/data/"
   private val PARSER: DirectedGraphParser = DirectedGraphParser()
 }
 
@@ -31,7 +31,7 @@ class GraphViewerFrame(inputGraph: Graph, title: String = "") extends JFrame("Gr
 
   setGraph(inputGraph, title)
 
-  private def createMenu(): Unit = {
+  protected def createMenu(): Unit = {
     val myMenuBar: JMenuBar = new JMenuBar()
     val fileMenu = new JMenu("File")
     val openItem = new JMenuItem("Open Graph")
@@ -56,7 +56,7 @@ class GraphViewerFrame(inputGraph: Graph, title: String = "") extends JFrame("Gr
     setVisible(true)
   }
 
-  private def loadGraph(): Unit = {
+  protected def loadGraph(): Unit = {
     val fileChooser = new JFileChooser()
     fileChooser.setCurrentDirectory(new File(PREFIX))
 
@@ -65,10 +65,10 @@ class GraphViewerFrame(inputGraph: Graph, title: String = "") extends JFrame("Gr
       val selectedFile = fileChooser.getSelectedFile
       println("Selected file: " + selectedFile.getAbsolutePath)
       val name = selectedFile.getName
-      
+
       val source: Source = Source.fromFile(selectedFile.getAbsolutePath)
       val digraph = PARSER.parse(source, name)
-      
+
       val graph = GraphStreamAdapter(digraph).createGraph()
       setGraph(graph, name)
     }

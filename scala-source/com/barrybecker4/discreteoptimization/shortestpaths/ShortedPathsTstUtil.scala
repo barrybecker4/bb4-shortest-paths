@@ -11,12 +11,6 @@ object ShortedPathsTstUtil {
   val PREFIX = "scala-test/com/barrybecker4/discreteoptimization/shortestpaths/solver/data/"
   val PARSER: DirectedGraphParser = DirectedGraphParser()
 
-  def getGraph(name: String): DirectedGraph = {
-    val source: Source = Source.fromFile(PREFIX + name)
-    PARSER.parse(source, name)
-  }
-
-
   def getSerializedSolution(name: String): String = {
     val source: Source = Source.fromFile(PREFIX + name)
     val s = source.getLines().mkString("\n") + "\n"
