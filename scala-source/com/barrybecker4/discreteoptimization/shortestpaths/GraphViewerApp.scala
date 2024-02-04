@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.shortestpaths
 
-import com.barrybecker4.discreteoptimization.common.model.graph.visualization.{GraphStreamAdapter, GraphViewerFrame}
+import com.barrybecker4.discreteoptimization.common.graph.visualization.{GraphStreamAdapter, GraphViewerFrame}
 
 
 object GraphViewerApp extends App {

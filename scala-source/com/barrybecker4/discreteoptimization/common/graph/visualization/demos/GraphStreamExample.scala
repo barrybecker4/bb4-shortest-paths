@@ -1,4 +1,4 @@
-package com.barrybecker4.discreteoptimization.common.model.graph.visualization.demos
+package com.barrybecker4.discreteoptimization.common.graph.visualization.demos
 
 import org.graphstream.graph.*
 import org.graphstream.graph.implementations.*

@@ -1,4 +1,4 @@
-package com.barrybecker4.discreteoptimization.common.model
+package com.barrybecker4.discreteoptimization.common
 
 import java.io.File
 import scala.io.Source

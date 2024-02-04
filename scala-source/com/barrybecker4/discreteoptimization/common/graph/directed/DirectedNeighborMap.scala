@@ -1,4 +1,4 @@
-package com.barrybecker4.discreteoptimization.common.model.graph.directed
+package com.barrybecker4.discreteoptimization.common.graph.directed
 
 import scala.collection.immutable.Map
 

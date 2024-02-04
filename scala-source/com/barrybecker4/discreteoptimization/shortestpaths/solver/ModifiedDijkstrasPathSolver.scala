@@ -1,9 +1,9 @@
 package com.barrybecker4.discreteoptimization.shortestpaths.solver
 
 import com.barrybecker4.common.format.FormatUtil
-import com.barrybecker4.discreteoptimization.common.model.graph.{Graph, Path}
-import com.barrybecker4.discreteoptimization.common.model.graph.algorithms.{DijkstrasAlgorithm, ModifiedDijkstrasAlgorithm}
-import com.barrybecker4.discreteoptimization.common.model.graph.directed.DirectedGraph
+import com.barrybecker4.discreteoptimization.common.graph.{Graph, Path}
+import com.barrybecker4.discreteoptimization.common.graph.algorithms.{DijkstrasAlgorithm, ModifiedDijkstrasAlgorithm}
+import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
 import com.barrybecker4.discreteoptimization.shortestpaths.model.ShortestPathsSolution
 
 import scala.util.Random

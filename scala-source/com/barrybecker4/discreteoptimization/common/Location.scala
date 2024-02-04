@@ -1,4 +1,6 @@
-package com.barrybecker4.discreteoptimization.common.model
+package com.barrybecker4.discreteoptimization.common
+
+import com.barrybecker4.discreteoptimization.common.Location
 
 case class Location(x: Float, y: Float) {
   

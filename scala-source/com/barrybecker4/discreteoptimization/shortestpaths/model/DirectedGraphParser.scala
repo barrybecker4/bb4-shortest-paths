@@ -1,7 +1,7 @@
 package com.barrybecker4.discreteoptimization.shortestpaths.model
 
-import com.barrybecker4.discreteoptimization.common.model.{Location, Parser}
-import com.barrybecker4.discreteoptimization.common.model.graph.directed.{DirectedEdge, DirectedGraph}
+import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraph}
+import com.barrybecker4.discreteoptimization.common.{Location, Parser}
 
 
 case class DirectedGraphParser() extends Parser[DirectedGraph] {

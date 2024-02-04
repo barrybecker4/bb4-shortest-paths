@@ -1,7 +1,7 @@
-package com.barrybecker4.discreteoptimization.common.model.graph.visualization.demos
+package com.barrybecker4.discreteoptimization.common.graph.visualization.demos
 
-import com.barrybecker4.discreteoptimization.common.model.graph.visualization.demos.LeHavreMap
-import com.barrybecker4.discreteoptimization.common.model.graph.visualization.demos.LeHavreMap.{PATH_PREFIX, STYLE_SHEET}
+import com.barrybecker4.discreteoptimization.common.graph.visualization.demos.LeHavreMap
+import com.barrybecker4.discreteoptimization.common.graph.visualization.demos.LeHavreMap.{PATH_PREFIX, STYLE_SHEET}
 import org.graphstream.graph.*
 import org.graphstream.graph.implementations.*
 import org.graphstream.ui.swing_viewer.ViewPanel
@@ -27,7 +27,7 @@ object LeHavreMap {
       |edge.tunnel { stroke-color: blue; stroke-width: 1px; stroke-mode: plain; }
       |edge.bridge { stroke-color: yellow; stroke-width: 1px; stroke-mode: plain; }
       |""".stripMargin
-  private val PATH_PREFIX = "scala-source/com/barrybecker4/discreteoptimization/common/model/graph/visualization/demos/"
+  private val PATH_PREFIX = "scala-source/com/barrybecker4/discreteoptimization/common/graph/visualization/demos/"
 
   def main(args: Array[String]): Unit = {
     System.setProperty("org.graphstream.ui", "swing")

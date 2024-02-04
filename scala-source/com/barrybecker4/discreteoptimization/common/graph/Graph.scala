@@ -1,4 +1,6 @@
-package com.barrybecker4.discreteoptimization.common.model.graph
+package com.barrybecker4.discreteoptimization.common.graph
+
+import com.barrybecker4.discreteoptimization.common.graph.{Edge, NeighborMap}
 
 import scala.collection.immutable.{Map, Set}
 

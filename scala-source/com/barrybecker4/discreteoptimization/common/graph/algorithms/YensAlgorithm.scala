@@ -1,9 +1,8 @@
-package com.barrybecker4.discreteoptimization.common.model.graph.algorithms
+package com.barrybecker4.discreteoptimization.common.graph.algorithms
 
 import com.barrybecker4.discreteoptimization.common.BoundedPriorityQueue
-import com.barrybecker4.discreteoptimization.common.model.graph.Path
-import com.barrybecker4.discreteoptimization.common.model.graph.algorithms.KShortestPathsFinder
-import com.barrybecker4.discreteoptimization.common.model.graph.directed.{ChangeableDirectedGraph, DirectedGraph}
+import com.barrybecker4.discreteoptimization.common.graph.Path
+import com.barrybecker4.discreteoptimization.common.graph.directed.{ChangeableDirectedGraph, DirectedGraph}
 
 import scala.annotation.tailrec
 import scala.collection.mutable

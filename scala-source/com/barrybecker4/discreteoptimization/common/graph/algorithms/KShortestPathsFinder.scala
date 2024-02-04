@@ -1,7 +1,7 @@
-package com.barrybecker4.discreteoptimization.common.model.graph.algorithms
+package com.barrybecker4.discreteoptimization.common.graph.algorithms
 
-import com.barrybecker4.discreteoptimization.common.model.graph.Path
-import com.barrybecker4.discreteoptimization.common.model.graph.directed.{DirectedEdge, DirectedGraph}
+import com.barrybecker4.discreteoptimization.common.graph.Path
+import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraph}
 
 import scala.collection.mutable.{ArrayBuffer, PriorityQueue}
 

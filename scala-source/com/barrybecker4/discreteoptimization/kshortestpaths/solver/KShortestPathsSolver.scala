@@ -1,7 +1,7 @@
 package com.barrybecker4.discreteoptimization.kshortestpaths.solver
 
+import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution
-import com.barrybecker4.discreteoptimization.common.model.graph.directed.DirectedGraph
 
 /**
  * See https://en.wikipedia.org/wiki/K_shortest_path_routing

@@ -1,7 +1,6 @@
-package com.barrybecker4.discreteoptimization.common.model.graph.algorithms
+package com.barrybecker4.discreteoptimization.common.graph.algorithms
 
-import com.barrybecker4.discreteoptimization.common.model.graph.directed.DirectedEdge
-
+import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedEdge
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 

@@ -1,6 +1,6 @@
-package com.barrybecker4.discreteoptimization.common.model.graph.directed
+package com.barrybecker4.discreteoptimization.common.graph.directed
 
-import com.barrybecker4.discreteoptimization.common.model.Location
+import com.barrybecker4.discreteoptimization.common.Location
 
 
 /**

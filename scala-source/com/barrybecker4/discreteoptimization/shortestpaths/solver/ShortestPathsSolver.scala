@@ -1,7 +1,7 @@
 package com.barrybecker4.discreteoptimization.shortestpaths.solver
 
+import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
 import com.barrybecker4.discreteoptimization.shortestpaths.model.ShortestPathsSolution
-import com.barrybecker4.discreteoptimization.common.model.graph.directed.DirectedGraph
 
 /**
  * Consider Dijkstra's or Bellman-ford algorithms

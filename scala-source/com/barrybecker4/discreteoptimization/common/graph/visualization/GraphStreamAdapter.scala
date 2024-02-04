@@ -1,8 +1,8 @@
-package com.barrybecker4.discreteoptimization.common.model.graph.visualization
+package com.barrybecker4.discreteoptimization.common.graph.visualization
 
-import com.barrybecker4.discreteoptimization.common.model.Location
-import com.barrybecker4.discreteoptimization.common.model.graph.directed.DirectedGraph
-import com.barrybecker4.discreteoptimization.common.model.graph.visualization.GraphStreamAdapter.STYLE_SHEET
+import com.barrybecker4.discreteoptimization.common.Location
+import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
+import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphStreamAdapter.STYLE_SHEET
 import org.graphstream.graph.implementations.MultiGraph
 
 

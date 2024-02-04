@@ -1,4 +1,4 @@
-package com.barrybecker4.discreteoptimization.common.model.graph.visualization
+package com.barrybecker4.discreteoptimization.common.graph.visualization
 
 import org.graphstream.graph.Graph
 import org.graphstream.ui.layout.springbox.implementations.{LinLog, SpringBox}

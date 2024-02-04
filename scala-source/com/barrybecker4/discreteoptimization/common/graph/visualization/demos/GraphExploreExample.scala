@@ -1,7 +1,7 @@
-package com.barrybecker4.discreteoptimization.common.model.graph.visualization.demos
+package com.barrybecker4.discreteoptimization.common.graph.visualization.demos
 
-import com.barrybecker4.discreteoptimization.common.model.graph.visualization.demos.GraphExploreExample
-import com.barrybecker4.discreteoptimization.common.model.graph.visualization.demos.GraphExploreExample.STYLE_SHEET
+import com.barrybecker4.discreteoptimization.common.graph.visualization.demos.GraphExploreExample
+import com.barrybecker4.discreteoptimization.common.graph.visualization.demos.GraphExploreExample.STYLE_SHEET
 import org.graphstream.graph.*
 import org.graphstream.graph.implementations.*
 

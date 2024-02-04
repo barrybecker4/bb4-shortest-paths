@@ -1,9 +1,9 @@
 package com.barrybecker4.discreteoptimization.kshortestpaths.solver
 
 import com.barrybecker4.common.format.FormatUtil
-import com.barrybecker4.discreteoptimization.common.model.graph.{Graph, Path}
-import com.barrybecker4.discreteoptimization.common.model.graph.algorithms.{DijkstrasAlgorithm, YensAlgorithm}
-import com.barrybecker4.discreteoptimization.common.model.graph.directed.DirectedGraph
+import com.barrybecker4.discreteoptimization.common.graph.{Graph, Path}
+import com.barrybecker4.discreteoptimization.common.graph.algorithms.{DijkstrasAlgorithm, YensAlgorithm}
+import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution
 import com.barrybecker4.discreteoptimization.kshortestpaths.solver.GreedyKPathsSolver
 
