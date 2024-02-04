@@ -19,26 +19,30 @@ object GraphViewerFrame {
   private val PARSER: DirectedGraphParser = DirectedGraphParser()
 }
 
-class GraphViewerFrame(inputGraph: Graph, title: String = "") extends JFrame("Graph Viewer") {
+class GraphViewerFrame extends JFrame("Graph Viewer") {
   System.setProperty("org.graphstream.ui", "swing")
 
   setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
   setSize(1000, 900)
-  this.setTitle(title)
 
   var viewer: GraphViewer = _
   createMenu()
 
-  setGraph(inputGraph, title)
+  setVisible(true)
 
   protected def createMenu(): Unit = {
     val myMenuBar: JMenuBar = new JMenuBar()
     val fileMenu = new JMenu("File")
-    val openItem = new JMenuItem("Open Graph")
+    val openItem = createOpenItemOption()
     fileMenu.add(openItem)
     myMenuBar.add(fileMenu)
     setJMenuBar(myMenuBar)
+  }
+
+  protected def createOpenItemOption(): JMenuItem = {
+    val openItem = new JMenuItem("Open Graph")
     openItem.addActionListener(_ => loadGraph())
+    openItem
   }
 
   protected def setGraph(graph: Graph, title: String): Unit = {
