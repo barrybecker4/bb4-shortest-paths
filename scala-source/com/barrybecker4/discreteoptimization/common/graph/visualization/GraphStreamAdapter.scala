@@ -10,7 +10,7 @@ object GraphStreamAdapter {
   private val STYLE_SHEET =
     """
       |graph {
-      | fill-color: #eeffee;
+      |  fill-color: #eeffee;
       |}
       |node {
       |  shape: circle;
@@ -22,16 +22,28 @@ object GraphStreamAdapter {
       |  text-mode: normal;
       |  text-alignment: center;
       |  text-size: 12px;
-      |  text-color: #5500aa;
+      |  text-color: #000077;
+      |}
+      |node.visited {
+      |  size: 25px, 25px;
+      |  fill-color: #ffaaaa;
+      |  stroke-color: #990088;
+      |  text-size: 14px;
+      |  text-color: #990066;
       |}
       |edge {
       |  text-size: 15px;
-      |  text-color: black;
       |  text-mode: normal;
       |  text-alignment: center;
       |  text-background-mode: none;
       |  text-color: #4466aa;
       |  text-alignment: under;
+      |}
+      |edge.visited {
+      |  text-size: 16px;
+      |  text-color: #aa0000;
+      |  stroke-color: #aa0066;
+      |  size: 2;
       |}
       |""".stripMargin
 }
