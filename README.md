@@ -1,18 +1,20 @@
 # bb4-shortest-paths
 
-Some shortest path algorithm implementations
- - Dijkstra's algorithm - single source shortest paths
- - ModifiedDijkstras - finds shortest path between two nodes
- - Yen's algorithm - finds K shortest paths between two nodes
+Some shortest path algorithm implementations and visualizations.
+ - Dijkstra's algorithm - single-source shortest paths 
+ - ModifiedDijkstra's - shortest path between two nodes
+ - Yen's algorithm - finds the K shortest paths between two nodes
 
 A GraphViewerApp is also provided. It allows you to view the graph test cases.
 
 ## How to use it
 
-In bb4-shortest-paths, the scala solution is in
-`com/barrybecker4/shortestpaths/<project>App.class`
+Run ./gradlew to build and run the tests.
 
-Run `./build.sh` to create the executable
+The default application is the GraphViewerApp. It allows you to view the graph tests cases and their results.
+For example, here is a shortest path result
 
-In another shell, go to `bb4-shortest-paths/<project>` and run it. </br>
+![](E:\projects\bb4\bb4-shortest-paths\images\network_dijkstra_solution.PNG)
+
+
 
