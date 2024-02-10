@@ -4,6 +4,7 @@ import com.barrybecker4.discreteoptimization.common.graph.Path
 import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraphParser}
 import com.barrybecker4.discreteoptimization.common.graph.visualization.{GraphStreamAdapter, GraphViewer, GraphViewerFrame}
 import com.barrybecker4.discreteoptimization.shortestpaths.ShortedPathsTstUtil
+import com.barrybecker4.discreteoptimization.shortestpaths.model.ShortestPathsSolution
 import com.barrybecker4.discreteoptimization.shortestpaths.viewer.{GraphShortestPathViewerFrame, GraphViewerListener}
 import com.barrybecker4.discreteoptimization.shortestpaths.viewer.GraphShortestPathViewerFrame.*
 import operations_research.pdlp.Solvers.AdaptiveLinesearchParamsOrBuilder
@@ -20,31 +21,11 @@ import scala.annotation.Annotation
 import scala.io.Source
 
 
-/**
- * Ideas:
- * Highlight the shortest path to a node upon mouseover
- * Implement similar for k shortest paths.
+/** Draws the shortest paths and allows interacting with them.
  */
 object GraphShortestPathViewerFrame {
   private val PREFIX = "scala-test/com/barrybecker4/discreteoptimization/shortestpaths/solver/data/"
   private val PARSER: DirectedGraphParser = DirectedGraphParser()
-  private val ANIMATION_DELAY = 50
-  private val PAUSE = 1000
-  private val COLORS: Array[Color] = Array(
-    new Color(92, 205, 25),
-    new Color(145, 215, 135),
-    new Color(173, 204, 25),
-    new Color(155, 195,155),
-    new Color(115, 155, 205),
-    new Color(83, 165, 215),
-    new Color(140, 117, 209),
-    new Color(155, 97, 235),
-    new Color(160, 104, 160),
-    new Color(245, 137, 139),
-  )
-
-  private def colorToCss(color: Color): String =
-    String.format("#%02x%02x%02x", color.getRed, color.getGreen, color.getBlue)
 }
 
 class GraphShortestPathViewerFrame extends GraphViewerFrame() {
@@ -64,11 +45,11 @@ class GraphShortestPathViewerFrame extends GraphViewerFrame() {
       val selectedFile = fileChooser.getSelectedFile
       println("selected file is " + selectedFile.getName)
 
-      // first load the graph
       val graph = loadTheGraph(selectedFile)
+      val solution = ShortedPathsTstUtil.getSolution(selectedFile.getName)
 
       // then load the shortest paths
-      loadShortestPaths(selectedFile, graph)
+      showShortestPaths(solution, graph)
     }
   }
 
@@ -80,59 +61,13 @@ class GraphShortestPathViewerFrame extends GraphViewerFrame() {
     graph
   }
 
-  private def loadShortestPaths(file: File, graph: MultiGraph): Unit = {
-    val solution = ShortedPathsTstUtil.getSolution(file.getName)
+  private def showShortestPaths(solution: ShortestPathsSolution, graph: MultiGraph): Unit = {
 
     // Get the viewer pipe for sending events
     val viewerPipe: ViewerPipe = viewer.newViewerPipe()
-    val viewerListener = GraphViewerListener(viewerPipe, graph)
     viewer.getDefaultView.enableMouseOptions()
-
-    //viewerPipe.addAttributeSink(graph)
-    viewerPipe.addViewerListener(viewerListener)
-    var ct = 0
-
-    new Thread(() => {
-      Thread.sleep(PAUSE)
-      for (path <- solution.paths) {
-        explore(path, graph, viewerPipe, ct)
-        ct += 1
-      }
-      listenForMouseEvents(viewerPipe)
-    }).start()
-
-  }
-
-  def explore(path: Path, graph: MultiGraph, viewerPipe: ViewerPipe, pathNum: Int): Unit = {
-
-    if (path.nodes.size > 1) {
-      var prevNode: Node = null
-      var nextNode: Node = null
-
-      for (nodeIdx <- path.nodes) {
-        val nextNode = graph.getNode(nodeIdx)
-        val leavingEdge: Edge =
-          if (prevNode != null) prevNode.leavingEdges().filter(e => e.getNode1 == nextNode).findFirst().get()
-          else null
-        nextNode.setAttribute("ui.class", "visited")
-        val c = colorToCss(COLORS(pathNum % COLORS.length))
-        nextNode.setAttribute("ui.style", s"fill-color: ${c};");
-        if (leavingEdge != null) {
-          leavingEdge.setAttribute("ui.class", "visited")
-          // leavingEdge.setAttribute("ui.style", "size: 4;")
-        }
-        prevNode = nextNode
-        viewerPipe.pump()
-        Thread.sleep(ANIMATION_DELAY)
-      }
-    }
-  }
-
-  private def listenForMouseEvents(viewerPipe: ViewerPipe): Unit = {
-    while (true) {
-      // use blockingPump to avoid 100% CPU usage
-      viewerPipe.blockingPump();
-    }
+    
+    PathRenderer(graph, viewerPipe).render(solution)
   }
 
   private def getGraphName(fileName: String): String = {
@@ -140,5 +75,4 @@ class GraphShortestPathViewerFrame extends GraphViewerFrame() {
     val start = if (idx > 0) idx else fileName.indexOf("_dijkstra_solution")
     fileName.substring(0, start)
   }
-
 }
