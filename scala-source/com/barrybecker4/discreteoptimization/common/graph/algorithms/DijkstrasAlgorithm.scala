@@ -15,7 +15,7 @@ class DijkstrasAlgorithm(graph: DirectedGraph) extends ShortestPathsFinder {
   private val size: Int = graph.numVertices
 
   /**
-   * - add 2 implementations - Yens and Epsteins (https://codeforces.com/blog/entry/102085).
+   * - add 2 implementations - Yen's and Epstein's (https://codeforces.com/blog/entry/102085).
    * - add graph path visualization
    *
    * find a shortest path from source vertex to all other vertices in the graph

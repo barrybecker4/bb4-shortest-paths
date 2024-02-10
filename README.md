@@ -16,5 +16,11 @@ For example, here is a shortest path result
 
 ![](E:\projects\bb4\bb4-shortest-paths\images\network_dijkstra_solution.PNG)
 
+Future Features
+- For k-shortest paths, color the paths with gradient colors to differentiate them. Best path will be the darkest.
+- When mousing over nodes in the viewer
+  - If shortest path, show the shortest path to node on mouseover
+  - If shortest k-paths, show the shortest path containing that node if there is one.
+
 
 

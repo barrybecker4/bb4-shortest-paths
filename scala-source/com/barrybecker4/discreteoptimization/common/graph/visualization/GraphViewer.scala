@@ -9,6 +9,8 @@ import javax.swing.{JFrame, JLabel, WindowConstants}
 
 
 class GraphViewer(graph: Graph) extends SwingViewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD) {
+  //Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD) { //
+  // Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD) {
 
   def getViewPanel: ViewPanel =
     addDefaultView(false).asInstanceOf[ViewPanel]

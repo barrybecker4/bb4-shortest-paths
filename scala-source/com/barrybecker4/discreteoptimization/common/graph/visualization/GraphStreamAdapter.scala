@@ -25,9 +25,8 @@ object GraphStreamAdapter {
       |  text-color: #000077;
       |}
       |node.visited {
-      |  size: 25px, 25px;
-      |  fill-color: #ffaaaa;
-      |  stroke-color: #990088;
+      |  size: 23px, 23px;
+      |  stroke-color: #880066;
       |  text-size: 14px;
       |  text-color: #990066;
       |}
