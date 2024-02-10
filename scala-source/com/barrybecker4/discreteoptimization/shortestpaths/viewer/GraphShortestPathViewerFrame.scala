@@ -1,12 +1,14 @@
-package com.barrybecker4.discreteoptimization.shortestpaths
+package com.barrybecker4.discreteoptimization.shortestpaths.viewer
 
 import com.barrybecker4.discreteoptimization.common.graph.Path
 import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraphParser}
-import com.barrybecker4.discreteoptimization.shortestpaths.GraphShortestPathViewerFrame.{ANIMATION_DELAY, COLORS, PARSER, PAUSE, PREFIX, colorToCss}
 import com.barrybecker4.discreteoptimization.common.graph.visualization.{GraphStreamAdapter, GraphViewer, GraphViewerFrame}
+import com.barrybecker4.discreteoptimization.shortestpaths.ShortedPathsTstUtil
+import com.barrybecker4.discreteoptimization.shortestpaths.viewer.{GraphShortestPathViewerFrame, GraphViewerListener}
+import com.barrybecker4.discreteoptimization.shortestpaths.viewer.GraphShortestPathViewerFrame.*
 import operations_research.pdlp.Solvers.AdaptiveLinesearchParamsOrBuilder
-import org.graphstream.graph.{Edge, Graph, Node}
 import org.graphstream.graph.implementations.MultiGraph
+import org.graphstream.graph.{Edge, Graph, Node}
 import org.graphstream.ui.layout.springbox.implementations.{LinLog, SpringBox}
 import org.graphstream.ui.swing_viewer.{SwingViewer, ViewPanel}
 import org.graphstream.ui.view.{View, Viewer, ViewerListener, ViewerPipe}
@@ -45,7 +47,7 @@ object GraphShortestPathViewerFrame {
     String.format("#%02x%02x%02x", color.getRed, color.getGreen, color.getBlue)
 }
 
-class GraphShortestPathViewerFrame extends GraphViewerFrame(), ViewerListener {
+class GraphShortestPathViewerFrame extends GraphViewerFrame() {
 
   override def createOpenItemOption(): JMenuItem = {
     val openItem = new JMenuItem("Open Shortest Paths")
@@ -56,7 +58,6 @@ class GraphShortestPathViewerFrame extends GraphViewerFrame(), ViewerListener {
   private def loadShortestPaths(): Unit = {
     val fileChooser = new JFileChooser()
     fileChooser.setCurrentDirectory(new File(PREFIX))
-
 
     val returnValue = fileChooser.showOpenDialog(GraphShortestPathViewerFrame.this)
     if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -84,10 +85,11 @@ class GraphShortestPathViewerFrame extends GraphViewerFrame(), ViewerListener {
 
     // Get the viewer pipe for sending events
     val viewerPipe: ViewerPipe = viewer.newViewerPipe()
+    val viewerListener = GraphViewerListener(viewerPipe, graph)
     viewer.getDefaultView.enableMouseOptions()
 
     //viewerPipe.addAttributeSink(graph)
-    viewerPipe.addViewerListener(this)
+    viewerPipe.addViewerListener(viewerListener)
     var ct = 0
 
     new Thread(() => {
@@ -139,18 +141,4 @@ class GraphShortestPathViewerFrame extends GraphViewerFrame(), ViewerListener {
     fileName.substring(0, start)
   }
 
-  override def viewClosed(viewName: String): Unit =
-    println("closed "+ viewName)
-
-  override def buttonPushed(id: String): Unit =
-    println("button" + id + " pushed")
-
-  override def buttonReleased(id: String): Unit =
-    println("button" + id + " released")
-
-  override def mouseOver(id: String): Unit =
-    println("moused over " + id)
-
-  override def mouseLeft(id: String): Unit =
-    println("mouse left " + id)
 }

@@ -17,7 +17,7 @@ group = 'com.barrybecker4'
 version = '1.8-SNAPSHOT'
 ext {
     archivesBaseName = 'bb4-project-template'
-    mainClass = "com.barrybecker4.discreteoptimization.shortestpaths.GraphViewerApp"
+    mainClass = "com.barrybecker4.discreteoptimization.shortestpaths.viewer.GraphViewerApp"
 }
 
 apply from: project.buildscript.classLoader.getResource('bb4.gradle').toURI()
