@@ -1,0 +1,76 @@
+
+graph {
+  fill-color: #efffff;
+}
+
+/* .node:not(.node#0)*/
+node {
+  shape: circle;
+  size: 20px, 20px;
+  fill-color: #ffffff;
+  fill-mode: plain;
+  stroke-mode: plain;
+  stroke-color: #7777bb;
+  text-mode: normal;
+  text-alignment: center;
+  text-size: 11px;
+  text-color: #7777bb;
+  text-offset: 0px, -3px;
+}
+
+node.visited {
+  size: 21px, 21px;
+  stroke-color: #885566;
+  text-size: 14px;
+  text-color: #995566;
+}
+
+node.highlighted {
+  size: 22px, 22px;
+  stroke-color: #880011;
+  text-size: 16px;
+  text-color: #550044;
+  text-style: bold;
+  fill-color: #ffbb99;
+  fill-mode: plain;
+  z-index: 20;
+}
+
+edge {
+  arrow-size: 3px, 3px;
+  text-size: 11px;
+  text-mode: normal;
+  text-alignment: center;
+  text-background-mode: none;
+  text-color: #8899dd;
+  text-alignment: under;
+  stroke-mode: plain;
+  fill-color: rgba(220, 220, 255, 220);  /* the transparency component appears to be ignored */
+  size: 0;
+}
+
+edge.visited {
+  text-size: 15px;
+  text-color: #993333;
+  stroke-mode: plain;
+  text-style: bold;
+  stroke-color: #887799;
+  stroke-width: 2px;
+  /* size: 2;*/
+}
+
+edge.highlighted {
+  text-size: 14px;
+  text-color: #220000;
+  stroke-mode: plain;
+  fill-color: #992222;
+  size: 3;
+  z-index: 10;
+}
+
+node#0 {
+  size: 22px, 22px;
+  stroke-width: 2px;
+  stroke-color: #bb0000;
+  text-color: #aa0044;
+}

@@ -2,7 +2,8 @@ package com.barrybecker4.discreteoptimization.shortestpaths.viewer.render
 
 import com.barrybecker4.discreteoptimization.common.graph.Path
 import com.barrybecker4.discreteoptimization.shortestpaths.model.ShortestPathsSolution
-import com.barrybecker4.discreteoptimization.shortestpaths.viewer.render.PathRenderer.{ANIMATION_DELAY, COLORS, PAUSE, colorToCss}
+import com.barrybecker4.discreteoptimization.shortestpaths.viewer.render.PathRenderer.{ANIMATION_DELAY, PAUSE}
+import com.barrybecker4.discreteoptimization.shortestpaths.viewer.render.UiClass.*
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.ui.view.ViewerPipe
@@ -12,23 +13,11 @@ import java.awt.Color
 object PathRenderer {
   private val ANIMATION_DELAY = 50
   private val PAUSE = 1000
-  private val COLORS: Array[Color] = Array(
-    new Color(92, 205, 25),
-    new Color(145, 215, 135),
-    new Color(173, 204, 25),
-    new Color(155, 195, 155),
-    new Color(115, 155, 205),
-    new Color(83, 165, 215),
-    new Color(140, 117, 209),
-    new Color(155, 97, 235),
-    new Color(160, 104, 160),
-    new Color(245, 137, 139),
-  )
-
-  private def colorToCss(color: Color): String =
-    String.format("#%02x%02x%02x", color.getRed, color.getGreen, color.getBlue)
 }
 
+/**
+ * path.nodes.last is O(N). use a map for better efficiency
+ */
 case class PathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, viewerPipe: ViewerPipe) {
 
   def render(): Unit = {
@@ -36,39 +25,40 @@ case class PathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, view
     //viewerPipe.addAttributeSink(graph)
     viewerPipe.addViewerListener(viewerListener)
 
-    //simulation and interaction happens in a separate path 
+    //simulation and interaction happens in a separate path
     new Thread(() => {
-      Thread.sleep(PAUSE)
-      for (path <- solution.paths) {
-        colorPath(path, ANIMATION_DELAY)
-      }
+//      Thread.sleep(PAUSE)
+//      for (path <- solution.paths) {
+//        colorPath(path, VISITED, ANIMATION_DELAY)
+//      }
       listenForMouseEvents()
     }).start()
   }
-  
-  def colorPath(nodeIdx: Int): Unit = {
+
+  def colorPath(nodeIdx: Int, uiClass: UiClass): Unit = {
     val path = getPath(nodeIdx)
-    println("coloring " + path)
-    colorPath(path, 0)
+    colorPath(path, uiClass, 0)
   }
-  
-  def colorPath(path: Path, animationDelay: Int = ANIMATION_DELAY): Unit = {
+
+  /**
+   * @param uiClass either "visited" or highlighted"
+   */
+  def colorPath(path: Path, uiClass: UiClass, animationDelay: Int = ANIMATION_DELAY): Unit = {
 
     if (path.nodes.size > 1) {
       var prevNode: Node = null
       var nextNode: Node = null
+      val pathIdx = path.nodes.last
 
       for (nodeIdx <- path.nodes) {
         val nextNode = graph.getNode(nodeIdx)
         val leavingEdge: Edge =
           if (prevNode != null) prevNode.leavingEdges().filter(e => e.getNode1 == nextNode).findFirst().get()
           else null
-        nextNode.setAttribute("ui.class", "visited")
-        val c = colorToCss(COLORS(nodeIdx % COLORS.length))
-        nextNode.setAttribute("ui.style", s"fill-color: $c;");
+        nextNode.setAttribute("ui.class", uiClass.name)
+
         if (leavingEdge != null) {
-          leavingEdge.setAttribute("ui.class", "visited")
-          // leavingEdge.setAttribute("ui.style", "size: 4;")
+          leavingEdge.setAttribute("ui.class", uiClass.name)
         }
         prevNode = nextNode
         if (animationDelay > 0) {
