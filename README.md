@@ -13,7 +13,9 @@ Run ./gradlew to build and run the tests.
 
 The default application is the GraphViewerApp. It allows you to view the graph tests cases and their results.
 For example, here is a shortest path result
-![](E:\projects\bb4\bb4-shortest-paths\images\sp_120_dijkstra_solution.png)
+
+![Mosue over to see shortest path to node](images/sp_120_dijkstra_solution.png)
+
 
 Future Features
 - For k-shortest paths, color the paths with gradient colors to differentiate them. Best path will be the darkest.
