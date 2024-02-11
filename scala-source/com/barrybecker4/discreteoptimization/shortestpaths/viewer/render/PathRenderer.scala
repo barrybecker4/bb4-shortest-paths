@@ -1,10 +1,10 @@
-package com.barrybecker4.discreteoptimization.shortestpaths.viewer
+package com.barrybecker4.discreteoptimization.shortestpaths.viewer.render
 
 import com.barrybecker4.discreteoptimization.common.graph.Path
 import com.barrybecker4.discreteoptimization.shortestpaths.model.ShortestPathsSolution
-import com.barrybecker4.discreteoptimization.shortestpaths.viewer.PathRenderer.{ANIMATION_DELAY, PAUSE, COLORS, colorToCss}
-import org.graphstream.graph.{Edge, Node}
+import com.barrybecker4.discreteoptimization.shortestpaths.viewer.render.PathRenderer.{ANIMATION_DELAY, COLORS, PAUSE, colorToCss}
 import org.graphstream.graph.implementations.MultiGraph
+import org.graphstream.graph.{Edge, Node}
 import org.graphstream.ui.view.ViewerPipe
 
 import java.awt.Color
@@ -29,26 +29,30 @@ object PathRenderer {
     String.format("#%02x%02x%02x", color.getRed, color.getGreen, color.getBlue)
 }
 
-case class PathRenderer(graph: MultiGraph, viewerPipe: ViewerPipe) {
+case class PathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, viewerPipe: ViewerPipe) {
 
-  def render(solution: ShortestPathsSolution): Unit = {
-    val viewerListener = GraphViewerListener(viewerPipe, graph)
+  def render(): Unit = {
+    val viewerListener = GraphViewerListener(viewerPipe, graph, this)
     //viewerPipe.addAttributeSink(graph)
     viewerPipe.addViewerListener(viewerListener)
-    var ct = 0
 
+    //simulation and interaction happens in a separate path 
     new Thread(() => {
       Thread.sleep(PAUSE)
       for (path <- solution.paths) {
-        colorPath(path, graph, viewerPipe, ct)
-        ct += 1
+        colorPath(path, ANIMATION_DELAY)
       }
-      listenForMouseEvents(viewerPipe)
+      listenForMouseEvents()
     }).start()
   }
-
-
-  def colorPath(path: Path, graph: MultiGraph, viewerPipe: ViewerPipe, pathNum: Int): Unit = {
+  
+  def colorPath(nodeIdx: Int): Unit = {
+    val path = getPath(nodeIdx)
+    println("coloring " + path)
+    colorPath(path, 0)
+  }
+  
+  def colorPath(path: Path, animationDelay: Int = ANIMATION_DELAY): Unit = {
 
     if (path.nodes.size > 1) {
       var prevNode: Node = null
@@ -60,20 +64,28 @@ case class PathRenderer(graph: MultiGraph, viewerPipe: ViewerPipe) {
           if (prevNode != null) prevNode.leavingEdges().filter(e => e.getNode1 == nextNode).findFirst().get()
           else null
         nextNode.setAttribute("ui.class", "visited")
-        val c = colorToCss(COLORS(pathNum % COLORS.length))
-        nextNode.setAttribute("ui.style", s"fill-color: ${c};");
+        val c = colorToCss(COLORS(nodeIdx % COLORS.length))
+        nextNode.setAttribute("ui.style", s"fill-color: $c;");
         if (leavingEdge != null) {
           leavingEdge.setAttribute("ui.class", "visited")
           // leavingEdge.setAttribute("ui.style", "size: 4;")
         }
         prevNode = nextNode
-        viewerPipe.pump()
-        Thread.sleep(ANIMATION_DELAY)
+        if (animationDelay > 0) {
+          viewerPipe.pump()
+          Thread.sleep(animationDelay)
+        }
       }
+      if (animationDelay == 0) viewerPipe.pump()
     }
   }
 
-  private def listenForMouseEvents(viewerPipe: ViewerPipe): Unit = {
+  private def getPath(nodeIdx: Int): Path = {
+    solution.paths.find(path => path.nodes.nonEmpty && path.nodes.last == nodeIdx)
+      .getOrElse(throw new IllegalStateException(s" count not find ${nodeIdx} among ${solution.paths.mkString("\n")}"))
+  }
+
+  private def listenForMouseEvents(): Unit = {
     while (true) {
       // use blockingPump to avoid 100% CPU usage
       viewerPipe.blockingPump();

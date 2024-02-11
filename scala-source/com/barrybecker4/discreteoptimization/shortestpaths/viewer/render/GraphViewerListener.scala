@@ -1,9 +1,10 @@
-package com.barrybecker4.discreteoptimization.shortestpaths.viewer
+package com.barrybecker4.discreteoptimization.shortestpaths.viewer.render
 
+import com.barrybecker4.discreteoptimization.shortestpaths.viewer.render.PathRenderer
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.ui.view.{ViewerListener, ViewerPipe}
 
-case class GraphViewerListener(viewerPipe: ViewerPipe, graph: MultiGraph) extends ViewerListener  {
+case class GraphViewerListener(viewerPipe: ViewerPipe, graph: MultiGraph, pathRenderer: PathRenderer) extends ViewerListener  {
   
   override def viewClosed(viewName: String): Unit =
     println("closed "+ viewName)
@@ -14,8 +15,10 @@ case class GraphViewerListener(viewerPipe: ViewerPipe, graph: MultiGraph) extend
   override def buttonReleased(id: String): Unit =
     println("button" + id + " released")
 
-  override def mouseOver(id: String): Unit =
+  override def mouseOver(id: String): Unit = {
     println("moused over " + id)
+    pathRenderer.colorPath(id.toInt)
+  }
 
   override def mouseLeft(id: String): Unit =
     println("mouse left " + id)

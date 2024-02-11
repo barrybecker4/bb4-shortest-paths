@@ -5,8 +5,9 @@ import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge
 import com.barrybecker4.discreteoptimization.common.graph.visualization.{GraphStreamAdapter, GraphViewer, GraphViewerFrame}
 import com.barrybecker4.discreteoptimization.shortestpaths.ShortedPathsTstUtil
 import com.barrybecker4.discreteoptimization.shortestpaths.model.ShortestPathsSolution
-import com.barrybecker4.discreteoptimization.shortestpaths.viewer.{GraphShortestPathViewerFrame, GraphViewerListener}
+import com.barrybecker4.discreteoptimization.shortestpaths.viewer.GraphShortestPathViewerFrame
 import com.barrybecker4.discreteoptimization.shortestpaths.viewer.GraphShortestPathViewerFrame.*
+import com.barrybecker4.discreteoptimization.shortestpaths.viewer.render.{GraphViewerListener, PathRenderer}
 import operations_research.pdlp.Solvers.AdaptiveLinesearchParamsOrBuilder
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.graph.{Edge, Graph, Node}
@@ -67,7 +68,7 @@ class GraphShortestPathViewerFrame extends GraphViewerFrame() {
     val viewerPipe: ViewerPipe = viewer.newViewerPipe()
     viewer.getDefaultView.enableMouseOptions()
     
-    PathRenderer(graph, viewerPipe).render(solution)
+    PathRenderer(graph, solution, viewerPipe).render()
   }
 
   private def getGraphName(fileName: String): String = {
