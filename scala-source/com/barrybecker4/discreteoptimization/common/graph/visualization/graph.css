@@ -60,6 +60,7 @@ edge.visited {
 }
 
 edge.highlighted {
+arrow-size: 5px, 5px;
   text-size: 14px;
   text-color: #220000;
   stroke-mode: plain;

@@ -10,19 +10,16 @@ import org.graphstream.ui.view.ViewerPipe
 
 import java.awt.Color
 
+
 object PathRenderer {
   private val ANIMATION_DELAY = 50
   private val PAUSE = 1000
 }
 
-/**
- * path.nodes.last is O(N). use a map for better efficiency
- */
 case class PathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, viewerPipe: ViewerPipe) {
 
   def render(): Unit = {
     val viewerListener = GraphViewerListener(viewerPipe, graph, this)
-    //viewerPipe.addAttributeSink(graph)
     viewerPipe.addViewerListener(viewerListener)
 
     //simulation and interaction happens in a separate path
@@ -40,15 +37,12 @@ case class PathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, view
     colorPath(path, uiClass, 0)
   }
 
-  /**
-   * @param uiClass either "visited" or highlighted"
-   */
   def colorPath(path: Path, uiClass: UiClass, animationDelay: Int = ANIMATION_DELAY): Unit = {
 
     if (path.nodes.size > 1) {
       var prevNode: Node = null
       var nextNode: Node = null
-      val pathIdx = path.nodes.last
+      val pathIdx = path.lastNode
 
       for (nodeIdx <- path.nodes) {
         val nextNode = graph.getNode(nodeIdx)
@@ -71,7 +65,7 @@ case class PathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, view
   }
 
   private def getPath(nodeIdx: Int): Path = {
-    solution.paths.find(path => path.nodes.nonEmpty && path.nodes.last == nodeIdx)
+    solution.paths.find(path => path.nodes.nonEmpty && path.lastNode == nodeIdx)
       .getOrElse(throw new IllegalStateException(s" count not find ${nodeIdx} among ${solution.paths.mkString("\n")}"))
   }
 
