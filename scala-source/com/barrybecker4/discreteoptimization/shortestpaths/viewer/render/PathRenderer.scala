@@ -22,12 +22,8 @@ case class PathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, view
     val viewerListener = GraphViewerListener(viewerPipe, graph, this)
     viewerPipe.addViewerListener(viewerListener)
 
-    //simulation and interaction happens in a separate path
+    // simulation and interaction happens in a separate thread
     new Thread(() => {
-//      Thread.sleep(PAUSE)
-//      for (path <- solution.paths) {
-//        colorPath(path, VISITED, ANIMATION_DELAY)
-//      }
       listenForMouseEvents()
     }).start()
   }
