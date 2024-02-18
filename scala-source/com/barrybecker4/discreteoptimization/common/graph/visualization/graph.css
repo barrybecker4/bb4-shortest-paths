@@ -40,7 +40,7 @@ edge {
   arrow-size: 3px, 3px;
   text-size: 11px;
   text-mode: normal;
-  text-alignment: center;
+  text-alignment: along;
   text-background-mode: none;
   text-color: #8899dd;
   text-alignment: under;
@@ -64,7 +64,8 @@ edge.highlighted {
   text-size: 14px;
   text-color: #220000;
   stroke-mode: plain;
-  fill-color: #992222;
+  /* fill-color: #992222; */
+  stroke-color: #991111;
   size: 3;
   z-index: 10;
 }

@@ -63,7 +63,6 @@ case class KShortestPathRenderer(graph: MultiGraph, solution: KShortestPathsSolu
       val paths = solution.shortestPaths.slice(ct, ct + pathIndices.length)
 
       for (path <- paths) {
-        println("coloring path " + ct + " " + uiClass)
         if (uiClass == PLAIN) colorPath(path, PLAIN, 0)
         else colorPath(path, uiClass, 0, Some(COLORS(ct)))
         ct += 1
