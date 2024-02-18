@@ -1,4 +1,4 @@
-package com.barrybecker4.discreteoptimization.kshortestpaths.viewer.render
+package com.barrybecker4.discreteoptimization.pathviewer.render
 
 enum UiClass(val name: String) {
   case PLAIN extends UiClass("")

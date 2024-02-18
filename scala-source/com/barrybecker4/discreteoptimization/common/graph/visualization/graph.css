@@ -50,8 +50,8 @@ edge {
 }
 
 edge.visited {
-  text-size: 15px;
-  text-color: #881111;
+  text-size: 12px;
+  text-color: #882222;
   stroke-mode: plain;
   /*text-style: bold; */
   stroke-color: #887799;

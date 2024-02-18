@@ -1,9 +1,9 @@
-package com.barrybecker4.discreteoptimization.shortestpaths.viewer.render
+package com.barrybecker4.discreteoptimization.pathviewer.render
 
 import com.barrybecker4.discreteoptimization.common.graph.Path
 import com.barrybecker4.discreteoptimization.shortestpaths.model.ShortestPathsSolution
-import com.barrybecker4.discreteoptimization.shortestpaths.viewer.render.PathRenderer.{ANIMATION_DELAY, PAUSE}
-import com.barrybecker4.discreteoptimization.shortestpaths.viewer.render.UiClass.*
+import com.barrybecker4.discreteoptimization.pathviewer.render.PathRenderer.{ANIMATION_DELAY, PAUSE}
+import com.barrybecker4.discreteoptimization.pathviewer.render.UiClass.*
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.ui.view.{Viewer, ViewerPipe}
@@ -11,16 +11,12 @@ import org.graphstream.ui.view.{Viewer, ViewerPipe}
 import java.awt.Color
 
 
-object PathRenderer {
+object ShortestPathRenderer {
   private val ANIMATION_DELAY = 20
   private val PAUSE = 100
 }
 
-case class PathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, viewer: Viewer) {
-
-  // The viewer pipe sends events from the UI thread to the render thread
-  val viewerPipe: ViewerPipe = viewer.newViewerPipe()
-  viewer.getDefaultView.enableMouseOptions()
+case class ShortestPathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, viewer: Viewer) extends PathRenderer(graph, viewer) {
 
   def render(): Unit = {
     val viewerListener = GraphViewerListener(viewerPipe, graph, this)
@@ -32,7 +28,7 @@ case class PathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, view
     }).start()
   }
 
-  def colorPath(nodeIdx: Int, uiClass: UiClass): Unit = {
+  def colorPaths(nodeIdx: Int, uiClass: UiClass): Unit = {
     val path = getPath(nodeIdx)
     colorPath(path, uiClass, 0)
   }

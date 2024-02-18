@@ -1,10 +1,11 @@
-package com.barrybecker4.discreteoptimization.kshortestpaths.viewer.render
+package com.barrybecker4.discreteoptimization.pathviewer.render
 
 import com.barrybecker4.discreteoptimization.common.graph.Path
 import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphViewer
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution
-import com.barrybecker4.discreteoptimization.kshortestpaths.viewer.render.PathRenderer.{ANIMATION_DELAY, COLORS, PAUSE, colorToCss}
-import com.barrybecker4.discreteoptimization.kshortestpaths.viewer.render.UiClass.{PLAIN, VISITED}
+import com.barrybecker4.discreteoptimization.pathviewer.render.PathRenderer.{ANIMATION_DELAY, PAUSE, colorToCss}
+import com.barrybecker4.discreteoptimization.pathviewer.render.KShortestPathRenderer.COLORS
+import com.barrybecker4.discreteoptimization.pathviewer.render.UiClass.{PLAIN, VISITED}
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.ui.view.ViewerPipe
@@ -12,10 +13,7 @@ import org.graphstream.ui.view.ViewerPipe
 import java.awt.Color
 
 
-object PathRenderer {
-  private val ANIMATION_DELAY = 50
-  private val PAUSE = 100
-
+object KShortestPathRenderer {
   private val COLORS: Array[Color] = Array(
     new Color(165, 105, 85),
     new Color(90, 160, 30),
@@ -28,23 +26,16 @@ object PathRenderer {
     new Color(115, 175, 135),
     new Color(90, 130, 150),
     new Color(5, 155, 105),
-
   )
 
-  private def colorToCss(color: Color): String =
-    String.format("#%02x%02x%02x", color.getRed, color.getGreen, color.getBlue)
 }
 
-case class PathRenderer(graph: MultiGraph, solution: KShortestPathsSolution, viewer: GraphViewer) {
-
-  // The viewer pipe sends events from the UI thread to the render thread
-  val viewerPipe: ViewerPipe = viewer.newViewerPipe()
-  viewer.getDefaultView.enableMouseOptions()
-
+case class KShortestPathRenderer(graph: MultiGraph, solution: KShortestPathsSolution, viewer: GraphViewer) extends PathRenderer(graph, viewer) {
+  
   def render(): Unit = {
     val viewerListener = GraphViewerListener(viewerPipe, graph, this)
     viewerPipe.addViewerListener(viewerListener)
-    //viewer.getDefaultView.setMouseManager(GraphMouseManager(viewer.getDefaultView, this))  // runs in same thread?
+    
 
     // simulation and interaction happens in a separate thread
     new Thread(() => {
