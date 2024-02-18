@@ -6,17 +6,21 @@ import com.barrybecker4.discreteoptimization.shortestpaths.viewer.render.PathRen
 import com.barrybecker4.discreteoptimization.shortestpaths.viewer.render.UiClass.*
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.graph.{Edge, Node}
-import org.graphstream.ui.view.ViewerPipe
+import org.graphstream.ui.view.{Viewer, ViewerPipe}
 
 import java.awt.Color
 
 
 object PathRenderer {
-  private val ANIMATION_DELAY = 50
-  private val PAUSE = 1000
+  private val ANIMATION_DELAY = 20
+  private val PAUSE = 100
 }
 
-case class PathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, viewerPipe: ViewerPipe) {
+case class PathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, viewer: Viewer) {
+
+  // The viewer pipe sends events from the UI thread to the render thread
+  val viewerPipe: ViewerPipe = viewer.newViewerPipe()
+  viewer.getDefaultView.enableMouseOptions()
 
   def render(): Unit = {
     val viewerListener = GraphViewerListener(viewerPipe, graph, this)
@@ -61,8 +65,12 @@ case class PathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, view
   }
 
   private def getPath(nodeIdx: Int): Path = {
-    solution.paths.find(path => path.nodes.nonEmpty && path.lastNode == nodeIdx)
-      .getOrElse(throw new IllegalStateException(s" count not find ${nodeIdx} among ${solution.paths.mkString("\n")}"))
+    val optionalPath = solution.paths.find(path => path.nodes.nonEmpty && path.lastNode == nodeIdx)
+    if (optionalPath.isEmpty) {
+      println("There is no path to node " + nodeIdx)
+      Path(Double.PositiveInfinity, List())
+    }
+    else optionalPath.get
   }
 
   private def listenForMouseEvents(): Unit = {

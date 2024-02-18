@@ -17,11 +17,11 @@ case class GraphViewerListener(viewerPipe: ViewerPipe, graph: MultiGraph, pathRe
     println("button" + id + " released")
 
   override def mouseOver(id: String): Unit = {
-    println("moused over " + id)
+    //println("moused over " + id)
     pathRenderer.colorPaths(id.toInt, HIGHLIGHTED)
   }
 
   override def mouseLeft(id: String): Unit =
-    println("moused out from " + id)
+    //println("moused out from " + id)
     pathRenderer.colorPaths(id.toInt, PLAIN)
 }

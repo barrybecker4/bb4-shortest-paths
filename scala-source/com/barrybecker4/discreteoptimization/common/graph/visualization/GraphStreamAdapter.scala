@@ -44,16 +44,16 @@ case class GraphStreamAdapter(digraph: DirectedGraph) {
   }
 
   private def addEdgesToGraph(graph: MultiGraph): Unit = {
-    var edgeId = 0
+
     var edgeSet: Set[(Int, Int)] = Set()
     for (edge <- digraph.edges) {
-      val graphEdge = graph.addEdge(edgeId.toString, edge.source.toString, edge.destination.toString, true)
+      val edgeId = s"${edge.source}-${edge.destination}"
+      val graphEdge = graph.addEdge(edgeId, edge.source.toString, edge.destination.toString, true)
       edgeSet += (edge.source, edge.destination)
       val weightText =
         if (edgeSet.contains((edge.destination, edge.source))) s"          ${edge.weight}"
         else s"${edge.weight}           "
       graphEdge.setAttribute("ui.label", weightText)
-      edgeId += 1
     }
   }
 }

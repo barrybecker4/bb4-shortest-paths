@@ -63,12 +63,8 @@ class GraphShortestPathViewerFrame extends GraphViewerFrame() {
   }
 
   private def showShortestPaths(solution: ShortestPathsSolution, graph: MultiGraph): Unit = {
-
-    // The viewer pipe sends events from the UI thread to the render thread
-    val viewerPipe: ViewerPipe = viewer.newViewerPipe()
-    viewer.getDefaultView.enableMouseOptions()
     
-    PathRenderer(graph, solution, viewerPipe).render()
+    PathRenderer(graph, solution, viewer).render()
   }
 
   private def getGraphName(fileName: String): String = {

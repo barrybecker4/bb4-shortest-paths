@@ -46,20 +46,21 @@ edge {
   text-alignment: under;
   stroke-mode: plain;
   fill-color: rgba(220, 220, 255, 220);  /* the transparency component appears to be ignored */
-  size: 1;
+  size: 0;
 }
 
 edge.visited {
   text-size: 15px;
-  text-color: #993333;
+  text-color: #881111;
   stroke-mode: plain;
-  text-style: bold;
+  /*text-style: bold; */
   stroke-color: #887799;
   size: 1;
+  z-index: 5;
 }
 
 edge.highlighted {
-arrow-size: 5px, 5px;
+  arrow-size: 5px, 5px;
   text-size: 14px;
   text-color: #220000;
   stroke-mode: plain;

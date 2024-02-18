@@ -1,9 +1,10 @@
 package com.barrybecker4.discreteoptimization.kshortestpaths.viewer.render
 
 import com.barrybecker4.discreteoptimization.common.graph.Path
+import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphViewer
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution
-import com.barrybecker4.discreteoptimization.kshortestpaths.viewer.render.PathRenderer.{ANIMATION_DELAY, PAUSE, COLORS, colorToCss}
-import com.barrybecker4.discreteoptimization.kshortestpaths.viewer.render.UiClass.*
+import com.barrybecker4.discreteoptimization.kshortestpaths.viewer.render.PathRenderer.{ANIMATION_DELAY, COLORS, PAUSE, colorToCss}
+import com.barrybecker4.discreteoptimization.kshortestpaths.viewer.render.UiClass.{PLAIN, VISITED}
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.ui.view.ViewerPipe
@@ -13,7 +14,7 @@ import java.awt.Color
 
 object PathRenderer {
   private val ANIMATION_DELAY = 50
-  private val PAUSE = 1000
+  private val PAUSE = 100
 
   private val COLORS: Array[Color] = Array(
     new Color(165, 105, 85),
@@ -34,22 +35,34 @@ object PathRenderer {
     String.format("#%02x%02x%02x", color.getRed, color.getGreen, color.getBlue)
 }
 
-case class PathRenderer(graph: MultiGraph, solution: KShortestPathsSolution, viewerPipe: ViewerPipe) {
+case class PathRenderer(graph: MultiGraph, solution: KShortestPathsSolution, viewer: GraphViewer) {
+
+  // The viewer pipe sends events from the UI thread to the render thread
+  val viewerPipe: ViewerPipe = viewer.newViewerPipe()
+  viewer.getDefaultView.enableMouseOptions()
 
   def render(): Unit = {
     val viewerListener = GraphViewerListener(viewerPipe, graph, this)
     viewerPipe.addViewerListener(viewerListener)
+    //viewer.getDefaultView.setMouseManager(GraphMouseManager(viewer.getDefaultView, this))  // runs in same thread?
 
     // simulation and interaction happens in a separate thread
     new Thread(() => {
-//      Thread.sleep(PAUSE)
-//      var ct = 0
-//      for (path <- solution.shortestPaths) {
-//        colorPath(path, VISITED, ANIMATION_DELAY, Some(COLORS(ct)))
-//        ct += 1
-//      }
+      var ct = 0
+      for (path <- solution.shortestPaths) {
+        colorPath(path, VISITED, ANIMATION_DELAY, Some(COLORS(ct)))
+        colorPath(path, VISITED, ANIMATION_DELAY, None)
+        ct += 1
+      }
       listenForMouseEvents()
     }).start()
+  }
+
+  private def listenForMouseEvents(): Unit = {
+    while (true) {
+      // use blockingPump to avoid 100% CPU usage
+      viewerPipe.blockingPump();
+    }
   }
 
   def colorPaths(nodeIdx: Int, uiClass: UiClass): Unit = {
@@ -82,12 +95,12 @@ case class PathRenderer(graph: MultiGraph, solution: KShortestPathsSolution, vie
         nextNode.setAttribute("ui.class", uiClass.name)
 
         if (leavingEdge != null) {
+          leavingEdge.setAttribute("ui.class", uiClass.name)
           if (color.isDefined) {
             val c = colorToCss(color.get)
             leavingEdge.setAttribute("ui.style", s"fill-color: $c; size: 3;")
           } else {
-            leavingEdge.setAttribute("ui.style", "size: 1;")
-            leavingEdge.setAttribute("ui.class", uiClass.name)
+            leavingEdge.setAttribute("ui.style", "size: 0;")
           }
         }
         prevNode = nextNode
@@ -103,10 +116,4 @@ case class PathRenderer(graph: MultiGraph, solution: KShortestPathsSolution, vie
   private def getPathIndices(nodeIdx: Int): Seq[Int] =
     solution.shortestPaths.zipWithIndex.filter((path, idx) => path.nodes.contains(nodeIdx)).map(_._2)
 
-  private def listenForMouseEvents(): Unit = {
-    while (true) {
-      // use blockingPump to avoid 100% CPU usage
-      viewerPipe.blockingPump();
-    }
-  }
 }
