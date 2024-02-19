@@ -97,7 +97,7 @@ case class ShortestPathRenderer(graph: MultiGraph, solution: ShortestPathsSoluti
   private def listenForMouseEvents(): Unit = {
     while (true) {
       // use blockingPump to avoid 100% CPU usage
-      viewerPipe.blockingPump();
+      viewerPipe.blockingPump()
     }
   }
 }

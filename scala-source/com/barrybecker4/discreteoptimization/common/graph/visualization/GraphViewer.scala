@@ -10,7 +10,7 @@ import javax.swing.{JFrame, JLabel, WindowConstants}
 
 /**
  * Renders a graph in another thread (separate from UI thread) to avoid janky performance.
- * @param graph
+ * @param thisGraph
  */
 class GraphViewer(thisGraph: Graph) extends SwingViewer(thisGraph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD) {
 

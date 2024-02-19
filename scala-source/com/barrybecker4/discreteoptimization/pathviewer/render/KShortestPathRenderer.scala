@@ -52,7 +52,7 @@ case class KShortestPathRenderer(graph: MultiGraph, solution: KShortestPathsSolu
   private def listenForMouseEvents(): Unit = {
     while (true) {
       // use blockingPump to avoid 100% CPU usage
-      viewerPipe.blockingPump();
+      viewerPipe.blockingPump()
     }
   }
 
