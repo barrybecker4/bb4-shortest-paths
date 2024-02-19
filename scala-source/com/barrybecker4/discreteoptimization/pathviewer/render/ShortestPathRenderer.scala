@@ -33,6 +33,11 @@ case class ShortestPathRenderer(graph: MultiGraph, solution: ShortestPathsSoluti
     colorPath(path, uiClass, 0)
   }
 
+  def colorPaths(nodeIdx1: Int, nodeIdx2: Int, uiClass: UiClass): Unit = {
+    val path = getPath(nodeIdx1, nodeIdx2)
+    colorPath(path, uiClass, 0)
+  }
+
   def colorPath(path: Path, uiClass: UiClass, animationDelay: Int = ANIMATION_DELAY): Unit = {
 
     if (path.nodes.size > 1) {
@@ -67,6 +72,26 @@ case class ShortestPathRenderer(graph: MultiGraph, solution: ShortestPathsSoluti
       Path(Double.PositiveInfinity, List())
     }
     else optionalPath.get
+  }
+
+  private def getPath(nodeIdx1: Int, nodeIdx2: Int): Path = {
+    val paths = solution.paths.filter(path => path.nodes.nonEmpty && (path.lastNode == nodeIdx1 || path.lastNode == nodeIdx2))
+    if (paths.isEmpty) {
+      println("There is no path to node " + nodeIdx1 + " or " + nodeIdx2)
+      Path(Double.PositiveInfinity, List())
+    }
+    else if (paths.size < 2) {
+      println("There is no shortest path that includes both " + nodeIdx1 + " and " + nodeIdx2)
+      Path(Double.PositiveInfinity, List())
+    }
+
+    val shorterPath = paths.minBy(p => p.nodes.size)
+    val longerPath = paths.maxBy(p => p.nodes.size)
+    if (longerPath.nodes(longerPath.nodes.size - 2) != shorterPath.nodes.last) {
+      println("Node " + nodeIdx1 + " and " + nodeIdx2 + " no not connect via a shortest edge")
+      Path(Double.PositiveInfinity, List())
+    }
+    else longerPath
   }
 
   private def listenForMouseEvents(): Unit = {

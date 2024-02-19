@@ -34,6 +34,10 @@ trait PathRenderer(graph: MultiGraph, viewer: Viewer) {
 
   def render(): Unit
 
+  /** color paths containing nodeIdx */
   def colorPaths(nodeIdx: Int, uiClass: UiClass): Unit
+
+  /** color paths containing bith nodeIdx1 and nodeIdx2 */
+  def colorPaths(nodeIdx1: Int, nodeIdx: Int, uiClass: UiClass): Unit
 
 }

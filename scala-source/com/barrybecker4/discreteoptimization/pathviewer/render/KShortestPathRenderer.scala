@@ -58,10 +58,18 @@ case class KShortestPathRenderer(graph: MultiGraph, solution: KShortestPathsSolu
 
   def colorPaths(nodeIdx: Int, uiClass: UiClass): Unit = {
     val pathIndices = getPathIndices(nodeIdx)
+    colorPaths(pathIndices, uiClass)
+  }
+
+  def colorPaths(nodeIdx1: Int, nodeIdx2: Int, uiClass: UiClass): Unit = {
+    val pathIndices = getPathIndices(nodeIdx1, nodeIdx2)
+    colorPaths(pathIndices, uiClass)
+  }
+  
+  private def colorPaths(pathIndices: Seq[Int], uiClass: UiClass): Unit = {
     if (pathIndices.nonEmpty) {
       var ct = pathIndices.head
       val paths = solution.shortestPaths.slice(ct, ct + pathIndices.length)
-
       for (path <- paths) {
         if (uiClass == PLAIN) colorPath(path, PLAIN, 0)
         else colorPath(path, uiClass, 0, Some(COLORS(ct)))
@@ -105,5 +113,9 @@ case class KShortestPathRenderer(graph: MultiGraph, solution: KShortestPathsSolu
 
   private def getPathIndices(nodeIdx: Int): Seq[Int] =
     solution.shortestPaths.zipWithIndex.filter((path, idx) => path.nodes.contains(nodeIdx)).map(_._2)
+
+
+  private def getPathIndices(nodeIdx1: Int, nodeIdx2: Int): Seq[Int] =
+    solution.shortestPaths.zipWithIndex.filter((path, idx) => path.nodes.contains(nodeIdx1) && path.nodes.contains(nodeIdx2)).map(_._2)  
 
 }

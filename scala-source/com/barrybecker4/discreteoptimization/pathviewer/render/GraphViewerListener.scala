@@ -20,7 +20,7 @@ case class GraphViewerListener(viewerPipe: ViewerPipe, graph: MultiGraph, pathRe
   override def mouseOver(id: String): Unit = {
     val edge = graph.getEdge(id)
     if (edge != null) {
-      println("mouse over edge " + id)
+      pathRenderer.colorPaths(edge.getNode0.getId.toInt, edge.getNode1.getId.toInt, HIGHLIGHTED)
     }
     else pathRenderer.colorPaths(id.toInt, HIGHLIGHTED)
   }
@@ -28,7 +28,7 @@ case class GraphViewerListener(viewerPipe: ViewerPipe, graph: MultiGraph, pathRe
   override def mouseLeft(id: String): Unit = {
     val edge = graph.getEdge(id)
     if (edge != null) {
-      println("mouse out from edge " + id)
+      pathRenderer.colorPaths(edge.getNode0.getId.toInt, edge.getNode1.getId.toInt, PLAIN)
     }
     else pathRenderer.colorPaths(id.toInt, PLAIN)
   }
