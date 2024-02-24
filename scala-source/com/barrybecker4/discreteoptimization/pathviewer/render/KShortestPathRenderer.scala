@@ -27,41 +27,26 @@ object KShortestPathRenderer {
     new Color(90, 130, 150),
     new Color(5, 155, 105),
   )
-
 }
 
-case class KShortestPathRenderer(graph: MultiGraph, solution: KShortestPathsSolution, viewer: GraphViewer) extends PathRenderer(graph, viewer) {
-  
-  def render(): Unit = {
-    val viewerListener = GraphViewerListener(viewerPipe, graph, this)
-    viewerPipe.addViewerListener(viewerListener)
-    
+case class KShortestPathRenderer(graph: MultiGraph, solution: KShortestPathsSolution, viewer: GraphViewer)
+  extends PathRenderer(graph, viewer) {
 
-    // simulation and interaction happens in a separate thread
-    new Thread(() => {
-      var ct = 0
-      for (path <- solution.shortestPaths) {
-        colorPath(path, VISITED, ANIMATION_DELAY, Some(COLORS(ct)))
-        colorPath(path, VISITED, ANIMATION_DELAY, None)
-        ct += 1
-      }
-      listenForMouseEvents()
-    }).start()
-  }
-
-  private def listenForMouseEvents(): Unit = {
-    while (true) {
-      // use blockingPump to avoid 100% CPU usage
-      viewerPipe.blockingPump()
+  override protected def initialAnimation(): Unit = {
+    var ct = 0
+    for (path <- solution.shortestPaths) {
+      colorPath(path, VISITED, ANIMATION_DELAY, Some(COLORS(ct)))
+      colorPath(path, VISITED, ANIMATION_DELAY, None)
+      ct += 1
     }
   }
 
-  def colorPaths(nodeIdx: Int, uiClass: UiClass): Unit = {
+  override def colorPaths(nodeIdx: Int, uiClass: UiClass): Unit = {
     val pathIndices = getPathIndices(nodeIdx)
     colorPaths(pathIndices, uiClass)
   }
 
-  def colorPaths(nodeIdx1: Int, nodeIdx2: Int, uiClass: UiClass): Unit = {
+  override def colorPaths(nodeIdx1: Int, nodeIdx2: Int, uiClass: UiClass): Unit = {
     val pathIndices = getPathIndices(nodeIdx1, nodeIdx2)
     colorPaths(pathIndices, uiClass)
   }
@@ -111,11 +96,17 @@ case class KShortestPathRenderer(graph: MultiGraph, solution: KShortestPathsSolu
     }
   }
 
+  // Get all the paths that pass through nodeIdx
   private def getPathIndices(nodeIdx: Int): Seq[Int] =
-    solution.shortestPaths.zipWithIndex.filter((path, idx) => path.nodes.contains(nodeIdx)).map(_._2)
+    solution.shortestPaths.zipWithIndex.filter((path, idx) => path.containsNode(nodeIdx)).map(_._2)
 
 
-  private def getPathIndices(nodeIdx1: Int, nodeIdx2: Int): Seq[Int] =
-    solution.shortestPaths.zipWithIndex.filter((path, idx) => path.nodes.contains(nodeIdx1) && path.nodes.contains(nodeIdx2)).map(_._2)  
+  private def getPathIndices(nodeIdx1: Int, nodeIdx2: Int): Seq[Int] = {
+    solution.shortestPaths.zipWithIndex.filter((path, idx) => {
+      val nodes = path.nodes
+      val containsBoth = path.containsNode(nodeIdx1) && path.containsNode(nodeIdx2)
+      containsBoth && (Math.abs(nodes.indexOf(nodeIdx2) - nodes.indexOf(nodeIdx1)) == 1)
+    }).map(_._2)
+  }
 
 }

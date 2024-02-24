@@ -18,22 +18,12 @@ object ShortestPathRenderer {
 
 case class ShortestPathRenderer(graph: MultiGraph, solution: ShortestPathsSolution, viewer: Viewer) extends PathRenderer(graph, viewer) {
 
-  def render(): Unit = {
-    val viewerListener = GraphViewerListener(viewerPipe, graph, this)
-    viewerPipe.addViewerListener(viewerListener)
-
-    // simulation and interaction happens in a separate thread
-    new Thread(() => {
-      listenForMouseEvents()
-    }).start()
-  }
-
-  def colorPaths(nodeIdx: Int, uiClass: UiClass): Unit = {
+  override def colorPaths(nodeIdx: Int, uiClass: UiClass): Unit = {
     val path = getPath(nodeIdx)
     colorPath(path, uiClass, 0)
   }
 
-  def colorPaths(nodeIdx1: Int, nodeIdx2: Int, uiClass: UiClass): Unit = {
+  override def colorPaths(nodeIdx1: Int, nodeIdx2: Int, uiClass: UiClass): Unit = {
     val path = getPath(nodeIdx1, nodeIdx2)
     colorPath(path, uiClass, 0)
   }
@@ -92,12 +82,5 @@ case class ShortestPathRenderer(graph: MultiGraph, solution: ShortestPathsSoluti
       Path(Double.PositiveInfinity, List())
     }
     else longerPath
-  }
-
-  private def listenForMouseEvents(): Unit = {
-    while (true) {
-      // use blockingPump to avoid 100% CPU usage
-      viewerPipe.blockingPump()
-    }
   }
 }

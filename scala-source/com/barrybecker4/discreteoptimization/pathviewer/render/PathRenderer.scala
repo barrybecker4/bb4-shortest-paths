@@ -31,8 +31,26 @@ trait PathRenderer(graph: MultiGraph, viewer: Viewer) {
 
   protected val viewerPipe: ViewerPipe = GraphViewerPipe("my_custom_pipe", viewer.newViewerPipe())
 
-  def render(): Unit
+  def render(): Unit = {
+    val viewerListener = GraphViewerListener(viewerPipe, graph, this)
+    viewerPipe.addViewerListener(viewerListener)
 
+    // simulation and interaction happens in a separate thread
+    new Thread(() => {
+      initialAnimation()
+      listenForMouseEvents()
+    }).start()
+  }
+
+  protected def initialAnimation(): Unit = {}
+
+  private def listenForMouseEvents(): Unit = {
+    while (true) {
+      // use blockingPump to avoid 100% CPU usage
+      viewerPipe.blockingPump()
+    }
+  }
+  
   /** color paths containing nodeIdx */
   def colorPaths(nodeIdx: Int, uiClass: UiClass): Unit
 

@@ -70,6 +70,7 @@ edge.highlighted {
   z-index: 10;
 }
 
+/* custom styling for first node */
 node#0 {
   size: 22px, 22px;
   stroke-width: 2px;
