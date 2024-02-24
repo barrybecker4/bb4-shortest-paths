@@ -1,10 +1,9 @@
 package com.barrybecker4.discreteoptimization.pathviewer.render
 
 import com.barrybecker4.discreteoptimization.common.graph.Path
-import com.barrybecker4.discreteoptimization.common.graph.visualization.CustomView
+import com.barrybecker4.discreteoptimization.common.graph.visualization.render.{CustomView, GraphViewerPipe}
 import com.barrybecker4.discreteoptimization.pathviewer.render.PathRenderer.{ANIMATION_DELAY, PAUSE}
 import com.barrybecker4.discreteoptimization.pathviewer.render.UiClass
-import com.barrybecker4.discreteoptimization.pathviewer.render.GraphViewerPipe
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.ui.graphicGraph.GraphicGraph

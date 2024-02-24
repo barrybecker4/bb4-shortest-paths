@@ -1,11 +1,10 @@
-package com.barrybecker4.discreteoptimization.pathviewer.render
+package com.barrybecker4.discreteoptimization.common.graph.visualization.render
 
-import org.graphstream.stream.ProxyPipe
-import org.graphstream.stream.SourceBase
+import org.graphstream.stream.{ProxyPipe, SourceBase}
 import org.graphstream.ui.view.ViewerPipe
 
 import java.util
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 
 /**
@@ -27,7 +26,6 @@ import scala.jdk.CollectionConverters._
  */
 class GraphViewerPipe(id: String, pipeIn: ProxyPipe) extends ViewerPipe(id, pipeIn) {
 
-
   override def edgeAttributeAdded(sourceId: String, timeId: Long, edgeId: String, attribute: String, value: AnyRef): Unit = {
     super.sendEdgeAttributeAdded(sourceId, timeId, edgeId, attribute, value)
     
@@ -37,7 +35,7 @@ class GraphViewerPipe(id: String, pipeIn: ProxyPipe) extends ViewerPipe(id, pipe
       }
     }
 
-    if (attribute.equals("ui.mouseOver")) {
+    else if (attribute.equals("ui.mouseOver")) {
       for (listener <- viewerListeners.asScala) {
         listener.mouseOver(edgeId)
       }
@@ -54,7 +52,7 @@ class GraphViewerPipe(id: String, pipeIn: ProxyPipe) extends ViewerPipe(id, pipe
       }
     }
 
-    if (attribute.equals("ui.mouseOver")) {
+    else if (attribute.equals("ui.mouseOver")) {
       for (listener <- viewerListeners.asScala) {
         listener.mouseLeft(edgeId)
       }

@@ -1,6 +1,5 @@
-package com.barrybecker4.discreteoptimization.common.graph.visualization
+package com.barrybecker4.discreteoptimization.common.graph.visualization.render
 
-import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphCamera2D
 import org.graphstream.ui.graphicGraph.GraphicGraph
 import org.graphstream.ui.swing.SwingGraphRenderer
 import org.graphstream.ui.swing_viewer.DefaultView

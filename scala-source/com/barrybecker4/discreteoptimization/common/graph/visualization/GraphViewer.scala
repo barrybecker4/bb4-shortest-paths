@@ -1,5 +1,6 @@
 package com.barrybecker4.discreteoptimization.common.graph.visualization
 
+import com.barrybecker4.discreteoptimization.common.graph.visualization.render.CustomView
 import org.graphstream.graph.Graph
 import org.graphstream.ui.layout.springbox.implementations.{LinLog, SpringBox}
 import org.graphstream.ui.swing_viewer.{SwingViewer, ViewPanel}

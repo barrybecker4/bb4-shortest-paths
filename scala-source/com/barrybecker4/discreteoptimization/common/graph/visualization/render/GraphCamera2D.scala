@@ -1,4 +1,4 @@
-package com.barrybecker4.discreteoptimization.common.graph.visualization
+package com.barrybecker4.discreteoptimization.common.graph.visualization.render
 
 import org.graphstream.ui.geom.Point3
 import org.graphstream.ui.graphicGraph.stylesheet.{Style, Values}
@@ -26,30 +26,38 @@ class GraphCamera2D(graphicGraph: GraphicGraph) extends DefaultCamera2D(graphicG
     isPointNearLineSegment(pt1, pt2, Point3(x, y, 0), distThresh)
   }
 
-  def isPointNearLineSegment(pt1: Point3, pt2: Point3, testPoint: Point3, distance: Double): Boolean = {
-    val length = pt1.distance(pt2)
-    val lengthSquared = length * length
+  private def isPointNearLineSegment(pt1: Point3, pt2: Point3, testPoint: Point3, distance: Double): Boolean = {
 
-    if (lengthSquared == 0.0) {
+    val dotProd = dotProduct(pt1, testPoint, pt2)
+    if (dotProd.isPosInfinity) {
       // Points are the same, check if the test point coincides with them
       return pt1.distance(testPoint) <= distance
     }
 
-    // Calculate the dot product of the vectors from pt1 to testPoint and pt1 to pt2
-    val deltaX = pt2.x - pt1.x
-    val deltaY = pt2.y - pt1.y
-    val dotProduct = ((testPoint.x - pt1.x) * deltaX + (testPoint.y - pt1.y) * deltaY) / lengthSquared
-
     // Check if the projection falls within the segment
-    if (dotProduct < 0.0 || dotProduct > 1.0) {
+    if (dotProd < 0.0 || dotProd > 1.0) {
       return false
     }
 
     // Calculate the coordinates of the projection on the line
-    val projectionX = pt1.x + dotProduct * (pt2.x - pt1.x)
-    val projectionY = pt1.y + dotProduct * (pt2.y - pt1.y)
+    val projection = calcProjection(pt1, pt2, dotProd)
 
     // Check if the distance from the test point to the projection is within the specified threshold
-    testPoint.distance(projectionX, projectionY, 0) <= distance
+    testPoint.distance(projection) <= distance
+  }
+
+  private def calcProjection(pt1: Point3, pt2: Point3, dotProd: Double): Point3 =
+    Point3(pt1.x + dotProd * (pt2.x - pt1.x), pt1.y + dotProd * (pt2.y - pt1.y), 0)
+
+  private def dotProduct(vectorsStart: Point3, vector1End: Point3, vector2End: Point3): Double = {
+    val length = vectorsStart.distance(vector2End)
+    val lengthSquared = length * length
+    if (lengthSquared == 0.0) {
+      Double.PositiveInfinity
+    } else {
+      val deltaX = vector2End.x - vectorsStart.x
+      val deltaY = vector2End.y - vectorsStart.y
+      ((vector1End.x - vectorsStart.x) * deltaX + (vector1End.y - vectorsStart.y) * deltaY) / lengthSquared
+    }
   }
 }
