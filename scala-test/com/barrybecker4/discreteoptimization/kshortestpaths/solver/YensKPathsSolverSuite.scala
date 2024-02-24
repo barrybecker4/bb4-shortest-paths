@@ -76,24 +76,24 @@ class YensKPathsSolverSuite extends BaseSolverSuite {
   }
 
   test("sp_100_3") {
-    verify("sp_100_3", 7, 5, update)
+    verify("sp_100_3", 10, 7, update)
   }
 
   test("sp_120") {
-    verify("sp_120", 10, 5, update)
+    verify("sp_120", 20, 10, update)
   }
 
   test("sp_400") {
-    verify("sp_400", 20, 5, update)
+    verify("sp_400", 100, 40, update)
   }
 
   test("sp_500") {
-    verify("sp_500", 30, 5, update)
+    verify("sp_500", 200, 50, update)
   }
 
   // runs in 2.1 s
   test("sp_700") {
-    verify("sp_700", 40, 5, update)
+    verify("sp_700", 40, 10, update)
   }
 
   test("test_5") {
@@ -129,7 +129,7 @@ class YensKPathsSolverSuite extends BaseSolverSuite {
   }
 
   test("test_50_2") {
-    verify("test_50_2", 7, 2, update)
+    verify("test_50_2", 10, 5, update)
   }
 
   /*

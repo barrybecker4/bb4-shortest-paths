@@ -17,8 +17,6 @@ For example, here is a shortest path result
 ![Mosue over to see shortest path to node](images/sp_120_dijkstra_solution.png)
 
 Future Features
-- Make my own ViewerPipe that overrides edgeAttributeAdded/Removed in order to handle edge mouseover
-- For k-shortest paths, color the paths with gradient colors to differentiate them. Best path will be the darkest.
 - Unify rendering of graphs, and shortest path results
 - When mousing over nodes in the viewer
   - If shortest path, show the shortest path to node on mouseover (for dijkstras)

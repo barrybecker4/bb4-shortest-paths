@@ -72,8 +72,15 @@ edge.highlighted {
 
 /* custom styling for first node */
 node#0 {
-  size: 22px, 22px;
-  stroke-width: 2px;
+  size: 23px, 23px;
+  stroke-width: 3px;
+  stroke-color: #bb0000;
+  text-color: #aa0044;
+}
+
+node.last {
+  size: 23px, 23px;
+  stroke-width: 3px;
   stroke-color: #bb0000;
   text-color: #aa0044;
 }

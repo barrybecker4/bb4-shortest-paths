@@ -15,17 +15,16 @@ import java.awt.Color
 
 object KShortestPathRenderer {
   private val COLORS: Array[Color] = Array(
-    new Color(165, 105, 85),
-    new Color(90, 160, 30),
-    new Color(70, 110, 180),
-    new Color(130, 50, 160),
     new Color(135, 25, 25),
-    new Color(170, 110, 10),
-    new Color(135, 165, 45),
-    new Color(100, 100, 220),
-    new Color(115, 175, 135),
-    new Color(90, 130, 150),
-    new Color(5, 155, 105),
+    new Color(195, 125, 15), // color of the best path
+    new Color(170, 160, 0),
+    new Color(140, 180, 30),
+    new Color(100, 170, 90),
+    new Color(65, 155, 145),
+    new Color(65, 125, 195),
+    new Color(100, 90, 220),
+    new Color(130, 70, 150),
+    new Color(180, 100, 150),
   )
 }
 
@@ -68,14 +67,17 @@ case class KShortestPathRenderer(graph: MultiGraph, solution: KShortestPathsSolu
     if (path.nodes.size > 1) {
       var prevNode: Node = null
       var nextNode: Node = null
-      val pathIdx = path.lastNode
+      val lastNode = path.lastNode
 
       for (nodeIdx <- path.nodes) {
         val nextNode = graph.getNode(nodeIdx)
         val leavingEdge: Edge =
           if (prevNode != null) prevNode.leavingEdges().filter(e => e.getNode1 == nextNode).findFirst().get()
           else null
-        nextNode.setAttribute("ui.class", uiClass.name)
+        if (nodeIdx == lastNode)
+          nextNode.setAttribute("ui.class", "last")
+        else
+          nextNode.setAttribute("ui.class", uiClass.name)
 
         if (leavingEdge != null) {
           leavingEdge.setAttribute("ui.class", uiClass.name)
