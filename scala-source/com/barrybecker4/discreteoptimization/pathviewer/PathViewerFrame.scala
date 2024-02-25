@@ -120,7 +120,9 @@ class PathViewerFrame extends GraphViewerFrame() {
     if (idx == -1)
       idx = fileName.indexOf("_dijkstra_solution")
     if (idx == -1)
-      idx = fileName.indexOf("_kpaths_solution")
+      idx = fileName.indexOf("_yens_kpaths_solution")
+    if (idx == -1)
+      idx = fileName.indexOf("_eppsteins_kpaths_solution")
     if (idx == -1)
       throw new IllegalArgumentException("Invalid fileName: " + fileName)
     idx

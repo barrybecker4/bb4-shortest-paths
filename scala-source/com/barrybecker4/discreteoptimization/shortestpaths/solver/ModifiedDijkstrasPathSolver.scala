@@ -23,7 +23,7 @@ class ModifiedDijkstrasPathSolver extends ShortestPathsSolver {
     val alg = new ModifiedDijkstrasAlgorithm(graph)
 
     val paths = Range(0, graph.numVertices)
-      .map(v => alg.getShortestPath(0, v).getOrElse(Path(Double.PositiveInfinity, List()))).toList
+      .map(v => alg.getShortestPath(0, v).getOrElse(Path.EMPTY_PATH)).toList
     val totalCost = paths.map(_.weight).sum
     val solution = ShortestPathsSolution(totalCost, paths)
 

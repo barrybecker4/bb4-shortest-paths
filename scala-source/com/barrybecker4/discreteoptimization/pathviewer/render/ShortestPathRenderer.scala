@@ -63,7 +63,7 @@ case class ShortestPathRenderer(graph: MultiGraph, solution: ShortestPathsSoluti
     val optionalPath = solution.paths.find(path => path.nodes.nonEmpty && path.lastNode == nodeIdx)
     if (optionalPath.isEmpty) {
       println("There is no path to node " + nodeIdx)
-      Path(Double.PositiveInfinity, List())
+      Path.EMPTY_PATH
     }
     else optionalPath.get
   }
@@ -72,18 +72,18 @@ case class ShortestPathRenderer(graph: MultiGraph, solution: ShortestPathsSoluti
     val paths = solution.paths.filter(path => path.nodes.nonEmpty && (path.lastNode == nodeIdx1 || path.lastNode == nodeIdx2))
     if (paths.isEmpty) {
       println("There is no path to node " + nodeIdx1 + " or " + nodeIdx2)
-      Path(Double.PositiveInfinity, List())
+      return Path.EMPTY_PATH
     }
     else if (paths.size < 2) {
       println("There is no shortest path that includes both " + nodeIdx1 + " and " + nodeIdx2)
-      Path(Double.PositiveInfinity, List())
+      return Path.EMPTY_PATH
     }
 
     val shorterPath = paths.minBy(p => p.nodes.size)
     val longerPath = paths.maxBy(p => p.nodes.size)
     if (longerPath.nodes(longerPath.nodes.size - 2) != shorterPath.nodes.last) {
       println("Node " + nodeIdx1 + " and " + nodeIdx2 + " no not connect via a shortest edge")
-      Path(Double.PositiveInfinity, List())
+      Path.EMPTY_PATH
     }
     else longerPath
   }

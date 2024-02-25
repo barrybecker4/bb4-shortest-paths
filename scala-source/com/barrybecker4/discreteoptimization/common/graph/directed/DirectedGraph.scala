@@ -16,6 +16,12 @@ case class DirectedGraph(numVertices: Int, edges: IndexedSeq[DirectedEdge], loca
   def outgoingNeighborsOf(v: Int): Set[DirectedEdge] = outgoingNeighborMap(v)
   def incomingNeighborsOf(v: Int): Set[DirectedEdge] = incomingNeighborMap(v)
 
+  def findEdge(source: Int, dest: Int): DirectedEdge = {
+    val edges = outgoingNeighborsOf(source)
+    val optEdge = edges.find(edge => edge.destination == dest)
+    if (optEdge.isEmpty) throw new IllegalStateException("No edge found from " + source + " to " + dest)
+    else optEdge.get
+  }
   private def computeNeighborsMap(): Unit = {
     for (edge <- edges) {
       outgoingNeighborMap.addNeighbor(edge.source, edge)
