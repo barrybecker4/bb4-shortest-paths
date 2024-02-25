@@ -135,6 +135,20 @@ class DijkstrasPathSolverSuite extends BaseSolverSuite {
     verify("test_50_2", update)
   }
 
+  test("tiny_graph_01") {
+    verify("tiny_graph_01", update)
+  }
+
+  test("tiny_graph_02") {
+    verify("tiny_graph_02", update)
+  }
+
+  // This takes the lion's share of the time at 36s
+  test("road_network_01") {
+    verify("road_network_01", update)
+  }
+
+
 //  test("sp_325729_1") {
 //    verify("sp_325729_1", update)
 //  }

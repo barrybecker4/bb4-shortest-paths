@@ -17,10 +17,7 @@ For example, here is a shortest path result
 ![Mosue over to see shortest path to node](images/sp_120_dijkstra_solution.png)
 
 Future Features
-- Unify rendering of graphs, and shortest path results
-- When mousing over nodes in the viewer
-  - If shortest path, show the shortest path to node on mouseover (for dijkstras)
-  - If shortest k-paths, show the shortest path containing that node if there is one.
+ - 
 
 
 

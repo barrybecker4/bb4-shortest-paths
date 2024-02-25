@@ -1,13 +1,16 @@
 package com.barrybecker4.discreteoptimization.pathviewer.render
 
 import com.barrybecker4.discreteoptimization.pathviewer.render.PathRenderer
-import com.barrybecker4.discreteoptimization.pathviewer.render.UiClass.*
+import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphStreamAdapter.LARGE_GRAPH_THRESH
+import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass.*
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.ui.view.{ViewerListener, ViewerPipe}
 
 
 case class GraphViewerListener(viewerPipe: ViewerPipe, graph: MultiGraph, pathRenderer: PathRenderer) extends ViewerListener  {
-  
+
+  private val isLarge: Boolean = graph.edges().count() > LARGE_GRAPH_THRESH
+
   override def viewClosed(viewName: String): Unit =
     println("closed "+ viewName)
 
@@ -27,9 +30,10 @@ case class GraphViewerListener(viewerPipe: ViewerPipe, graph: MultiGraph, pathRe
 
   override def mouseLeft(id: String): Unit = {
     val edge = graph.getEdge(id)
+    val uiClass = if (isLarge) LARGE else PLAIN
     if (edge != null) {
-      pathRenderer.colorPaths(edge.getNode0.getId.toInt, edge.getNode1.getId.toInt, PLAIN)
+      pathRenderer.colorPaths(edge.getNode0.getId.toInt, edge.getNode1.getId.toInt, uiClass)
     }
-    else pathRenderer.colorPaths(id.toInt, PLAIN)
+    else pathRenderer.colorPaths(id.toInt, uiClass)
   }
 }

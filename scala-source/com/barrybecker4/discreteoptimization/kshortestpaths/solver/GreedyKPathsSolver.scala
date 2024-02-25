@@ -17,7 +17,6 @@ class GreedyKPathsSolver(k: Int = 3) extends KShortestPathsSolver {
 
   /**
    * Find k shortest paths from source
-   * For now, just print the shortest path k times
    */
   def findPaths(graph: DirectedGraph, source: Int, destination: Int, k: Int): KShortestPathsSolution = {
 

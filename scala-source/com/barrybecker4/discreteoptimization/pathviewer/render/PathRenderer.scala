@@ -1,9 +1,8 @@
 package com.barrybecker4.discreteoptimization.pathviewer.render
 
 import com.barrybecker4.discreteoptimization.common.graph.Path
-import com.barrybecker4.discreteoptimization.common.graph.visualization.render.{CustomView, GraphViewerPipe}
+import com.barrybecker4.discreteoptimization.common.graph.visualization.render.{CustomView, GraphViewerPipe, UiClass}
 import com.barrybecker4.discreteoptimization.pathviewer.render.PathRenderer.{ANIMATION_DELAY, PAUSE}
-import com.barrybecker4.discreteoptimization.pathviewer.render.UiClass
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.ui.graphicGraph.GraphicGraph
@@ -19,9 +18,6 @@ import java.util.EnumSet
 object PathRenderer {
   val ANIMATION_DELAY = 20
   val PAUSE = 100
-
-  def colorToCss(color: Color): String =
-    String.format("#%02x%02x%02x", color.getRed, color.getGreen, color.getBlue)
 }
 
 trait PathRenderer(graph: MultiGraph, viewer: Viewer) {

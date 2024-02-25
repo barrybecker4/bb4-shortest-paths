@@ -2,6 +2,8 @@ package com.barrybecker4.discreteoptimization.common.graph.visualization
 
 import com.barrybecker4.discreteoptimization.common.Location
 import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
+import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphStreamAdapter.LARGE_GRAPH_THRESH
+import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass.*
 import org.graphstream.graph.implementations.MultiGraph
 
 import scala.io.Source
@@ -9,6 +11,7 @@ import scala.util.Using
 
 
 object GraphStreamAdapter {
+  val LARGE_GRAPH_THRESH = 300
   private val STYLE_SHEET_PATH = "scala-source/com/barrybecker4/discreteoptimization/common/graph/visualization/graph.css"
 
   private def loadStyleSheet(): String = {
@@ -21,6 +24,8 @@ object GraphStreamAdapter {
  * Creates a stream graph from DirectedGraph
  */
 case class GraphStreamAdapter(digraph: DirectedGraph) {
+
+  private val isLarge = digraph.edges.size > LARGE_GRAPH_THRESH
 
   def createGraph(): MultiGraph = {
     val graph = new MultiGraph("Some Graph")
@@ -44,8 +49,8 @@ case class GraphStreamAdapter(digraph: DirectedGraph) {
   }
 
   private def addEdgesToGraph(graph: MultiGraph): Unit = {
-
     var edgeCount: Map[(Int, Int), Int] = Map()
+    val uiClass = if (isLarge) LARGE.name else PLAIN.name
     for (edge <- digraph.edges) {
       val edgeTuple = (edge.source, edge.destination)
       val reverseTuple = (edge.destination, edge.source)
@@ -59,6 +64,7 @@ case class GraphStreamAdapter(digraph: DirectedGraph) {
         if (edgeCount.contains(reverseTuple)) s"          ${edge.weight}"
         else s"${edge.weight}           "
       graphEdge.setAttribute("ui.label", weightText)
+      graphEdge.setAttribute("ui.class", uiClass)
     }
   }
 }

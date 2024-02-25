@@ -2,10 +2,11 @@ package com.barrybecker4.discreteoptimization.pathviewer.render
 
 import com.barrybecker4.discreteoptimization.common.graph.Path
 import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphViewer
+import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution
-import com.barrybecker4.discreteoptimization.pathviewer.render.PathRenderer.{ANIMATION_DELAY, PAUSE, colorToCss}
-import com.barrybecker4.discreteoptimization.pathviewer.render.KShortestPathRenderer.COLORS
-import com.barrybecker4.discreteoptimization.pathviewer.render.UiClass.{PLAIN, VISITED}
+import com.barrybecker4.discreteoptimization.pathviewer.render.PathRenderer.{ANIMATION_DELAY, PAUSE}
+import com.barrybecker4.discreteoptimization.pathviewer.render.PathColors.*
+import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass.*
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.ui.view.ViewerPipe
@@ -13,28 +14,13 @@ import org.graphstream.ui.view.ViewerPipe
 import java.awt.Color
 
 
-object KShortestPathRenderer {
-  private val COLORS: Array[Color] = Array(
-    new Color(135, 25, 25),
-    new Color(195, 125, 15), // color of the best path
-    new Color(170, 160, 0),
-    new Color(140, 180, 30),
-    new Color(100, 170, 90),
-    new Color(65, 155, 145),
-    new Color(65, 125, 195),
-    new Color(100, 90, 220),
-    new Color(130, 70, 150),
-    new Color(180, 100, 150),
-  )
-}
-
 case class KShortestPathRenderer(graph: MultiGraph, solution: KShortestPathsSolution, viewer: GraphViewer)
   extends PathRenderer(graph, viewer) {
 
   override protected def initialAnimation(): Unit = {
     var ct = 0
     for (path <- solution.shortestPaths) {
-      colorPath(path, VISITED, ANIMATION_DELAY, Some(COLORS(ct)))
+      colorPath(path, VISITED, ANIMATION_DELAY, Some(getColor(ct)))
       colorPath(path, VISITED, ANIMATION_DELAY, None)
       ct += 1
     }
@@ -55,8 +41,8 @@ case class KShortestPathRenderer(graph: MultiGraph, solution: KShortestPathsSolu
       var ct = pathIndices.head
       val paths = solution.shortestPaths.slice(ct, ct + pathIndices.length)
       for (path <- paths) {
-        if (uiClass == PLAIN) colorPath(path, PLAIN, 0)
-        else colorPath(path, uiClass, 0, Some(COLORS(ct)))
+        if (uiClass == PLAIN || uiClass == LARGE) colorPath(path, uiClass, 0)
+        else colorPath(path, uiClass, 0, Some(getColor(ct)))
         ct += 1
       }
     }
@@ -67,14 +53,14 @@ case class KShortestPathRenderer(graph: MultiGraph, solution: KShortestPathsSolu
     if (path.nodes.size > 1) {
       var prevNode: Node = null
       var nextNode: Node = null
-      val lastNode = path.lastNode
+      val lastNodeIdx = path.lastNode
 
       for (nodeIdx <- path.nodes) {
         val nextNode = graph.getNode(nodeIdx)
         val leavingEdge: Edge =
           if (prevNode != null) prevNode.leavingEdges().filter(e => e.getNode1 == nextNode).findFirst().get()
           else null
-        if (nodeIdx == lastNode)
+        if (nodeIdx == lastNodeIdx && uiClass.isHighlight)
           nextNode.setAttribute("ui.class", "last")
         else
           nextNode.setAttribute("ui.class", uiClass.name)
@@ -85,7 +71,7 @@ case class KShortestPathRenderer(graph: MultiGraph, solution: KShortestPathsSolu
             val c = colorToCss(color.get)
             leavingEdge.setAttribute("ui.style", s"fill-color: $c; size: 3;")
           } else {
-            leavingEdge.setAttribute("ui.style", "size: 0;")
+            leavingEdge.setAttribute("ui.style", "size: 2;")
           }
         }
         prevNode = nextNode

@@ -69,7 +69,7 @@ class YensAlgorithm(graph: DirectedGraph) extends KShortestPathsFinder {
       val findShortestPath = new ModifiedDijkstrasAlgorithm(changeableGraph)
       findShortestPath.findShortestPathFlowerRootAt(end)
 
-      //2.2 recover the deleted vertices and update the cost and identify the new candidate results
+      // 2.2 recover the deleted vertices and update the cost and identify the new candidate results
       for (nodeSeq <- nextPath.nodes.size - 2 to nextDerivedNodeSeq by -1 if nodeSeq >= 0) {
         val recoveredNode = nextPath.nodes(nodeSeq)
         changeableGraph.recover(recoveredNode)
@@ -91,11 +91,11 @@ class YensAlgorithm(graph: DirectedGraph) extends KShortestPathsFinder {
             }
         }
 
-        //2.3 recover edges
+        // 2.3 recover edges
         val nextNode = nextPath.nodes(nodeSeq + 1)
         changeableGraph.recover(recoveredNode, nextNode)
 
-        //2.4 update cost if necessary
+        // 2.4 update cost if necessary
         val newCost = changeableGraph.findOrigEdge(recoveredNode, nextNode).weight +
                       findShortestPath.getStartVertexDistance(nextNode)
         if (findShortestPath.getStartVertexDistance(recoveredNode) > newCost && newCost < Double.MaxValue) {

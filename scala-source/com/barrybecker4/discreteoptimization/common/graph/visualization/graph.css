@@ -39,20 +39,25 @@ node.highlighted {
 edge {
   arrow-size: 3px, 3px;
   text-size: 11px;
-  text-mode: normal;
   text-alignment: along;
   text-background-mode: none;
   text-color: #8899dd;
   text-alignment: under;
   stroke-mode: plain;
-  fill-color: rgba(220, 220, 255, 220);  /* the transparency component appears to be ignored */
+  fill-color: rgba(0, 0, 80, 30);
+  stroke-mode: none;
   size: 1;
+}
+
+edge.large {
+  text-mode: hidden;
 }
 
 edge.visited {
   text-size: 12px;
   text-color: #882222;
-  stroke-mode: plain;
+  text-mode: normal;
+  stroke-mode: none;
   /*text-style: bold; */
   stroke-color: #887799;
   size: 2;
@@ -61,6 +66,7 @@ edge.visited {
 
 edge.highlighted {
   arrow-size: 5px, 5px;
+  text-mode: normal;
   text-size: 14px;
   text-color: #220000;
   stroke-mode: plain;
