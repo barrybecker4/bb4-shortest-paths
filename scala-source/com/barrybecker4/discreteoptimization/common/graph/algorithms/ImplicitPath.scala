@@ -23,7 +23,7 @@ class ImplicitPath(var sidetrackEdge: DirectedEdge, graph: DirectedGraph,
    * 3) the shortest path (in the shortest path tree) from node v to node t (target)
    */
   def explicitPath(ksp: List[Path], tree: ShortestPaths): Path = {
-    var explicitPath: Path = Path.EMPTY_PATH
+    var explicitPath: Path = new Path(0, List(sidetrackEdge.destination))
     // If path is not the shortest path in the graph...
     if (parentPath >= 0) {
       // Get the explicit representation of the shorter parent path that this path sidetracks from
@@ -47,13 +47,15 @@ class ImplicitPath(var sidetrackEdge: DirectedEdge, graph: DirectedGraph,
       // 1b) Add the s-u portion of the path
       // Copy the explicit parent path up to the identified point where the current/child path sidetracks
       var explicitNodes = List(explicitPrefPath.nodes.head)
+      var weight: Double = 0
       for (i <- 0 to lastEdgeNum) {
         explicitNodes :+= edges(i).destination
+        weight += edges(i).weight
       }
       // 2) Add the (u, v) portion of the path
       // Add the last sidetrack edge to the explicit path representation
       explicitNodes :+= sidetrackEdge.destination
-      explicitPath = Path(edges.map(_.weight).sum + sidetrackEdge.weight, explicitNodes)
+      explicitPath = Path(weight + sidetrackEdge.weight, explicitNodes)
     }
 
     // 3) Add the v-t portion of the path
@@ -61,8 +63,8 @@ class ImplicitPath(var sidetrackEdge: DirectedEdge, graph: DirectedGraph,
     // with the current path) to the explicit path representation
     var current = sidetrackEdge.destination
     var vtWeight: Double = 0
-    var vtNodes: List[Int] = List(current)
-    while (!(current == tree.source)) {
+    var vtNodes: List[Int] = List()
+    while (current != tree.source) {
       val next: Int = tree.previousNode(current).get
       vtWeight += (tree.distToVertex(current) - tree.distToVertex(next))
       vtNodes :+= next
@@ -88,6 +90,6 @@ class ImplicitPath(var sidetrackEdge: DirectedEdge, graph: DirectedGraph,
   override def compareTo(comparedNode: ImplicitPath): Int = {
     val cost1 = this.cost
     val cost2 = comparedNode.cost
-    if (cost1 == cost2) 0 else if (cost1 > cost2) 1 else -1
+    if (cost1 == cost2) 0 else if (cost1 < cost2) 1 else -1
   }
 }

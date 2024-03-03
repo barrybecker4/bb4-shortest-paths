@@ -92,7 +92,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
       // Optional/added step: Stop if this path is above the cost/length threshold (if a threshold exists)
       if (kpath.weight > threshold) return ksp
       // Add explicit path to the list of K shortest paths
-      ksp +:= kpath
+      ksp :+= kpath
 
       // Push the O(|E|) children of this path within the path heap onto the priority queue as new candidates
       addChildrenToQueue(sidetrackEdgeCostMap, kpathImplicit, k, pathPQ)
@@ -146,7 +146,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
     // Initialize the stack for the DFS
     var edgeStack: List[DirectedEdge] = List()
     // Add the neighbors of the last sidetrack edge in the graph to the stack for DFS
-    for (outgoingEdge <- graph.outgoingNeighborsOf(kpathImplicit.sidetrackEdge.destination)) {
+    for (outgoingEdge <- graph.outgoingNeighborsOf(kpathImplicit.sidetrackEdge.destination).toList.sortBy(-_.weight)) {
       edgeStack +:= outgoingEdge
     }
     // Iterate/execute the DFS
@@ -162,7 +162,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
       }
       else {
         // Recursive case for DFS: sidetrack edge not reached, keep going (if current node has outgoing edges)
-        for (outgoingEdge <- graph.outgoingNeighborsOf(poppedEdge.destination))
+        for (outgoingEdge <- graph.outgoingNeighborsOf(poppedEdge.destination).toList.sortBy(-_.weight))
           edgeStack +:= outgoingEdge
       }
     }
