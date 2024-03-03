@@ -133,7 +133,7 @@ class SimpleEppsteinsKPathsSolverSuite extends BaseSolverSuite {
   }
 
   test("tiny_graph_01") {
-    verify("tiny_graph_01", 5, 2, update)
+    verify("tiny_graph_01", 10, 10, update)
   }
 
   test("tiny_graph_02") {
@@ -150,7 +150,7 @@ class SimpleEppsteinsKPathsSolverSuite extends BaseSolverSuite {
     verify("sp_325729_1", update)
   }*/
 
-  override def createSolver(): KShortestPathsSolver = SimpleEppsteinsKPathsSolver(2)
+  override def createSolver(): KShortestPathsSolver = SimpleEppsteinsKPathsSolver()
 
   override def solverName(): String = "simple_eppsteins_kpaths"
 }

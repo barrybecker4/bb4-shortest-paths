@@ -24,8 +24,6 @@ import scala.collection.mutable
  */
 class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinder {
 
-  def isLoopless: Boolean = false
-
   /**
    * Computes the K shortest paths (allowing cycles) in a graph from source to destination using a simple
    * version of Eppstein's algorithm.
@@ -68,7 +66,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
    */
   def kspCutoff(source: Int, target: Int, K: Int, threshold: Double): List[Path] = {
     // Compute the shortest path tree, T, for the target node (the shortest path from every node in the graph to the target)
-    val tree: ShortestPaths = new DijkstrasAlgorithm(graph).findShortestPaths(source)
+    val tree: ShortestPaths = new DijkstrasAlgorithm(graph.transpose).findShortestPaths(target)
 
     // Compute the set of sidetrack edge costs
     val sidetrackEdgeCostMap = computeSidetrackEdgeCosts(tree)
@@ -82,7 +80,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
 
     /* Pop k times from the candidate-path priority queue to determine the k shortest paths */
     var k = 0
-    while (k < K && pathPQ.size > 0) {
+    while (k < K && pathPQ.nonEmpty) {
       // Get the next shortest path, which is implicitly represented as:
       //        1) A parent, shorter path, p, from s (source) to t (target)
       //        2) A sidetrack edge which branches off of path p at node u, and points to node v
@@ -113,7 +111,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
    * and d(v) is the cost of the shortest path from node v to the target.
    * @param tree  the shortest path tree, T, rooted at the target node, t
    */
-  protected def computeSidetrackEdgeCosts(tree: ShortestPaths): Map[String, Double] = {
+  private def computeSidetrackEdgeCosts(tree: ShortestPaths): Map[String, Double] = {
     var sidetrackEdgeCostMap: Map[String, Double] = Map()
     val edgeList = graph.edges
 
@@ -123,7 +121,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
       val tp = tree.previousNode(edge.source)
       if (tp.isEmpty || !(tp.get == edge.destination)) {
         val sidetrackEdgeCost = edge.weight + tree.distToVertex(edge.destination) - tree.distToVertex(edge.source)
-        sidetrackEdgeCostMap += (edge.source + "," + edge.destination) -> sidetrackEdgeCost
+        sidetrackEdgeCostMap += toString(edge) -> sidetrackEdgeCost
       }
     }
     sidetrackEdgeCostMap
@@ -132,7 +130,6 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
   /**
    * Push the children of the given (kth) path, onto the priority queue.
    * @param sidetrackMap  map container with all of the costs associated with sidetrack edges
-   * @param kpathImplicit implicit representation of the (kth) path
    * @param kpathImplicit implicit representation of the previous/parent (kth) shortest path
    * @param k             k, the index of the previous/parent shortest path
    * @param pathPQ        priority queue of candidate paths
@@ -143,8 +140,8 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
     // Each path is represented as a sequence of sidetrack edges.
     // Each path's children are all of the paths with the same sequence of sidetrack edges followed by one additional sidetrack.
     // Therefore, starting from the last sidetrack edge of the parent (kth) path, its children correspond to each
-    //  sidetrack edge reachable by traversing non-sidetrack edges only in the graph.
-    //  These can be found using a depth-first search.
+    // sidetrack edge reachable by traversing non-sidetrack edges only in the graph.
+    // These can be found using a depth-first search.
 
     // Initialize the stack for the DFS
     var edgeStack: List[DirectedEdge] = List()
@@ -156,7 +153,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
     while (edgeStack.nonEmpty) {
       val poppedEdge = edgeStack.head
       edgeStack = edgeStack.tail
-      val edgeString = poppedEdge.source + "," + poppedEdge.destination
+      val edgeString = toString(poppedEdge)
       if (sidetrackMap.contains(edgeString)) {
         // Base case for DFS: sidetrack edge found
         // Add the child/candidate path represented by the sidetrack edge to the priority queue
@@ -170,5 +167,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
       }
     }
   }
+
+  private def toString(edge: DirectedEdge): String = s"${edge.source},${edge.destination}"
 }
 

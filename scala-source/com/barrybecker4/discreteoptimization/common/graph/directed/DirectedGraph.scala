@@ -22,6 +22,12 @@ case class DirectedGraph(numVertices: Int, edges: IndexedSeq[DirectedEdge], loca
     if (optEdge.isEmpty) throw new IllegalStateException("No edge found from " + source + " to " + dest)
     else optEdge.get
   }
+  
+  /** Reverse all the edges in a given directed graph */
+  def transpose: DirectedGraph = 
+    DirectedGraph(numVertices, edges.map(e => DirectedEdge(e.destination, e.source, e.weight)), locations)
+  
+  
   private def computeNeighborsMap(): Unit = {
     for (edge <- edges) {
       outgoingNeighborMap.addNeighbor(edge.source, edge)

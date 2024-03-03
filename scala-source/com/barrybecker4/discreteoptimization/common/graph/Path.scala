@@ -1,7 +1,7 @@
 package com.barrybecker4.discreteoptimization.common.graph
 
 object Path {
-  val EMPTY_PATH = Path(Double.PositiveInfinity, List())
+  val EMPTY_PATH = Path(0, List())
 }
 
 case class Path(weight: Double, nodes: List[Int]) {

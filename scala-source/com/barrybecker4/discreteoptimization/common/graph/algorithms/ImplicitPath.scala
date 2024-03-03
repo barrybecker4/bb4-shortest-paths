@@ -29,15 +29,14 @@ class ImplicitPath(var sidetrackEdge: DirectedEdge, graph: DirectedGraph,
       // Get the explicit representation of the shorter parent path that this path sidetracks from
       val explicitPrefPath = ksp(parentPath)
       // 1a) Identify the s-u portion of the path
-      // Identify and add the segment of the parent path up until the point where the current path sidetracks off
-      // of it.
+      // Identify and add the segment of the parent path up until the point where current path sidetracks off of it.
       // In other words, if (u, v) is the sidetrack edge of the current path off of the parent path, look for the
       // last instance of node u in the parent path.
       val edges = getPathEdges(explicitPrefPath)
       var lastEdgeNum = -1
       var idx = edges.size - 1
       var done = false
-      while (idx > 0 && !done) {
+      while (idx >= 0 && !done) {
         val currentEdge = edges(idx)
         if (currentEdge.destination.equals(sidetrackEdge.source)) {
           lastEdgeNum = idx
@@ -62,7 +61,7 @@ class ImplicitPath(var sidetrackEdge: DirectedEdge, graph: DirectedGraph,
     // with the current path) to the explicit path representation
     var current = sidetrackEdge.destination
     var vtWeight: Double = 0
-    var vtNodes: List[Int] = List()
+    var vtNodes: List[Int] = List(current)
     while (!(current == tree.source)) {
       val next: Int = tree.previousNode(current).get
       vtWeight += (tree.distToVertex(current) - tree.distToVertex(next))
@@ -89,8 +88,6 @@ class ImplicitPath(var sidetrackEdge: DirectedEdge, graph: DirectedGraph,
   override def compareTo(comparedNode: ImplicitPath): Int = {
     val cost1 = this.cost
     val cost2 = comparedNode.cost
-    if (cost1 == cost2) 0
-    else if (cost1 > cost2) 1
-    else - 1
+    if (cost1 == cost2) 0 else if (cost1 > cost2) 1 else -1
   }
 }

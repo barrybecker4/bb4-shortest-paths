@@ -11,7 +11,7 @@ import scala.util.Random
 
 /**
  */
-class SimpleEppsteinsKPathsSolver(k: Int = 3) extends KShortestPathsSolver {
+class SimpleEppsteinsKPathsSolver extends KShortestPathsSolver {
 
 
   /**
