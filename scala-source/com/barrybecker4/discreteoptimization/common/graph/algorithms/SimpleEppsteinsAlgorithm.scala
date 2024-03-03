@@ -31,7 +31,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
    * @param target ending node for all of the paths
    * @param K      number of shortest paths to compute
    */
-  def findKShortestPaths(source: Int, target: Int, K: Int): List[Path] = {
+  def findKShortestPaths(source: Int, target: Int, K: Int): Seq[Path] = {
     kspCutoff(source, target, K, Double.MaxValue)
   }
 
@@ -64,7 +64,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
    * @param threshold maximum cost allowed for a path
    * @return a list of the K shortest paths from s to t, ordered from shortest to longest
    */
-  def kspCutoff(source: Int, target: Int, K: Int, threshold: Double): List[Path] = {
+  def kspCutoff(source: Int, target: Int, K: Int, threshold: Double): Seq[Path] = {
     // Compute the shortest path tree, T, for the target node (the shortest path from every node in the graph to the target)
     val tree: ShortestPaths = new DijkstrasAlgorithm(graph.transpose).findShortestPaths(target)
 
@@ -72,7 +72,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
     val sidetrackEdgeCostMap = computeSidetrackEdgeCosts(tree)
 
     // Initialize the containers for the candidate k shortest paths and the actual found k shortest paths
-    var ksp: List[Path] = List()
+    var ksp: Vector[Path] = Vector()
     val pathPQ = mutable.PriorityQueue[ImplicitPath]()
 
     // Place the shortest path in the candidate-path priority queue

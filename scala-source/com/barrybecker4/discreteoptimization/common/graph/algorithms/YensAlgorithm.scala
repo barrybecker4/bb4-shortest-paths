@@ -18,7 +18,7 @@ class YensAlgorithm(graph: DirectedGraph) extends KShortestPathsFinder {
   private val paths = mutable.ListBuffer[Path]()
   private val changeableGraph = ChangeableDirectedGraph(graph)
 
-  def findKShortestPaths(start: Int, end: Int, k: Int): List[Path] = {
+  def findKShortestPaths(start: Int, end: Int, k: Int): Seq[Path] = {
 
     require(k > 0, "The number of paths should be positive")
     require(start != end, "the path is loopless, so the ends of paths should be different")

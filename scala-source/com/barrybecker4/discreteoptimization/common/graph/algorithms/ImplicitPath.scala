@@ -22,7 +22,7 @@ class ImplicitPath(var sidetrackEdge: DirectedEdge, graph: DirectedGraph,
    * 2) the sidetrack edge (u,v)
    * 3) the shortest path (in the shortest path tree) from node v to node t (target)
    */
-  def explicitPath(ksp: List[Path], tree: ShortestPaths): Path = {
+  def explicitPath(ksp: Seq[Path], tree: ShortestPaths): Path = {
     var explicitPath: Path = new Path(0, List(sidetrackEdge.destination))
     // If path is not the shortest path in the graph...
     if (parentPath >= 0) {

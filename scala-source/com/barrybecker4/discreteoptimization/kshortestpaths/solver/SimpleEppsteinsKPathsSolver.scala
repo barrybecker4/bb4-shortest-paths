@@ -19,7 +19,7 @@ class SimpleEppsteinsKPathsSolver extends KShortestPathsSolver {
    */
   def findPaths(graph: DirectedGraph, source: Int, destination: Int, k: Int): KShortestPathsSolution = {
 
-    val paths: List[Path] = SimpleEppsteinsAlgorithm(graph).findKShortestPaths(source, destination, k)
+    val paths: Seq[Path] = SimpleEppsteinsAlgorithm(graph).findKShortestPaths(source, destination, k)
 
     val totalCost = paths.map(path => path.weight).sum
     val solution = KShortestPathsSolution(totalCost, destination, k, paths)

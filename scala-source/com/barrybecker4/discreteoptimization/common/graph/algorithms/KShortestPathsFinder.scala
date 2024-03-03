@@ -14,6 +14,6 @@ trait KShortestPathsFinder {
   /**
    * @return return shortest paths to all other nodes rom the specified source
    */
-  def findKShortestPaths(source: Int, destination: Int, k: Int): List[Path]
+  def findKShortestPaths(source: Int, destination: Int, k: Int): Seq[Path]
   
 }

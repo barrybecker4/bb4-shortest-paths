@@ -3,7 +3,7 @@ package com.barrybecker4.discreteoptimization.kshortestpaths.model
 import com.barrybecker4.discreteoptimization.common.graph.Path
 
 
-case class KShortestPathsSolution(totalCost: Double, destination: Int, k: Int, shortestPaths: List[Path]) {
+case class KShortestPathsSolution(totalCost: Double, destination: Int, k: Int, shortestPaths: Seq[Path]) {
   
   override def toString: String = {
     val result = s"$totalCost $destination $k\n"

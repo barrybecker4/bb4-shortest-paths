@@ -19,7 +19,7 @@ class GreedyKPathsSolver(k: Int = 3) extends KShortestPathsSolver {
    */
   def findPaths(graph: DirectedGraph, source: Int, destination: Int, k: Int): KShortestPathsSolution = {
 
-    val paths: List[Path] = YensAlgorithm(graph).findKShortestPaths(source, destination, k)
+    val paths: Seq[Path] = YensAlgorithm(graph).findKShortestPaths(source, destination, k)
 
     val totalCost = paths.map(path => path.weight).sum
     val solution = KShortestPathsSolution(totalCost, destination, k, paths)
