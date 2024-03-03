@@ -90,7 +90,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
       // Convert from the implicit path representation to the explicit path representation
       val kpath = kpathImplicit.explicitPath(ksp, tree)
       // Optional/added step: Stop if this path is above the cost/length threshold (if a threshold exists)
-      if (kpath.weight > threshold) return ksp
+      if (kpath.weight > threshold || kpath.lastNode != target) return ksp
       // Add explicit path to the list of K shortest paths
       ksp :+= kpath
 

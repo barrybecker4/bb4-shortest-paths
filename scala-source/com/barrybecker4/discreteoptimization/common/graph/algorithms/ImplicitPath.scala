@@ -64,8 +64,8 @@ class ImplicitPath(var sidetrackEdge: DirectedEdge, graph: DirectedGraph,
     var current = sidetrackEdge.destination
     var vtWeight: Double = 0
     var vtNodes: List[Int] = List()
-    while (current != tree.source) {
-      val next: Int = tree.previousNode(current).get
+    while (current != tree.source && tree.previousNode(current).isDefined) {
+      val next: Int = tree.previousNode(current).get //.getOrElse(0)
       vtWeight += (tree.distToVertex(current) - tree.distToVertex(next))
       vtNodes :+= next
       current = next

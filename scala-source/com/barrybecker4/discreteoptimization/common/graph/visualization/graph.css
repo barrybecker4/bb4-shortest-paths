@@ -37,7 +37,7 @@ node.highlighted {
 }
 
 edge {
-  arrow-size: 3px, 3px;
+  arrow-size: 4px, 4px;
   text-size: 11px;
   text-alignment: along;
   text-background-mode: none;
