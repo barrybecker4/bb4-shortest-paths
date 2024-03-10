@@ -1,7 +1,7 @@
-package com.barrybecker4.discreteoptimization.common.graph.algorithms
+package com.barrybecker4.discreteoptimization.common.graph.algorithms.shortestpaths
 
-import com.barrybecker4.discreteoptimization.common.graph.{Edge, Path}
 import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraph}
+import com.barrybecker4.discreteoptimization.common.graph.{Edge, Path}
 
 
 /**

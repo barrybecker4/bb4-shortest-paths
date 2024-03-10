@@ -1,8 +1,8 @@
 package com.barrybecker4.discreteoptimization.shortestpaths.solver
 
 import com.barrybecker4.common.format.FormatUtil
+import com.barrybecker4.discreteoptimization.common.graph.algorithms.shortestpaths.DijkstrasAlgorithm
 import com.barrybecker4.discreteoptimization.common.graph.{Graph, Path}
-import com.barrybecker4.discreteoptimization.common.graph.algorithms.DijkstrasAlgorithm
 import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
 import com.barrybecker4.discreteoptimization.shortestpaths.model.ShortestPathsSolution
 
