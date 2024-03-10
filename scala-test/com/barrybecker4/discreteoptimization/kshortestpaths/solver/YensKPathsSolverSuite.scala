@@ -2,7 +2,7 @@ package com.barrybecker4.discreteoptimization.kshortestpaths.solver
 
 import com.barrybecker4.discreteoptimization.common.graph.algorithms.YensAlgorithm
 import com.barrybecker4.discreteoptimization.kshortestpaths.solver.BaseSolverSuite
-import com.barrybecker4.discreteoptimization.kshortestpaths.solver.{GreedyKPathsSolver, KShortestPathsSolver}
+import com.barrybecker4.discreteoptimization.kshortestpaths.solver.{KShortestPathsSolver, YensKPathsSolver}
 
 class YensKPathsSolverSuite extends BaseSolverSuite {
 
@@ -151,7 +151,7 @@ class YensKPathsSolverSuite extends BaseSolverSuite {
     verify("sp_325729_1", update)
   }*/
 
-  override def createSolver(): KShortestPathsSolver = GreedyKPathsSolver(2)
+  override def createSolver(): KShortestPathsSolver = YensKPathsSolver(2)
 
-  override def solverName(): String = "yens_kpaths"
+  override def solverName(): String = YensKPathsSolver.BASE_NAME
 }

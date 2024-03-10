@@ -156,5 +156,5 @@ class DijkstrasPathSolverSuite extends BaseSolverSuite {
 
   override def createSolver(): ShortestPathsSolver = DijkstrasPathSolver()
 
-  override def solverName(): String = "dijkstra"
+  override def solverName(): String = DijkstrasPathSolver.BASE_NAME
 }

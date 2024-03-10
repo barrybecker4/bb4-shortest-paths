@@ -37,14 +37,14 @@ node.highlighted {
 }
 
 edge {
-  arrow-size: 4px, 4px;
+  arrow-size: 5px, 5px;
   text-size: 11px;
   text-alignment: along;
   text-background-mode: none;
   text-color: #8899dd;
   text-alignment: under;
   stroke-mode: plain;
-  fill-color: rgba(0, 0, 80, 30);
+  fill-color: rgba(0, 0, 80, 90);
   stroke-mode: none;
   size: 1;
 }
@@ -65,7 +65,7 @@ edge.visited {
 }
 
 edge.highlighted {
-  arrow-size: 5px, 5px;
+  arrow-size: 6px, 6px;
   text-mode: normal;
   text-size: 14px;
   text-color: #220000;
@@ -89,4 +89,5 @@ node.last {
   stroke-width: 3px;
   stroke-color: #bb0000;
   text-color: #aa0044;
+  z-index: 12;
 }

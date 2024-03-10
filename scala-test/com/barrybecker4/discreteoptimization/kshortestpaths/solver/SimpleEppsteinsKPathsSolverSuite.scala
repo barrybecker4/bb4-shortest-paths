@@ -1,7 +1,7 @@
 package com.barrybecker4.discreteoptimization.kshortestpaths.solver
 
 import com.barrybecker4.discreteoptimization.kshortestpaths.solver.SimpleEppsteinsKPathsSolver
-import com.barrybecker4.discreteoptimization.kshortestpaths.solver.{BaseSolverSuite, GreedyKPathsSolver, KShortestPathsSolver}
+import com.barrybecker4.discreteoptimization.kshortestpaths.solver.{BaseSolverSuite, YensKPathsSolver, KShortestPathsSolver}
 
 class SimpleEppsteinsKPathsSolverSuite extends BaseSolverSuite {
 
@@ -152,5 +152,5 @@ class SimpleEppsteinsKPathsSolverSuite extends BaseSolverSuite {
 
   override def createSolver(): KShortestPathsSolver = SimpleEppsteinsKPathsSolver()
 
-  override def solverName(): String = "simple_eppsteins_kpaths"
+  override def solverName(): String = SimpleEppsteinsKPathsSolver.BASE_NAME
 }

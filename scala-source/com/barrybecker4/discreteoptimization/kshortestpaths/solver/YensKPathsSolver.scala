@@ -5,14 +5,17 @@ import com.barrybecker4.discreteoptimization.common.graph.{Graph, Path}
 import com.barrybecker4.discreteoptimization.common.graph.algorithms.{KShortestPathsFinder, YensAlgorithm}
 import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution
-import com.barrybecker4.discreteoptimization.kshortestpaths.solver.GreedyKPathsSolver
+import com.barrybecker4.discreteoptimization.kshortestpaths.solver.YensKPathsSolver
 
 import scala.util.Random
 
+
+object YensKPathsSolver {
+  val BASE_NAME = "yens_kpaths"
+}
 /**
  */
-class GreedyKPathsSolver(k: Int = 3) extends KShortestPathsSolver {
-
+class YensKPathsSolver(k: Int = 3) extends KShortestPathsSolver {
 
   /**
    * Find k shortest paths from source

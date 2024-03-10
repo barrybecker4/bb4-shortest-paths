@@ -8,6 +8,10 @@ import com.barrybecker4.discreteoptimization.shortestpaths.model.ShortestPathsSo
 
 import scala.util.Random
 
+object DijkstrasPathSolver {
+  val BASE_NAME = "dijkstra"
+}
+
 /**
  */
 class DijkstrasPathSolver extends ShortestPathsSolver {
