@@ -1,10 +1,10 @@
-package com.barrybecker4.discreteoptimization.common.graph.algorithms.kshortestpaths
+package com.barrybecker4.discreteoptimization.common.graph.algorithms.kshortestpaths.eppstein
 
 import com.barrybecker4.discreteoptimization.common.BoundedPriorityQueue
 import com.barrybecker4.discreteoptimization.common.graph.Path
 import com.barrybecker4.discreteoptimization.common.graph.Path.EMPTY_PATH
-import com.barrybecker4.discreteoptimization.common.graph.algorithms.shortestpaths.{DijkstrasAlgorithm, ImplicitPath, ShortestPaths}
 import com.barrybecker4.discreteoptimization.common.graph.algorithms.kshortestpaths.KShortestPathsFinder
+import com.barrybecker4.discreteoptimization.common.graph.algorithms.shortestpaths.{DijkstrasAlgorithm, ImplicitPath, ShortestPaths}
 import com.barrybecker4.discreteoptimization.common.graph.directed.{ChangeableDirectedGraph, DirectedEdge, DirectedGraph}
 
 import scala.annotation.tailrec
@@ -90,7 +90,7 @@ class SimpleEppsteinsAlgorithm(graph: DirectedGraph) extends KShortestPathsFinde
       val kpathImplicit = pathPQ.dequeue()
 
       // Convert from the implicit path representation to the explicit path representation
-      val kpath = kpathImplicit.explicitPath(ksp, tree)
+      val kpath = kpathImplicit.explicitPath(ksp, tree, graph)
       // Optional/added step: Stop if this path is above the cost/length threshold (if a threshold exists)
       if (kpath.weight > threshold || kpath.lastNode != target) return ksp
       // Add explicit path to the list of K shortest paths

@@ -1,7 +1,8 @@
 package com.barrybecker4.discreteoptimization.kshortestpaths.solver
 
 import com.barrybecker4.common.format.FormatUtil
-import com.barrybecker4.discreteoptimization.common.graph.algorithms.kshortestpaths.{KShortestPathsFinder, SimpleEppsteinsAlgorithm}
+import com.barrybecker4.discreteoptimization.common.graph.algorithms.kshortestpaths.KShortestPathsFinder
+import com.barrybecker4.discreteoptimization.common.graph.algorithms.kshortestpaths.eppstein.SimpleEppsteinsAlgorithm
 import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
 import com.barrybecker4.discreteoptimization.common.graph.{Graph, Path}
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution

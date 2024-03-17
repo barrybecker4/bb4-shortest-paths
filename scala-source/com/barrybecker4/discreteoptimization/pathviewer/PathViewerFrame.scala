@@ -1,7 +1,7 @@
 package com.barrybecker4.discreteoptimization.pathviewer
 
 import com.barrybecker4.discreteoptimization.common.graph.Path
-import com.barrybecker4.discreteoptimization.common.graph.algorithms.kshortestpaths.SimpleEppsteinsAlgorithm
+import com.barrybecker4.discreteoptimization.common.graph.algorithms.kshortestpaths.eppstein.SimpleEppsteinsAlgorithm
 import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraphParser}
 import com.barrybecker4.discreteoptimization.common.graph.visualization.{GraphStreamAdapter, GraphViewer, GraphViewerFrame}
 import com.barrybecker4.discreteoptimization.kshortestpaths.KShortedPathsTstUtil
