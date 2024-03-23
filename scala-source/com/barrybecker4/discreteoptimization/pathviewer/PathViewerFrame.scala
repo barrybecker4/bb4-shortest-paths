@@ -1,12 +1,11 @@
 package com.barrybecker4.discreteoptimization.pathviewer
 
 import com.barrybecker4.discreteoptimization.common.graph.Path
-import com.barrybecker4.discreteoptimization.common.graph.algorithms.kshortestpaths.eppstein.SimpleEppsteinsAlgorithm
 import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraphParser}
 import com.barrybecker4.discreteoptimization.common.graph.visualization.{GraphStreamAdapter, GraphViewer, GraphViewerFrame}
 import com.barrybecker4.discreteoptimization.kshortestpaths.KShortedPathsTstUtil
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution
-import com.barrybecker4.discreteoptimization.kshortestpaths.solver.{SimpleEppsteinsKPathsSolver, YensKPathsSolver}
+import com.barrybecker4.discreteoptimization.kshortestpaths.solver.YensKPathsSolver
 import com.barrybecker4.discreteoptimization.pathviewer.PathViewerFrame.{K_SHORTEST_PATHS_PREFIX, SHORTEST_PATHS_PREFIX}
 import com.barrybecker4.discreteoptimization.pathviewer.render.ShortestPathRenderer
 import com.barrybecker4.discreteoptimization.pathviewer.render.KShortestPathRenderer
@@ -124,8 +123,6 @@ class PathViewerFrame extends GraphViewerFrame() {
       idx = fileName.indexOf(s"_${DijkstrasPathSolver.BASE_NAME}_solution")
     if (idx == -1)
       idx = fileName.indexOf(s"_${YensKPathsSolver.BASE_NAME}_solution")
-    if (idx == -1)
-      idx = fileName.indexOf(s"_${SimpleEppsteinsKPathsSolver.BASE_NAME}_solution")
     if (idx == -1)
       throw new IllegalArgumentException("Invalid fileName: " + fileName)
     idx
