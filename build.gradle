@@ -4,7 +4,7 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
     dependencies {
-        classpath 'com.barrybecker4:bb4-gradle:1.8-SNAPSHOT'
+        classpath 'com.barrybecker4:bb4-gradle:1.8'
     }
 }
 
@@ -14,7 +14,7 @@ plugins {
 
 description = 'Implementations for shortest path algorithms'
 group = 'com.barrybecker4'
-version = '1.8-SNAPSHOT'
+version = '1.8'
 ext {
     archivesBaseName = 'bb4-project-template'
     mainClass = "com.barrybecker4.discreteoptimization.pathviewer.PathViewerApp"
@@ -23,26 +23,12 @@ ext {
 apply from: project.buildscript.classLoader.getResource('bb4.gradle').toURI()
 
 dependencies {
-    implementation 'com.barrybecker4:bb4-common:1.8-SNAPSHOT'
+    implementation 'com.barrybecker4:bb4-common:1.8'
     implementation 'org.scala-lang.modules:scala-parallel-collections_3:1.0.4'
-    implementation 'com.barrybecker4:bb4-math:1.8-SNAPSHOT'
-    implementation 'com.barrybecker4:bb4-optimization:1.8-SNAPSHOT'
-    implementation 'com.google.ortools:ortools-java:9.7.2996'
+    implementation 'com.barrybecker4:bb4-math:1.8'
     // for graph visualization
     implementation 'org.graphstream:gs-core:2.0'
     implementation 'org.graphstream:gs-ui-swing:2.0'
-}
-
-
-for (problemName in ['ShortestPaths', 'KShortestPaths']) {
-    println(problemName)
-    tasks.register('run' + problemName, JavaExec) {
-        dependsOn classes
-        group = 'application'
-        description = 'Runs the ' + problemName + 'App'
-        mainClassName = 'com.barrybecker4.discreteoptimization.' + problemName + 'App'
-        classpath = sourceSets.main.runtimeClasspath
-    }
 }
 
 

@@ -14,7 +14,6 @@ import com.barrybecker4.discreteoptimization.shortestpaths.model.ShortestPathsSo
 import com.barrybecker4.discreteoptimization.pathviewer.PathViewerFrame.*
 import com.barrybecker4.discreteoptimization.pathviewer.render.{GraphViewerListener, PathRenderer}
 import com.barrybecker4.discreteoptimization.shortestpaths.solver.{DijkstrasPathSolver, ModifiedDijkstrasPathSolver}
-import operations_research.pdlp.Solvers.AdaptiveLinesearchParamsOrBuilder
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.graph.{Edge, Graph, Node}
 import org.graphstream.ui.layout.springbox.implementations.{LinLog, SpringBox}

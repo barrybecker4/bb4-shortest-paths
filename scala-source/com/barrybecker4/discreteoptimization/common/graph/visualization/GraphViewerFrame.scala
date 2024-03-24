@@ -3,7 +3,6 @@ package com.barrybecker4.discreteoptimization.common.graph.visualization
 import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedGraph, DirectedGraphParser}
 import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphViewerFrame.{PARSER, PREFIX}
 import com.barrybecker4.discreteoptimization.common.graph.visualization.{GraphStreamAdapter, GraphViewer}
-import operations_research.pdlp.Solvers.AdaptiveLinesearchParamsOrBuilder
 import org.graphstream.graph.Graph
 import org.graphstream.ui.layout.springbox.implementations.{LinLog, SpringBox}
 import org.graphstream.ui.swing_viewer.{SwingViewer, ViewPanel}

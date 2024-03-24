@@ -144,14 +144,9 @@ class DijkstrasPathSolverSuite extends BaseSolverSuite {
   }
 
   // This takes the lion's share of the time at 36s
-  test("road_network_01") {
-    verify("road_network_01", update)
-  }
-
-
-//  test("sp_325729_1") {
-//    verify("sp_325729_1", update)
-//  }
+  //  test("road_network_01") {
+  //    verify("road_network_01", update)
+  //  }
 
 
   override def createSolver(): ShortestPathsSolver = DijkstrasPathSolver()
