@@ -10,14 +10,13 @@ object KShortedPathsTstUtil {
 
   val PREFIX = "scala-test/com/barrybecker4/discreteoptimization/kshortestpaths/solver/data/"
 
-
   def getSerializedSolution(name: String): String = {
     val source: Source = Source.fromFile(PREFIX + name)
     val s = source.getLines().mkString("\n") + "\n"
     source.close()
     s
   }
-
+  
   def getSolution(name: String): KShortestPathsSolution = {
     val source: Source = Source.fromFile(PREFIX + name)
     KShortestPathsSolutionParser().parse(source.getLines().toIndexedSeq)

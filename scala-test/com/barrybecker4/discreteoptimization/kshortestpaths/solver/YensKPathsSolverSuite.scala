@@ -6,7 +6,7 @@ import com.barrybecker4.discreteoptimization.kshortestpaths.solver.{KShortestPat
 
 class YensKPathsSolverSuite extends BaseSolverSuite {
 
-  val update = true
+  val update = false
   
   test("sp_4_1") {
     verify("sp_4_1", 2, 2, update)
@@ -143,7 +143,7 @@ class YensKPathsSolverSuite extends BaseSolverSuite {
 
   // This takes the lion's share of the time at 36s
   test("road_network_01") {
-    verify("road_network_01", 11000, 2, update)
+    verify("road_network_01", 11000, 3, update)
   }
 
   /*

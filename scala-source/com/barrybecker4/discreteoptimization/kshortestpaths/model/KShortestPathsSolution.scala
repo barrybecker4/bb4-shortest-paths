@@ -6,7 +6,8 @@ import com.barrybecker4.discreteoptimization.common.graph.Path
 case class KShortestPathsSolution(totalCost: Double, destination: Int, k: Int, shortestPaths: Seq[Path]) {
   
   override def toString: String = {
-    val result = s"$totalCost $destination $k\n"
+    val eol = if (shortestPaths.nonEmpty) "\n" else ""
+    val result = s"$totalCost $destination $k" + eol
     result + shortestPaths.map(path => s"${path.weight} ${path.nodes.mkString(" ")}").mkString("\n")
   }
 }
