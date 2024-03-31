@@ -81,7 +81,7 @@ class ImplicitPath(var sidetrackEdge: DirectedEdge, graph: DirectedGraph,
     var edges: List[DirectedEdge] = List()
     while (nextNode != path.lastNode) {
       nextNode = iterator.next()
-      edges :+= graph.findEdge(currentNode, nextNode)
+      edges :+= graph.findMinWeightEdge(currentNode, nextNode)
       currentNode = nextNode
     }
     edges

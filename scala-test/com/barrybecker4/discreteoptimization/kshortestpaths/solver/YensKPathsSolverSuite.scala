@@ -6,7 +6,7 @@ import com.barrybecker4.discreteoptimization.kshortestpaths.solver.{KShortestPat
 
 class YensKPathsSolverSuite extends BaseSolverSuite {
 
-  val update = false
+  val update = true
   
   test("sp_4_1") {
     verify("sp_4_1", 2, 2, update)
@@ -111,6 +111,14 @@ class YensKPathsSolverSuite extends BaseSolverSuite {
 
   test("test_6_2") {
     verify("test_6_2", 2, 2, update)
+  }
+
+  test("test_6_3") {
+    verify("test_6_3", 4, 2, update)
+  }
+
+  test("test_6_4") {
+    verify("test_6_4", 4, 2, update)
   }
 
   test("test_7") {

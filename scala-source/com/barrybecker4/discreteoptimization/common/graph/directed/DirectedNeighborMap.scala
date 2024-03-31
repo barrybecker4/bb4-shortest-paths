@@ -2,6 +2,9 @@ package com.barrybecker4.discreteoptimization.common.graph.directed
 
 import scala.collection.immutable.Map
 
+/** 
+ * Keeps track of node neighbors. There can be more than one edge from a to b.
+ */
 class DirectedNeighborMap {
 
   private var map: Map[Int, Set[DirectedEdge]] = Map()

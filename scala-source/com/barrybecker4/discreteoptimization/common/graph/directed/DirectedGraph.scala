@@ -16,11 +16,11 @@ case class DirectedGraph(numVertices: Int, edges: IndexedSeq[DirectedEdge], loca
   def outgoingNeighborsOf(v: Int): Set[DirectedEdge] = outgoingNeighborMap(v)
   def incomingNeighborsOf(v: Int): Set[DirectedEdge] = incomingNeighborMap(v)
 
-  def findEdge(source: Int, dest: Int): DirectedEdge = {
-    val edges = outgoingNeighborsOf(source)
-    val optEdge = edges.find(edge => edge.destination == dest)
-    if (optEdge.isEmpty) throw new IllegalStateException("No edge found from " + source + " to " + dest)
-    else optEdge.get
+  def findMinWeightEdge(source: Int, dest: Int): DirectedEdge = {
+    val edges = outgoingNeighborsOf(source).filter(_.destination == dest)
+    if (edges.isEmpty)
+      throw new IllegalStateException("No edge found from " + source + " to " + dest) 
+    else edges.minBy(_.weight)
   }
   
   /** Reverse all the edges in a given directed graph */
@@ -36,5 +36,3 @@ case class DirectedGraph(numVertices: Int, edges: IndexedSeq[DirectedEdge], loca
   }
 
 }
-
-

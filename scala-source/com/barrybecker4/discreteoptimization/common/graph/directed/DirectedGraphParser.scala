@@ -41,7 +41,6 @@ case class DirectedGraphParser() extends Parser[DirectedGraph] {
   private def parseEdges(start: Int, numEdges: Int, lines: IndexedSeq[String]): IndexedSeq[DirectedEdge] = {
     var edges = IndexedSeq[DirectedEdge]()
     var edgeSet: Set[(Int, Int)] = Set()
-    var firstTime = true
     for (i <- 0 until numEdges) {
       val line = lines(i + start)
       val parts = line.split("\\s+")
@@ -50,10 +49,11 @@ case class DirectedGraphParser() extends Parser[DirectedGraph] {
       val source = parts(0).toInt
       val dest = parts(1).toInt
       val e = (source, dest)
-      if (edgeSet.contains(e) && firstTime) {
-        println("WARNING: duplicate edge for " + e)
-        firstTime = false
+      
+      if (edgeSet.contains(e)) {
+        println(s"More than one edge from ${e._1} to ${e._2}. This is allowed, but may not be what you want.")
       } else edgeSet += (source, dest)
+      
       edges :+= DirectedEdge(source, dest, weight)
     }
     edges
