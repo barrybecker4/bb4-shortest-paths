@@ -23,7 +23,7 @@ object DemoGraphApp extends App {
       DirectedEdge(4, 2, 1.2),
       DirectedEdge(1, 0, 1.1),
     )
-    DirectedGraph(5, edges)
+    new DirectedGraph(5, edges)
   }
 
 }

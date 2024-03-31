@@ -7,11 +7,11 @@ import com.barrybecker4.discreteoptimization.common.Location
  * A version of a directed graph that allows you to remove nodes and edges from the original graph.
  * You can also recover nodes and edges after they have been removed.
  */
-class ChangeableDirectedGraph(numVertices: Int, edges: IndexedSeq[DirectedEdge], locations: Option[Array[Location]] = None) 
-  extends DirectedGraph(numVertices, edges, locations) {
+class ChangeableDirectedGraph(nodes: Nodes, edges: IndexedSeq[DirectedEdge], locations: Option[Array[Location]] = None)
+  extends DirectedGraph(nodes, edges) {
 
   def this(graph: DirectedGraph) = {
-    this(graph.numVertices, graph.edges, graph.locations)
+    this(graph.nodes, graph.edges)
   }
   
   private var removedNodeSet = collection.immutable.Set[Int]()

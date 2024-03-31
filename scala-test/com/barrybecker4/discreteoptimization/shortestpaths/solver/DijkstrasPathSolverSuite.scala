@@ -123,6 +123,10 @@ class DijkstrasPathSolverSuite extends BaseSolverSuite {
     verify("test_6_4", update)
   }
 
+  test("test_6_node_weights") {
+    verify("test_6_node_weights", update)
+  }
+
   test("test_7") {
     verify("test_7", update)
   }

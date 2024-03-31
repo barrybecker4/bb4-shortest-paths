@@ -9,6 +9,7 @@ import scala.collection.mutable.{ArrayBuffer, PriorityQueue}
 /**
  * Find the shortest path in a weighted directed graph using Dijkstra's algorithm.
  * Complexity should be O (V + E log V)  because we are using a minPriority queue.
+ * The nodes optionally have weights as well as the edges.
  */
 class DijkstrasAlgorithm(graph: DirectedGraph) extends ShortestPathsFinder {
 
@@ -25,7 +26,7 @@ class DijkstrasAlgorithm(graph: DirectedGraph) extends ShortestPathsFinder {
     if (source >= size)
       throw new IllegalArgumentException(s"Source vertex must be < $size")
     else {
-      val shortestPaths = ShortestPaths(size, source)
+      val shortestPaths = ShortestPaths(graph.nodes, source)
 
       val sourceDist = (source, 0.0)
       val sortByWeight: Ordering[(Int, Double)] = (a, b) => a._2.compareTo(b._2)

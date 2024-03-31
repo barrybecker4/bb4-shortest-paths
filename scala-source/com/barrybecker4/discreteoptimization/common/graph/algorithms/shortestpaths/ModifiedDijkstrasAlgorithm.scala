@@ -105,7 +105,7 @@ class ModifiedDijkstrasAlgorithm(graph: DirectedGraph) {
 
         neighborSet.filterNot(isDetermined).foreach(nextEdge => {
           val next = if (isOpposite) nextEdge.source else nextEdge.destination
-          val edgeWeight = nextEdge.weight
+          val edgeWeight = nextEdge.weight + graph.getNodeWeight(nextEdge.source)
           val curDistance = distanceTo.getOrElse(node, Double.MaxValue - edgeWeight)
           val distance = curDistance + edgeWeight
           if (!distanceTo.contains(next) || distance < distanceTo(next)) {
@@ -144,7 +144,7 @@ class ModifiedDijkstrasAlgorithm(graph: DirectedGraph) {
   def correctCostBackward(node: Int): Unit = {
     graph.incomingNeighborsOf(node).foreach(preEdge => {
       val previous = preEdge.source
-      val newWeight = preEdge.weight + distanceTo(node)
+      val newWeight = preEdge.weight + + graph.getNodeWeight(preEdge.source) + distanceTo(node)
       val oldWeight = distanceTo.getOrElse(previous, Double.MaxValue)
       if (newWeight < oldWeight) {
         distanceTo.put(previous, newWeight)
@@ -161,7 +161,7 @@ class ModifiedDijkstrasAlgorithm(graph: DirectedGraph) {
       .filter(e => distanceTo.contains(e.destination))
       .foreach(nextEdge => {
         val next = nextEdge.destination
-        val newWeight = nextEdge.weight + distanceTo(next)
+        val newWeight = nextEdge.weight + graph.getNodeWeight(nextEdge.source) + distanceTo(next)
         if (newWeight < distanceTo.getOrElse(node, Double.MaxValue)) {
           distanceTo.put(node, newWeight)
           predecessorMap += node -> next

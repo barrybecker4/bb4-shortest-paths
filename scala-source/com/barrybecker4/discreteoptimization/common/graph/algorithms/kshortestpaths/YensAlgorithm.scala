@@ -114,7 +114,7 @@ class YensAlgorithm(graph: DirectedGraph) extends KShortestPathsFinder {
       changeableGraph.recover(recoveredNode, nextNode)
 
       // 2.4 update cost if necessary
-      val newCost = changeableGraph.findOrigEdge(recoveredNode, nextNode).weight +
+      val newCost = changeableGraph.findOrigEdge(recoveredNode, nextNode).weight + changeableGraph.getNodeWeight(recoveredNode)
         findShortestPath.getStartVertexDistance(nextNode)
       if (findShortestPath.getStartVertexDistance(recoveredNode) > newCost && newCost < Double.MaxValue) {
         findShortestPath.setStartVertexDistance(recoveredNode, newCost)

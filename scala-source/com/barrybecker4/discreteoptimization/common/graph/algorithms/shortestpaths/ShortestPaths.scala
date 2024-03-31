@@ -1,7 +1,7 @@
 package com.barrybecker4.discreteoptimization.common.graph.algorithms.shortestpaths
 
 import com.barrybecker4.discreteoptimization.common.graph.Path
-import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedEdge
+import com.barrybecker4.discreteoptimization.common.graph.directed.{Nodes, DirectedEdge}
 
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
@@ -11,10 +11,10 @@ import scala.collection.mutable.ArrayBuffer
  * @param numNodes the number of nodes in the graph.
  * @param source the node that we will traverse from.
  */
-case class ShortestPaths(numNodes: Int, source: Int) {
+case class ShortestPaths(nodes: Nodes, source: Int) {
 
-  private val edgeTo = ArrayBuffer.fill[Option[DirectedEdge]](numNodes)(None)
-  private val distTo = ArrayBuffer.fill(numNodes)(Double.PositiveInfinity)
+  private val edgeTo = ArrayBuffer.fill[Option[DirectedEdge]](nodes.numNodes)(None)
+  private val distTo = ArrayBuffer.fill(nodes.numNodes)(Double.PositiveInfinity)
   distTo(source) = 0.0
   
   def pathNodesToVertex(vertex: Int): List[Int] = {
@@ -35,10 +35,10 @@ case class ShortestPaths(numNodes: Int, source: Int) {
     Path(distToVertex(vertex), pathNodesToVertex(vertex))
   
   def isBetterEdge(edge: DirectedEdge): Boolean = 
-    distTo(edge.source) + edge.weight < distTo(edge.destination)
+    distTo(edge.source) + nodes.getWeight(edge.source) + edge.weight < distTo(edge.destination)
   
   def useEdge(edge: DirectedEdge): Unit = {
-    distTo(edge.destination) = distTo(edge.source) + edge.weight
+    distTo(edge.destination) = distTo(edge.source) + nodes.getWeight(edge.source) + edge.weight
     edgeTo(edge.destination) = Some(edge)
   }
 

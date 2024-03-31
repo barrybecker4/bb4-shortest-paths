@@ -1,17 +1,25 @@
 package com.barrybecker4.discreteoptimization.common.graph.directed
 
 import com.barrybecker4.discreteoptimization.common.Location
+import com.barrybecker4.discreteoptimization.common.graph.directed.Nodes
 
 
 /** 
  * An immutable directed graph with optional node locations
  */
-case class DirectedGraph(numVertices: Int, edges: IndexedSeq[DirectedEdge], locations: Option[Array[Location]] = None) {
+case class DirectedGraph(nodes: Nodes, edges: IndexedSeq[DirectedEdge]) {
 
   // Map from vertex to its neighbors
   private val outgoingNeighborMap: DirectedNeighborMap = DirectedNeighborMap()
   private val incomingNeighborMap: DirectedNeighborMap = DirectedNeighborMap()
   computeNeighborsMap()
+  
+  def this(numNodes: Int, edges: IndexedSeq[DirectedEdge]) = this(new Nodes(numNodes), edges)
+  
+  def numVertices: Int = nodes.numNodes
+  def hasLocations: Boolean = nodes.hasLocations
+  def getLocation(nodeIdx: Int): Location = nodes.locations.get(nodeIdx)
+  def getNodeWeight(nodeIdx: Int): Double = nodes.getWeight(nodeIdx)
 
   def outgoingNeighborsOf(v: Int): Set[DirectedEdge] = outgoingNeighborMap(v)
   def incomingNeighborsOf(v: Int): Set[DirectedEdge] = incomingNeighborMap(v)
@@ -25,7 +33,7 @@ case class DirectedGraph(numVertices: Int, edges: IndexedSeq[DirectedEdge], loca
   
   /** Reverse all the edges in a given directed graph */
   def transpose: DirectedGraph = 
-    DirectedGraph(numVertices, edges.map(e => DirectedEdge(e.destination, e.source, e.weight)), locations)
+    DirectedGraph(nodes, edges.map(e => DirectedEdge(e.destination, e.source, e.weight)))
   
   
   private def computeNeighborsMap(): Unit = {

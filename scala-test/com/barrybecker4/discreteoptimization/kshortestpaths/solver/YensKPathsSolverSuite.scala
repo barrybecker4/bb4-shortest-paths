@@ -121,6 +121,10 @@ class YensKPathsSolverSuite extends BaseSolverSuite {
     verify("test_6_4", 4, 2, update)
   }
 
+  test("test_6_node_weights") {
+    verify("test_6_node_weights", 4, 2, update)
+  }
+
   test("test_7") {
     verify("test_7", 3, 3, update)
   }

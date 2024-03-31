@@ -1,37 +1,52 @@
 package com.barrybecker4.discreteoptimization.common.graph.directed
 
-import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraph}
+import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraph, Nodes}
 import com.barrybecker4.discreteoptimization.common.{Location, Parser}
 
 
+/**
+ * Parse directed graphs. The format is as follows
+ * The first line consists of
+ * <numVertices> <numEdges> <hasLocations> <hasNodeWeights>
+ * The last 2, hasLocations and hasNodeWeights, are boolean and optional
+ * The lines that follow consist of
+ */
 case class DirectedGraphParser() extends Parser[DirectedGraph] {
   
   override protected def parse(lines: IndexedSeq[String], problemName: String): DirectedGraph = {
     val firstLine = lines(0).split("\\s+")
-    val numVertices = firstLine(0).toInt
+    val numNodes = firstLine(0).toInt
     val numEdges = firstLine(1).toInt
-    val hasLocations = firstLine(2).toBoolean
-
-    var locations: Option[Array[Location]] = None
-    if (hasLocations) {
-      locations = Some(parseLocations(numVertices, lines))
-    }
-    val start = if (hasLocations) 1 + numVertices else 1
+    val hasLocations = if (firstLine.length > 2) firstLine(2).toBoolean else false
+    val hasNodeWeights = if (firstLine.length > 3) firstLine(3).toBoolean else false
+    
+    val hasNodeData = hasLocations || hasNodeWeights
+    val nodes =
+      if (hasNodeData) parseNodes(numNodes, hasLocations, hasNodeWeights, lines)
+      else new Nodes(numNodes)
+    
+    val start = if (hasNodeData) 1 + numNodes else 1
     val edges = parseEdges(start, numEdges, lines)
 
-    DirectedGraph(numVertices, edges, locations)
+    DirectedGraph(nodes, edges)
   }
 
-  private def parseLocations(numVertices: Int, lines: IndexedSeq[String]): Array[Location] = {
-    val theLocations: Array[Location] = Array.fill(numVertices)(null)
-    var start = 1
-    for (i <- 0 until numVertices) {
-      val line = lines(i + start)
+  private def parseNodes(numNodes: Int,
+                         hasLocations: Boolean, hasWeights: Boolean, lines: IndexedSeq[String]): Nodes = {
+    // var locations: Option[Array[Location]] = None
+    val locations: Array[Location] = Array.fill(numNodes)(null)
+    val weights: Array[Double] = Array.fill(numNodes)(0)
+    for (i <- 0 until numNodes) {
+      val line = lines(i + 1)
       val parts = line.split("\\s+")
-      theLocations(i) = Location(parts(0).toFloat, parts(1).toFloat)
+      if (hasLocations)
+        locations(i) = Location(parts(0).toFloat, parts(1).toFloat)
+      if (hasWeights) {
+        val wtPosition = if (hasLocations) 2 else 0
+        weights(i) = parts(wtPosition).toDouble
+      }  
     }
-    start += numVertices
-    theLocations
+    Nodes(numNodes, Some(locations), Some(weights))
   }
 
   /**

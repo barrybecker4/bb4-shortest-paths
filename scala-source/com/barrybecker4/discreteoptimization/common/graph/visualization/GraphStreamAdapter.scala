@@ -41,8 +41,8 @@ case class GraphStreamAdapter(digraph: DirectedGraph) {
     for (nodeId <- Range(0, digraph.numVertices)) {
       val node = graph.addNode(nodeId.toString)
       node.setAttribute("ui.label", node.getId)
-      if (digraph.locations.isDefined) {
-        val location: Location = digraph.locations.get(nodeId)
+      if (digraph.hasLocations) {
+        val location: Location = digraph.getLocation(nodeId)
         node.setAttribute("xy", location.x, location.y)
       }
     }
