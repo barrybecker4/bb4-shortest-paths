@@ -2,6 +2,7 @@ package com.barrybecker4.discreteoptimization.common.graph.traffic.viewer
 
 import com.barrybecker4.discreteoptimization.common.graph.Path
 import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraphParser}
+import com.barrybecker4.discreteoptimization.common.graph.traffic.demo.TrafficDemo
 import com.barrybecker4.discreteoptimization.common.graph.traffic.{TrafficGraph, TrafficGraphParser}
 import com.barrybecker4.discreteoptimization.common.graph.traffic.viewer.TrafficViewerFrame.{PARSER, SUFFIX, TRAFFIC_GRAPHS_PREFIX}
 import com.barrybecker4.discreteoptimization.common.graph.traffic.viewer.adapter.TrafficStreamAdapter
@@ -66,10 +67,17 @@ class TrafficViewerFrame extends GraphViewerFrame() {
 
   private def loadTheGraph(file: File): MultiGraph = {
     val graphName = getGraphName(file.getName)
-    val trafficGraph = loadTrafficGraphFromName(graphName)
-    val graph = TrafficStreamAdapter(trafficGraph).createGraph()
+    //val trafficGraph = loadTrafficGraphFromName(graphName)
+    //val graph = TrafficStreamAdapter(trafficGraph).createGraph()
+    
+    // for now lets create a hard-coded graph
+    val graph = TrafficGraphGenerator().generateGraph()
     setGraph(graph, file.getName)
     graph
+  }
+
+  override protected def setGraph(graph: Graph, title: String): Unit = {
+    new TrafficDemo(graph, 200).run()
   }
 
   private def getGraphName(fileName: String): String = {

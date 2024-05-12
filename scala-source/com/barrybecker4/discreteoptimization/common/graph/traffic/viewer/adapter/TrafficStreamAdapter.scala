@@ -6,6 +6,7 @@ import com.barrybecker4.discreteoptimization.common.graph.traffic.TrafficGraph
 import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphStreamAdapter.LARGE_GRAPH_THRESH
 import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass.*
 import org.graphstream.graph.implementations.MultiGraph
+import org.graphstream.ui.geom.Point3
 
 import scala.io.Source
 import scala.util.Using
@@ -14,7 +15,7 @@ import scala.util.Using
 object TrafficStreamAdapter {
   val LARGE_GRAPH_THRESH = 300
   private val STYLE_SHEET_PATH =
-    "scala-source/com/barrybecker4/discreteoptimization/common/graph/traffic/viewer/adapter/graph.css"
+    "scala-source/com/barrybecker4/discreteoptimization/common/graph/traffic/viewer/adapter/traffic.css"
 
   private def loadStyleSheet(): String = {
     Using(Source.fromFile(STYLE_SHEET_PATH)) { source => source.mkString }
@@ -63,6 +64,8 @@ case class TrafficStreamAdapter(trafficGraph: TrafficGraph) {
       val graphEdge = graph.addEdge(streetId, street.intersectionIdx1.toString, street.intersectionIdx2.toString, true)
       streetCount += edgeTuple -> (streetCount.getOrElse(edgeTuple, 0) + 1)
       graphEdge.setAttribute("ui.class", uiClass)
+      graphEdge.setAttribute("ui.style", "shape: cubic-curve;")
+      graphEdge.setAttribute("ui.curve", new Point3(7, 1, 0), new Point3(3, 3, 0))
     }
   }
 }
