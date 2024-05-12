@@ -8,7 +8,7 @@ import scala.jdk.CollectionConverters.*
 
 
 /**
- * Shell around a proxy pipe coming from the viewer allowing to put viewer
+ * Shell around a proxy pipe coming from the viewer allowing us to put viewer
  * listeners on a viewer that runs in a distinct thread.
  *
  * <p>

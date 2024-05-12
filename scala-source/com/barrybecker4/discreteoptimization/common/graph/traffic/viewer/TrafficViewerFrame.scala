@@ -6,6 +6,7 @@ import com.barrybecker4.discreteoptimization.common.graph.traffic.demo.TrafficDe
 import com.barrybecker4.discreteoptimization.common.graph.traffic.{TrafficGraph, TrafficGraphParser}
 import com.barrybecker4.discreteoptimization.common.graph.traffic.viewer.TrafficViewerFrame.{PARSER, SUFFIX, TRAFFIC_GRAPHS_PREFIX}
 import com.barrybecker4.discreteoptimization.common.graph.traffic.viewer.adapter.TrafficStreamAdapter
+import com.barrybecker4.discreteoptimization.common.graph.visualization.render.GraphViewerPipe
 import com.barrybecker4.discreteoptimization.common.graph.visualization.{GraphStreamAdapter, GraphViewer, GraphViewerFrame}
 import com.barrybecker4.discreteoptimization.kshortestpaths.KShortedPathsTstUtil
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution
@@ -19,11 +20,13 @@ import org.graphstream.graph.{Edge, Graph, Node}
 import org.graphstream.ui.layout.springbox.implementations.{LinLog, SpringBox}
 import org.graphstream.ui.swing_viewer.{SwingViewer, ViewPanel}
 import org.graphstream.ui.view.{View, Viewer, ViewerListener, ViewerPipe}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import java.awt.Color
 import java.io.File
 import javax.swing.*
 import scala.annotation.Annotation
+import scala.concurrent.Future
 import scala.io.Source
 
 
@@ -45,6 +48,7 @@ class TrafficViewerFrame extends GraphViewerFrame() {
     myMenuBar.add(fileMenu)
     setJMenuBar(myMenuBar)
   }
+
   private def createOpenTrafficGraphItemOption(): JMenuItem = {
     val openItem = new JMenuItem("Open traffic map")
     openItem.addActionListener(_ => loadTrafficGraph())
@@ -60,24 +64,41 @@ class TrafficViewerFrame extends GraphViewerFrame() {
       val selectedFile = fileChooser.getSelectedFile
       println("selected file is " + selectedFile.getName)
 
-      val graph = loadTheGraph(selectedFile)
+      //val graph = loadTheGraph(selectedFile)
+      val graph = TrafficGraphGenerator().generateGraph()
       //showTrafficGraph(graph)
+      setGraph(graph, "Traffic Demo")
     }
   }
 
   private def loadTheGraph(file: File): MultiGraph = {
     val graphName = getGraphName(file.getName)
-    //val trafficGraph = loadTrafficGraphFromName(graphName)
-    //val graph = TrafficStreamAdapter(trafficGraph).createGraph()
-    
-    // for now lets create a hard-coded graph
-    val graph = TrafficGraphGenerator().generateGraph()
+    val trafficGraph = loadTrafficGraphFromName(graphName)
+    val graph = TrafficStreamAdapter(trafficGraph).createGraph()
+
     setGraph(graph, file.getName)
     graph
   }
-
+  
   override protected def setGraph(graph: Graph, title: String): Unit = {
-    new TrafficDemo(graph, 200).run()
+    
+    if (viewer != null)
+      remove(viewer.getViewPanel)
+    viewer = new GraphViewer(graph)
+    this.setTitle(title)
+
+    // If the graph nodes have location data, don't use an layout
+    if (graph.getNode(0).hasAttribute("xyz")) viewer.disableAutoLayout()
+    else viewer.enableAutoLayout(SpringBox()) //SpringBox()) // LinLog()
+
+    add(viewer.getViewPanel)
+    this.repaint()
+    setVisible(true)
+
+    // must be run in a separate thread or it doesn't do anything
+    val displayFuture: Future[Unit] = Future {
+      new TrafficDemo(graph, 200, viewer.newViewerPipe()).run()
+    }
   }
 
   private def getGraphName(fileName: String): String = {
