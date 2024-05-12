@@ -1,6 +1,6 @@
-package com.barrybecker4.discreteoptimization.common.graph.traffic.viewer
+package com.barrybecker4.discreteoptimization.traffic.viewer
 
-import com.barrybecker4.discreteoptimization.common.graph.traffic.viewer.TrafficGraphGenerator.loadStyleSheet
+import TrafficGraphGenerator.loadStyleSheet
 import org.graphstream.graph.Edge
 import org.graphstream.graph.Graph
 import org.graphstream.graph.Node
@@ -15,7 +15,7 @@ import scala.util.Using
 
 
 object TrafficGraphGenerator {
-  private val STYLE_SHEET_PATH = "scala-source/com/barrybecker4/discreteoptimization/common/graph/traffic/viewer/adapter/traffic.css"
+  private val STYLE_SHEET_PATH = "scala-source/com/barrybecker4/discreteoptimization/traffic/viewer/adapter/traffic.css"
 
   private def loadStyleSheet(): String = {
     Using(Source.fromFile(STYLE_SHEET_PATH)) { source => source.mkString }
@@ -86,7 +86,7 @@ class TrafficGraphGenerator {
     edge = graph.addEdge("D5D4", "D5", "D4", true)
     setEdgePoint(edge, 0.0d, -240.0d)
     addEdgeLengths(graph)
-    showLabels(graph);
+    showLabels(graph)
   }
 
   // The control point for the edge

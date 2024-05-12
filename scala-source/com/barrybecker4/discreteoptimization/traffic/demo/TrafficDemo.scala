@@ -1,11 +1,10 @@
-package com.barrybecker4.discreteoptimization.common.graph.traffic.demo
+package com.barrybecker4.discreteoptimization.traffic.demo
 
-import com.barrybecker4.discreteoptimization.common.graph.traffic.viewer.TrafficGraphGenerator
 import org.graphstream.graph.Graph
 import org.graphstream.ui.view.{Viewer, ViewerPipe}
-import com.barrybecker4.discreteoptimization.common.graph.traffic.demo.ViewerAdapter
-import com.barrybecker4.discreteoptimization.common.graph.traffic.vehicles.VehicleSpriteGenerator
 import com.barrybecker4.discreteoptimization.common.graph.visualization.render.GraphViewerPipe
+import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSpriteGenerator
+import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficGraphGenerator
 import org.graphstream.graph.implementations.MultiGraph
 
 import java.awt.{Dimension, Frame}

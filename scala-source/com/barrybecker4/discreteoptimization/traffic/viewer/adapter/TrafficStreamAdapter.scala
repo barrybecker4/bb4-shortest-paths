@@ -1,10 +1,10 @@
-package com.barrybecker4.discreteoptimization.common.graph.traffic.viewer.adapter
+package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 
 import com.barrybecker4.discreteoptimization.common.Location
 import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
-import com.barrybecker4.discreteoptimization.common.graph.traffic.TrafficGraph
 import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphStreamAdapter.LARGE_GRAPH_THRESH
 import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass.*
+import com.barrybecker4.discreteoptimization.traffic.graph.TrafficGraph
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.ui.geom.Point3
 

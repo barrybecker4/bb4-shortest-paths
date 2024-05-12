@@ -1,4 +1,4 @@
-package com.barrybecker4.discreteoptimization.common.graph.traffic.demo
+package com.barrybecker4.discreteoptimization.traffic.demo
 
 import org.graphstream.ui.view.ViewerListener
 

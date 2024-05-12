@@ -1,4 +1,4 @@
-package com.barrybecker4.discreteoptimization.common.graph.traffic
+package com.barrybecker4.discreteoptimization.traffic.graph.model
 
 import com.barrybecker4.discreteoptimization.common.graph.Edge
 

@@ -1,7 +1,7 @@
-package com.barrybecker4.discreteoptimization.common.graph.traffic.viewer
+package com.barrybecker4.discreteoptimization.traffic.viewer
 
-import com.barrybecker4.discreteoptimization.common.graph.traffic.demo.TrafficDemo
 import com.barrybecker4.discreteoptimization.common.graph.visualization.render.GraphViewerPipe
+import com.barrybecker4.discreteoptimization.traffic.demo.TrafficDemo
 
 
 /**

@@ -1,4 +1,4 @@
-package com.barrybecker4.discreteoptimization.common.graph.traffic.vehicles.placement
+package com.barrybecker4.discreteoptimization.traffic.vehicles.placement
 
 import org.graphstream.graph.Edge
 import org.graphstream.graph.Graph

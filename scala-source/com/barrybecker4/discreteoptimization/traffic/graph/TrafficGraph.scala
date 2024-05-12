@@ -1,8 +1,8 @@
-package com.barrybecker4.discreteoptimization.common.graph.traffic
+package com.barrybecker4.discreteoptimization.traffic.graph
 
 import com.barrybecker4.discreteoptimization.common.Location
 import com.barrybecker4.discreteoptimization.common.graph.NeighborMap
-import com.barrybecker4.discreteoptimization.common.graph.traffic.{Intersection, Street}
+import com.barrybecker4.discreteoptimization.traffic.graph.model.{Intersection, Street}
 
 
 /**

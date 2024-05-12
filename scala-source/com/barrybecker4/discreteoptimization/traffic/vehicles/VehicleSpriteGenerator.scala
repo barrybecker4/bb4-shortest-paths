@@ -1,6 +1,6 @@
-package com.barrybecker4.discreteoptimization.common.graph.traffic.vehicles
+package com.barrybecker4.discreteoptimization.traffic.vehicles
 
-import com.barrybecker4.discreteoptimization.common.graph.traffic.vehicles.placement.VehiclePlacer
+import com.barrybecker4.discreteoptimization.traffic.vehicles.placement.VehiclePlacer
 import org.graphstream.graph.Graph
 import org.graphstream.ui.spriteManager.{Sprite, SpriteManager}
 
