@@ -7,7 +7,7 @@ import org.graphstream.ui.spriteManager.SpriteManager
 
 
 object VehicleSprite {
-  private val STEP_PERCENT = 0.005d
+  private val STEP_PERCENT = 0.001d
   // The is dependent on the size of the window and the coordinates used to build the graph
   private val SCALE = 3000.0
 }

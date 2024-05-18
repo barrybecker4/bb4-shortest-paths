@@ -6,6 +6,7 @@ import com.barrybecker4.discreteoptimization.common.graph.visualization.render.G
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSpriteGenerator
 import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficGraphGenerator
 import org.graphstream.graph.implementations.MultiGraph
+import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficGraphUtil.sleep
 
 import java.awt.{Dimension, Frame}
 import javax.swing.JFrame
@@ -36,21 +37,5 @@ class TrafficDemo(graph: Graph, numSprites: Int, viewerPipe: ViewerPipe) {
       sleep(10)
     }
     System.exit(0)
-  }
-
-//  private def setViewerSize(width: Int, height: Int, viewer: Viewer): Unit = {
-//    viewer.getDefaultView.openInAFrame(true)
-//    val frame = Frame.getFrames()(Frame.getFrames.length - 1)
-//    frame.setPreferredSize(new Dimension(width, height))
-//    frame.pack()
-//    frame.setVisible(true)
-//  }
-
-  private def sleep(ms: Long): Unit = {
-    try Thread.sleep(ms)
-    catch {
-      case e: InterruptedException =>
-        e.printStackTrace()
-    }
   }
 }

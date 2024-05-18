@@ -14,7 +14,7 @@ import com.barrybecker4.discreteoptimization.traffic.graph.model.{Port, Street, 
  * :
  * x_nIntersections y_nIntersections angle_nIntersections_a, radialLength_nIntersections_a angle_nIntersections_b, radialLength_nIntersections_b...
  * intersectionId_i1 port_i intersectionId_j1 port_j
- * intersectionId_i2 port_i intersectionId_j2> port_j
+ * intersectionId_i2 port_i intersectionId_j2 port_j
  * :
  * intersectionId_i_nEdges port_i intersectionId_j_nEdges port_j
  */
@@ -42,8 +42,8 @@ case class TrafficGraphParser() extends Parser[TrafficGraph] {
       val location = Location(parts(0).toFloat, parts(1).toFloat)
       val numPorts = (parts.length - 2) / 2
       val ports: IndexedSeq[Port] = for (j <- 0 until numPorts; idx = 2 + j * 2)
-        yield Port(parts(idx).toDouble, parts(idx + 1).toInt)
-      intersections :+= Intersection(location, ports)
+        yield Port(j, parts(idx).toDouble, parts(idx + 1).toInt)
+      intersections :+= Intersection(i, location, ports)
     }
     intersections
   }

@@ -12,6 +12,7 @@ import java.nio.file.Paths
 import java.util.stream.Collectors
 import scala.io.Source
 import scala.util.Using
+import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficGraphUtil.{addEdgeLengths, showNodeLabels}
 
 
 object TrafficGraphGenerator {
@@ -86,7 +87,7 @@ class TrafficGraphGenerator {
     edge = graph.addEdge("D5D4", "D5", "D4", true)
     setEdgePoint(edge, 0.0d, -240.0d)
     addEdgeLengths(graph)
-    showLabels(graph)
+    //showNodeLabels(graph)
   }
 
   // The control point for the edge
@@ -96,20 +97,4 @@ class TrafficGraphGenerator {
     edge.setAttribute("ui.points", src(0), src(1), 0.0, x, y, 0, x, y, 0, dst(0), dst(1), 0)
   }
 
-  private def showLabels(graph: Graph): Unit = {
-    graph.nodes.forEach((node: Node) => node.setAttribute("ui.label", node.getId))
-  }
-
-  private def addEdgeLengths(graph: Graph): Unit = {
-    graph.edges.forEach((edge: Edge) => edge.setAttribute("length", computeEdgeLength(edge)))
-  }
-
-  private def computeEdgeLength(edge: Edge) = {
-    val source = edge.getSourceNode
-    val target = edge.getTargetNode
-    //System.out.println("source = "+ Arrays.toString(source.getAttribute("xyz", Object[].class)) + " target = " + target.getAttribute("xyz", Object[].class));
-    val sourceXYZ = source.getAttribute("xyz", classOf[Array[AnyRef]])
-    val targetXYZ = target.getAttribute("xyz", classOf[Array[AnyRef]])
-    Math.sqrt(Math.pow(targetXYZ(0).asInstanceOf[Double] - sourceXYZ(0).asInstanceOf[Double], 2) + Math.pow(targetXYZ(1).asInstanceOf[Double] - sourceXYZ(1).asInstanceOf[Double], 2))
-  }
 }
