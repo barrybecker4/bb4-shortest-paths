@@ -64,21 +64,21 @@ class TrafficViewerFrame extends GraphViewerFrame() {
       val selectedFile = fileChooser.getSelectedFile
       println("selected file is " + selectedFile.getName)
 
-      val graph = loadTheGraph(selectedFile)
+      val trafficGraph = loadTrafficGraph(selectedFile)
+      val graph = adapter.TrafficStreamAdapter(trafficGraph).createGraph()
+
       //val graph = TrafficGraphGenerator().generateGraph()
       //showTrafficGraph(graph)
-      setGraph(graph, "Traffic Demo")
+      setGraph(graph, trafficGraph.numVehicles, "Traffic Demo")
     }
   }
 
-  private def loadTheGraph(file: File): MultiGraph = {
+  private def loadTrafficGraph(file: File): TrafficGraph = {
     val graphName = getGraphName(file.getName)
-    val trafficGraph = loadTrafficGraphFromName(graphName)
-    val graph = adapter.TrafficStreamAdapter(trafficGraph).createGraph()
-    graph
+    loadTrafficGraphFromName(graphName)
   }
 
-  override protected def setGraph(graph: Graph, title: String): Unit = {
+  def setGraph(graph: Graph, numVehicles: Int, title: String): Unit = {
 
     if (viewer != null)
       remove(viewer.getViewPanel)
@@ -95,7 +95,13 @@ class TrafficViewerFrame extends GraphViewerFrame() {
 
     // must be run in a separate thread or it doesn't do anything
     val displayFuture: Future[Unit] = Future {
-      new TrafficDemo(graph, 100, viewer.newViewerPipe()).run()
+      new TrafficDemo(graph, numVehicles, viewer.newViewerPipe()).run()
+    }
+    displayFuture.onComplete {
+      case scala.util.Success(_) =>
+        println("TrafficDemo completed successfully.")
+      case scala.util.Failure(exception) =>
+        println(s"TrafficDemo run failed with exception: $exception")
     }
   }
 

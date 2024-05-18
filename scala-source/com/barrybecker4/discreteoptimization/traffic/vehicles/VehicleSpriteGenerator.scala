@@ -14,7 +14,7 @@ class VehicleSpriteGenerator(private val numSprites: Int) {
     sprites = new SpriteManager(graph)
     sprites.setSpriteFactory(new VehicleSpriteFactory)
     for (i <- 0 until numSprites) {
-      sprites.addSprite(i + "")
+      sprites.addSprite(s"$i")
     }
     new VehiclePlacer(sprites, graph).placeVehicleSprites()
   }

@@ -35,5 +35,5 @@ sprite {
   fill-mode: plain;
   stroke-mode: none;
   /* Rotate the sprite based on the direction of the edge */
-  sprite-orientation: to;
+  sprite-orientation: from;
 }

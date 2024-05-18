@@ -8,8 +8,8 @@ import com.barrybecker4.discreteoptimization.traffic.demo.TrafficDemo
  * This just shows the hardcoded graph from TrafficGraphGenerator.
  * For general traffic map configurations, use TrafficViewerApp.
  */
-object TrafficApplication {
-  private val SPRITE_COUNT = 80
+object TrafficDemoApplication {
+  private val SPRITE_COUNT = 100
 
   def main(args: Array[String]): Unit = {
     System.setProperty("org.graphstream.ui", "org.graphstream.ui.swing.util.Display")

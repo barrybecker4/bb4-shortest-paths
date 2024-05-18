@@ -17,25 +17,24 @@ class TrafficDemo(graph: Graph, numSprites: Int, viewerPipe: ViewerPipe) {
   final private val spriteGenerator: VehicleSpriteGenerator = new VehicleSpriteGenerator(numSprites)
 
   def run(): Unit = {
-    //val graph = new TrafficGraphGenerator().generateGraph()
-    //val viewer = graph.display(false)
-    //setViewerSize(1200, 1000, viewer)
-    //val pipeIn = viewer.newViewerPipe
     val pipeIn = new GraphViewerPipe("my pipe", viewerPipe)
     pipeIn.addViewerListener(viewerListener)
     pipeIn.pump()
-    sleep(1000) // give a chance to layout
+    sleep(500) // give a chance to layout
 
-    spriteGenerator.addSprites(graph)
-    simulateTrafficFlow(pipeIn)
+    try {
+      spriteGenerator.addSprites(graph)
+      simulateTrafficFlow(pipeIn)
+    }
+    catch
+      case e: Exception => throw new IllegalStateException(e)
   }
 
   private def simulateTrafficFlow(pipeIn: ViewerPipe): Unit = {
     while (viewerListener.isLooping) {
       pipeIn.pump()
       spriteGenerator.moveSprites()
-      sleep(10)
+      sleep(1)
     }
-    //System.exit(0)
   }
 }

@@ -7,7 +7,7 @@ import org.graphstream.ui.spriteManager.SpriteManager
 
 
 object VehicleSprite {
-  private val STEP_PERCENT = 0.001d
+  private val STEP_PERCENT = 0.0001d
   // The is dependent on the size of the window and the coordinates used to build the graph
   private val SCALE = 3000.0
 }
@@ -19,23 +19,25 @@ class VehicleSprite(identifier: String, manager: SpriteManager) extends Sprite(i
     var p = getX
     if (step == 0) step = calculateIncrement(getAttachment.asInstanceOf[Edge])
     p += step
-    if (p < 0 || p > 1) chooseNextEdge()
+    if (p < 0 || p > 1) chooseNextEdge(p)
     else setPosition(p)
+    setAttribute("ui.rotation", Math.PI / 4)
+    setAttribute("angle", 45)
   }
 
-  def chooseNextEdge(): Unit = {
+  def chooseNextEdge(p: Double): Unit = {
     val edge = getAttachment.asInstanceOf[Edge]
     var node = edge.getSourceNode
+
     if (step > 0) node = edge.getTargetNode
     val nextEdge = randomEdge(node)
-    var pos = .0
-    if (node eq nextEdge.getSourceNode) {
+    val offset = Math.abs(p % 1)
+    val pos = if (node eq nextEdge.getSourceNode) {
       step = calculateIncrement(nextEdge)
-      pos = 0
-    }
-    else {
+      offset
+    } else {
       step = -calculateIncrement(nextEdge)
-      pos = 1
+      1 - offset
     }
     attachToEdge(nextEdge.getId)
     setPosition(pos)

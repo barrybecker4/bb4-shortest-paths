@@ -18,18 +18,23 @@ import scala.util.Random
  */
 object VehiclePlacer {
   /** The minimum gap between vehicles */
-  private val MIN_GAP = 15.0
+  private val MIN_GAP = 8.0
   /**
    * This will not be exact because the sprites size is relative to the window size.
    * Sprites get proportionally larger as the window size shrinks.
    * See traffic.css - size: 12px, 6px;
    */
-  private val VEHICLE_LENGTH = 30.0
-  private val VEHICLE_COLORS = Array[String]("#aa5588;", "#11bb99;", "#5522aa;")
+  private val VEHICLE_LENGTH = 20.0
+  private val VEHICLE_COLORS = Array[String](
+    "#772255;",
+    "#776633;",
+    "#337755;",
+    "#332277;"
+  )
 }
 
 class VehiclePlacer(private val sprites: SpriteManager, private val graph: Graph) {
-  final private var rnd: Random = new Random(0)
+  final private val rnd: Random = new Random(0)
 
   def placeVehicleSprites(): Unit = {
     val edgeIdToNumVehicles = determineNumVehiclesOnEdges
@@ -59,7 +64,7 @@ class VehiclePlacer(private val sprites: SpriteManager, private val graph: Graph
       val edgeLen = getEdgeLen(edge)
       val expectedAllocation = (numVehicles * edgeLen / totalLen).toInt
       val maxAllocation = (edgeLen / (VehiclePlacer.MIN_GAP + VehiclePlacer.VEHICLE_LENGTH)).toInt
-      if (expectedAllocation > maxAllocation) throw new IllegalArgumentException("Trying to allocate more vehicles (" + expectedAllocation + ") than the streets will hold (" + maxAllocation + ")!")
+      if (expectedAllocation > maxAllocation) throw new IllegalArgumentException("Trying to allocate more vehicles (" + expectedAllocation + ") than the street will hold (" + maxAllocation + ")!")
       edge.setAttribute("maxAllocation", maxAllocation)
       val delta = expectedAllocation
       assert(delta >= 0)
@@ -122,7 +127,8 @@ class VehiclePlacer(private val sprites: SpriteManager, private val graph: Graph
       var positionIdx = rnd.nextInt(spriteSlots.length)
       while (spriteSlots(positionIdx) != null) positionIdx = (positionIdx + 1) % spriteSlots.length
       val sprite = sprites.addSprite(spriteCt.get + "")
-      sprite.setAttribute("ui.style", "fill-color: " + VehiclePlacer.VEHICLE_COLORS((Math.random * VehiclePlacer.VEHICLE_COLORS.length).toInt))
+      val color = VehiclePlacer.VEHICLE_COLORS((Math.random * VehiclePlacer.VEHICLE_COLORS.length).toInt)
+      sprite.setAttribute("ui.style", s"fill-color: $color")
       spriteCt.getAndIncrement
       val pos = positionIdx.toDouble / spriteSlots.length
       sprite.setPosition(pos)

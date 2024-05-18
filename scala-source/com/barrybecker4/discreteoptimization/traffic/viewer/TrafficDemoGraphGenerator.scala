@@ -87,7 +87,7 @@ class TrafficGraphGenerator {
     edge = graph.addEdge("D5D4", "D5", "D4", true)
     setEdgePoint(edge, 0.0d, -240.0d)
     addEdgeLengths(graph)
-    //showNodeLabels(graph)
+    // showNodeLabels(graph)
   }
 
   // The control point for the edge
