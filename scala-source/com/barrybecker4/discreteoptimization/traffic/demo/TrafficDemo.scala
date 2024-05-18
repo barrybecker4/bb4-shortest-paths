@@ -36,6 +36,6 @@ class TrafficDemo(graph: Graph, numSprites: Int, viewerPipe: ViewerPipe) {
       spriteGenerator.moveSprites()
       sleep(10)
     }
-    System.exit(0)
+    //System.exit(0)
   }
 }

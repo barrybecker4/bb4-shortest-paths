@@ -52,7 +52,7 @@ case class TrafficStreamAdapter(trafficGraph: TrafficGraph) {
 
   private def addStreetsToGraph(graph: MultiGraph): Unit = {
     var streetCount: Map[(Int, Int), Int] = Map()
-    //val uiClass = if (isLarge) LARGE.name else PLAIN.name
+    // val uiClass = if (isLarge) LARGE.name else PLAIN.name
     val streetSubGraphs: IndexedSeq[StreetSubGraph] =
       for (street <- trafficGraph.streets)
         yield StreetSubGraph(street, intersectionSubGraphs(street.intersectionIdx1), intersectionSubGraphs(street.intersectionIdx2), graph)

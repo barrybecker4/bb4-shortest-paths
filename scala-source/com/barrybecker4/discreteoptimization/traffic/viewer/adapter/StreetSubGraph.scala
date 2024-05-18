@@ -20,37 +20,49 @@ case class StreetSubGraph(street: Street,
   forwardEdge.setAttribute("ui.class", PLAIN.name)
   backwardEdge.setAttribute("ui.class", PLAIN.name)
 
-  addCurvePoints(forwardEdge, street)
-  addCurvePoints(backwardEdge, street)
+  addCurvePoints(forwardEdge, street, forward = true)
+  addCurvePoints(backwardEdge, street, forward = false)
 
-  
-  private def addCurvePoints(edge: Edge, street: Street): Unit = {
+
+  private def addCurvePoints(edge: Edge, street: Street, forward: Boolean): Unit = {
     val src = edge.getSourceNode.getAttribute("xyz", classOf[Array[AnyRef]])
     val dst = edge.getTargetNode.getAttribute("xyz", classOf[Array[AnyRef]])
 
-    val intersection1 = intersectionSubGraph1.intersection
-    val intersection2 = intersectionSubGraph2.intersection
+    val intersection1 = if (forward) intersectionSubGraph1.intersection else intersectionSubGraph2.intersection
+    val intersection2 = if (forward) intersectionSubGraph2.intersection else intersectionSubGraph1.intersection
+    val portIdx1 = if (forward) street.portIdx1 else street.portIdx2
+    val portIdx2 = if (forward) street.portIdx2 else street.portIdx1
 
-    val srcVec = getPortSpokePoint(src, intersection1, street.portIdx1)
-    val dstVec = getPortSpokePoint(dst, intersection2, street.portIdx2)
+    val srcCtrlPt = getPortSpokePoint(src, intersection1, portIdx1)
+    val dstCtrlPt = getPortSpokePoint(dst, intersection2, portIdx2)
+
+//    val halfwayPt = halfway(src, dst)
+//    println(street.toString + " forward=" + forward)
+//    println("halfwayPt=" + halfwayPt)
+//    println("src=" + ptToString(src) + " srcVec=" + srcCtrlPt)
+//    println("dst=" + ptToString(dst) + " dstVec=" + dstCtrlPt)
 
     edge.setAttribute("ui.points",
       src(0), src(1), 0.0,
-      srcVec.x, srcVec.y, 0,
-      dstVec.x, dstVec.y, 0,
+      srcCtrlPt.x, srcCtrlPt.y, 0,
+      dstCtrlPt.x, dstCtrlPt.y, 0,
       dst(0), dst(1), 0.0)
   }
 
-  private def getPortSpokePoint(pt1: Array[AnyRef], intersection: Intersection, portId: Int): Location = {
+  private def halfway(src: Array[AnyRef], dst: Array[AnyRef]): Location = {
+    Location((src(0).toString.toFloat + dst(0).toString.toFloat) / 2.0f, (src(1).toString.toFloat + dst(1).toString.toFloat) / 2.0f)
+  }
+
+  private def getPortSpokePoint(pt: Array[AnyRef], intersection: Intersection, portId: Int): Location = {
     val radialPos = getRadialPosition(intersection, portId)
-    Location(pt1(0).toString.toFloat + radialPos.x, pt1(1).toString.toFloat + radialPos.y)
+    Location(pt(0).toString.toFloat + radialPos.x, pt(1).toString.toFloat + radialPos.y)
   }
 
   private def getRadialPosition(intersection: Intersection, portId: Int): Location = {
     val port = intersection.ports(portId)
     //val len = IntersectionSubGraph.INTERSECTION_RADIUS + port.radialLength
-    val vecX = (Math.cos(port.angle) * port.radialLength).toFloat
-    val vecY = (Math.sin(port.angle) * port.radialLength).toFloat
+    val vecX = (Math.cos(port.angleRad) * port.radialLength).toFloat
+    val vecY = (Math.sin(port.angleRad) * port.radialLength).toFloat
     Location(vecX, vecY)
   }
 
@@ -60,4 +72,7 @@ case class StreetSubGraph(street: Street,
     else
       s"${street.intersectionIdx2}_${street.portIdx2}-${street.intersectionIdx1}_${street.portIdx1}"
   }
+
+  private def ptToString(array: Array[AnyRef]): String =
+    s"${array(0).toString}, ${array(1).toString}"
 }
