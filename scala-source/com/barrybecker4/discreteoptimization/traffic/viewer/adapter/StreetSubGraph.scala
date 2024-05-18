@@ -36,12 +36,6 @@ case class StreetSubGraph(street: Street,
     val srcCtrlPt = getPortSpokePoint(src, intersection1, portIdx1)
     val dstCtrlPt = getPortSpokePoint(dst, intersection2, portIdx2)
 
-//    val halfwayPt = halfway(src, dst)
-//    println(street.toString + " forward=" + forward)
-//    println("halfwayPt=" + halfwayPt)
-//    println("src=" + ptToString(src) + " srcVec=" + srcCtrlPt)
-//    println("dst=" + ptToString(dst) + " dstVec=" + dstCtrlPt)
-
     edge.setAttribute("ui.points",
       src(0), src(1), 0.0,
       srcCtrlPt.x, srcCtrlPt.y, 0,

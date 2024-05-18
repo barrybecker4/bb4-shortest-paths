@@ -68,7 +68,7 @@ case class IntersectionSubGraph(intersection: Intersection, graph: MultiGraph) {
       for (toPortId <- intersection.ports.indices) {
         if (toPortId != fromPortId) {
           val toNode = outgoingNodes(toPortId)
-          val edge: Edge = graph.addEdge(getEdgeName(fromPortId, toPortId), fromNode, toNode)
+          val edge: Edge = graph.addEdge(getEdgeName(fromPortId, toPortId), fromNode, toNode, true)
 
           val src = fromNode.getAttribute("xyz", classOf[Array[AnyRef]])
           val dst = toNode.getAttribute("xyz", classOf[Array[AnyRef]])
