@@ -7,14 +7,23 @@ import org.graphstream.ui.spriteManager.SpriteManager
 
 
 object VehicleSprite {
-  private val STEP_PERCENT = 0.0001d
   // The is dependent on the size of the window and the coordinates used to build the graph
-  private val SCALE = 3000.0
+  private val SCALE = 10.0
 }
 
-class VehicleSprite(identifier: String, manager: SpriteManager) extends Sprite(identifier, manager) {
+class VehicleSprite(identifier: String, speed: Double, manager: SpriteManager) extends Sprite(identifier, manager) {
   private var step = 0.0
 
+  override def attachToEdge(id: String): Unit = {
+    super.attachToEdge(id)
+    // add the sprite to a "sprites" attribute of the edge
+  }
+
+  override def detach(): Unit = {
+    super.detach()
+    // remove the sprite from the sprites attribute of the edge
+  }
+  
   def move(): Unit = {
     var p = getX
     if (step == 0) step = calculateIncrement(getAttachment.asInstanceOf[Edge])
@@ -44,8 +53,7 @@ class VehicleSprite(identifier: String, manager: SpriteManager) extends Sprite(i
   /** Move in larger percentage steps across shorter edges */
   private def calculateIncrement(edge: Edge): Double = {
     val edgeLen = edge.getAttribute("length", classOf[Object]).asInstanceOf[Double]
-    val scale = VehicleSprite.SCALE / edgeLen
-    VehicleSprite.STEP_PERCENT * scale
+    speed * VehicleSprite.SCALE / edgeLen
   }
 
   /**
