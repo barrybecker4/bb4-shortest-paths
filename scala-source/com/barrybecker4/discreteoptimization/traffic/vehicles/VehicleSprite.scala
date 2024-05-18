@@ -21,8 +21,6 @@ class VehicleSprite(identifier: String, manager: SpriteManager) extends Sprite(i
     p += step
     if (p < 0 || p > 1) chooseNextEdge(p)
     else setPosition(p)
-    setAttribute("ui.rotation", Math.PI / 4)
-    setAttribute("angle", 45)
   }
 
   def chooseNextEdge(p: Double): Unit = {

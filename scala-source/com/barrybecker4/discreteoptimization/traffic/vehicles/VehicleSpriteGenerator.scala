@@ -8,18 +8,18 @@ import org.graphstream.ui.spriteManager.{Sprite, SpriteManager}
 class VehicleSpriteGenerator(private val numSprites: Int) {
 
   /** The set of sprites. */
-  private var sprites: SpriteManager = _
+  private var spriteManager: SpriteManager = _
 
   def addSprites(graph: Graph): Unit = {
-    sprites = new SpriteManager(graph)
-    sprites.setSpriteFactory(new VehicleSpriteFactory)
+    spriteManager = new SpriteManager(graph)
+    spriteManager.setSpriteFactory(new VehicleSpriteFactory)
     for (i <- 0 until numSprites) {
-      sprites.addSprite(s"$i")
+      spriteManager.addSprite(s"$i")
     }
-    new VehiclePlacer(sprites, graph).placeVehicleSprites()
+    new VehiclePlacer(spriteManager, graph).placeVehicleSprites()
   }
 
   def moveSprites(): Unit = {
-    sprites.forEach((s: Sprite) => s.asInstanceOf[VehicleSprite].move())
+    spriteManager.forEach((s: Sprite) => s.asInstanceOf[VehicleSprite].move())
   }
 }

@@ -7,5 +7,6 @@ import org.graphstream.ui.spriteManager.SpriteManager
 
 
 class VehicleSpriteFactory extends SpriteFactory {
-  override def newSprite(identifier: String, manager: SpriteManager, position: Values) = new VehicleSprite(identifier, manager)
+  override def newSprite(identifier: String, manager: SpriteManager, position: Values) = 
+    new VehicleSprite(identifier, manager)
 }
