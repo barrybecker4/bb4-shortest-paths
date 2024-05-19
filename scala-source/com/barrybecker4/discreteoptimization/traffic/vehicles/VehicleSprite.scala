@@ -3,7 +3,7 @@ package com.barrybecker4.discreteoptimization.traffic.vehicles
 import org.graphstream.graph.Edge
 import org.graphstream.graph.Node
 import org.graphstream.ui.spriteManager.Sprite
-import org.graphstream.ui.spriteManager.SpriteManager
+import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSpriteManager
 
 
 object VehicleSprite {
@@ -11,17 +11,19 @@ object VehicleSprite {
   private val SCALE = 10.0
 }
 
-class VehicleSprite(identifier: String, speed: Double, manager: SpriteManager) extends Sprite(identifier, manager) {
+class VehicleSprite(identifier: String, speed: Double, manager: VehicleSpriteManager) extends Sprite(identifier, manager) {
   private var step = 0.0
 
   override def attachToEdge(id: String): Unit = {
     super.attachToEdge(id)
-    // add the sprite to a "sprites" attribute of the edge
+    manager.addVehicleToEdge(id, this)
   }
 
   override def detach(): Unit = {
-    super.detach()
-    // remove the sprite from the sprites attribute of the edge
+    if (attachment != null) {
+      manager.removeVehicleFromEdge(attachment.getId, this)
+      super.detach()
+    }
   }
   
   def move(): Unit = {
