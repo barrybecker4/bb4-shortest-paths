@@ -30,8 +30,8 @@ object TrafficStreamAdapter {
  */
 case class TrafficStreamAdapter(trafficGraph: TrafficGraph) {
 
+  var intersectionSubGraphs: IndexedSeq[IntersectionSubGraph] = _
   private val isLarge = trafficGraph.intersections.size > LARGE_GRAPH_THRESH
-  private var intersectionSubGraphs: IndexedSeq[IntersectionSubGraph] = _
 
   def createGraph(): MultiGraph = {
     val graph = new MultiGraph("Some traffic graph")

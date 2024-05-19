@@ -1,7 +1,7 @@
 package com.barrybecker4.discreteoptimization.traffic.viewer
 
 import com.barrybecker4.discreteoptimization.common.graph.visualization.render.GraphViewerPipe
-import com.barrybecker4.discreteoptimization.traffic.demo.TrafficDemo
+import com.barrybecker4.discreteoptimization.traffic.demo.TrafficOrchestrator
 
 
 /**
@@ -16,6 +16,6 @@ object TrafficDemoApplication {
 
     val graph = new TrafficGraphGenerator().generateGraph()
     val pipeIn = graph.display(false).newViewerPipe()
-    new TrafficDemo(graph, SPRITE_COUNT, pipeIn).run()
+    new TrafficOrchestrator(graph, SPRITE_COUNT, 10.0, IndexedSeq(), pipeIn).run()
   }
 }

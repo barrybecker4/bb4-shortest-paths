@@ -12,8 +12,8 @@ import com.barrybecker4.discreteoptimization.pathviewer.PathViewerFrame.*
 import com.barrybecker4.discreteoptimization.shortestpaths.ShortedPathsTstUtil
 import com.barrybecker4.discreteoptimization.shortestpaths.model.ShortestPathsSolution
 import com.barrybecker4.discreteoptimization.shortestpaths.solver.{DijkstrasPathSolver, ModifiedDijkstrasPathSolver}
-import com.barrybecker4.discreteoptimization.traffic.demo.TrafficDemo
-import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.TrafficStreamAdapter
+import com.barrybecker4.discreteoptimization.traffic.demo.TrafficOrchestrator
+import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.{IntersectionSubGraph, TrafficStreamAdapter}
 import com.barrybecker4.discreteoptimization.traffic.graph.{TrafficGraph, TrafficGraphParser}
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.graph.{Edge, Graph, Node}
@@ -65,11 +65,12 @@ class TrafficViewerFrame extends GraphViewerFrame() {
       println("selected file is " + selectedFile.getName)
 
       val trafficGraph = loadTrafficGraph(selectedFile)
-      val graph = adapter.TrafficStreamAdapter(trafficGraph).createGraph()
+      val adapter = TrafficStreamAdapter(trafficGraph)
+      val graph = adapter.createGraph()
 
       //val graph = TrafficGraphGenerator().generateGraph()
       //showTrafficGraph(graph)
-      setGraph(graph, trafficGraph.numVehicles, "Traffic Demo")
+      setGraph(graph, trafficGraph.numVehicles, trafficGraph.initialSpeed, adapter.intersectionSubGraphs, "Traffic Demo")
     }
   }
 
@@ -78,7 +79,10 @@ class TrafficViewerFrame extends GraphViewerFrame() {
     loadTrafficGraphFromName(graphName)
   }
 
-  def setGraph(graph: Graph, numVehicles: Int, title: String): Unit = {
+  def setGraph(graph: Graph, numVehicles: Int, 
+               initialSpeed: Double, 
+               intersectionSubGraphs: IndexedSeq[IntersectionSubGraph], 
+               title: String): Unit = {
 
     if (viewer != null)
       remove(viewer.getViewPanel)
@@ -95,7 +99,7 @@ class TrafficViewerFrame extends GraphViewerFrame() {
 
     // must be run in a separate thread or it doesn't do anything
     val displayFuture: Future[Unit] = Future {
-      new TrafficDemo(graph, numVehicles, viewer.newViewerPipe()).run()
+      new TrafficOrchestrator(graph, numVehicles, initialSpeed, intersectionSubGraphs, viewer.newViewerPipe()).run()
     }
     displayFuture.onComplete {
       case scala.util.Success(_) =>

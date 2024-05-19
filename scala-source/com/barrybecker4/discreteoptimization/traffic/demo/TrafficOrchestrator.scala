@@ -7,14 +7,19 @@ import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSpriteGener
 import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficGraphGenerator
 import org.graphstream.graph.implementations.MultiGraph
 import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficGraphUtil.sleep
+import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraph
+import com.barrybecker4.discreteoptimization.traffic.demo.TrafficOrchestrator.DELTA_TIME_SECS
 
 import java.awt.{Dimension, Frame}
 import javax.swing.JFrame
 
+object TrafficOrchestrator {
+  private val DELTA_TIME_SECS = 0.01
+}
 
-class TrafficDemo(graph: Graph, numSprites: Int, viewerPipe: ViewerPipe) {
+class TrafficOrchestrator(graph: Graph, numSprites: Int, initialSpeed: Double, intersectionSubGraphs: IndexedSeq[IntersectionSubGraph], viewerPipe: ViewerPipe) {
   final private val viewerListener = new ViewerAdapter
-  final private val spriteGenerator: VehicleSpriteGenerator = new VehicleSpriteGenerator(numSprites)
+  final private val spriteGenerator: VehicleSpriteGenerator = new VehicleSpriteGenerator(numSprites, initialSpeed)
 
   def run(): Unit = {
     val pipeIn = new GraphViewerPipe("my pipe", viewerPipe)
@@ -33,7 +38,8 @@ class TrafficDemo(graph: Graph, numSprites: Int, viewerPipe: ViewerPipe) {
   private def simulateTrafficFlow(pipeIn: ViewerPipe): Unit = {
     while (viewerListener.isLooping) {
       pipeIn.pump()
-      spriteGenerator.moveSprites()
+      intersectionSubGraphs.foreach(intersectionSubGraph => intersectionSubGraph.update(DELTA_TIME_SECS))
+      spriteGenerator.moveSprites(DELTA_TIME_SECS)
       sleep(1)
     }
   }

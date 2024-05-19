@@ -7,11 +7,8 @@ import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficViewerFrame
 
 /**
  * Ideas:
- * - Each Intersection should have a SignalStrategy / TrafficSignal
- *    - it can be configurable per node in the traffic config file
- *    - Enum like DumbTrafficLight, SmartTrafficLight, CollisionAvoidance
- * - Within an intersection, examine the sprites on intersection edges and the edges leading into the intersection
- * - Sprites should be aware of how distance the next sprite in front is, if any.
+ * - Within an intersection, examine the sprites on intersection edges and the edges leading into the intersection.
+ * - Sprites should be aware of how distant the next sprite in front is, if any.
  *     - There should be an optimal distance to it
  *     - If >= distantThreshold, don't try to catch up
  *     - If < distanceThreshold, and > optimalDistance, then try to speed up a little to get closer to optimal
@@ -24,6 +21,9 @@ import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficViewerFrame
  *     
  * Done
  * - Sprite attachment and detachment to/from edges will also make the Edge aware of which sprites are currently attached to it.
+ * - Each Intersection should have a SignalStrategy / TrafficSignal
+ *    - it can be configurable per node in the traffic config file
+ *    - Enum like DumbTrafficLight, SmartTrafficLight, CollisionAvoidance
  */
 object TrafficApp extends App {
 

@@ -9,7 +9,7 @@ import org.graphstream.graph.implementations.MultiGraph
 
 
 object IntersectionSubGraph {
-  val INTERSECTION_RADIUS = 110.0
+  val INTERSECTION_RADIUS = 90.0
   private val LANE_SEP_ANGLE = angleToRads(12)
 
   private def angleToRads(angle: Double): Double = angle.toFloat * Math.PI / 180.0
@@ -29,6 +29,19 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
   def getIncomingNode(portId: Int): Node = incomingNodes(portId)
   def getOutgoingNode(portId: Int): Node = outgoingNodes(portId)
 
+  // Called by the orchestrator to update the intersection every timestep
+  // * - Within an intersection, examine the sprites on intersection edges and the edges leading into the intersection.
+  // * - Sprites should be aware of how distant the next sprite in front is, if any.
+  // *     - There should be an optimal distance to it
+  // *     - If >= distantThreshold, don't try to catch up
+  // *     - If < distanceThreshold, and > optimalDistance, then try to speed up a little to get closer to optimal
+  // *     - If < optimalDistance, then break until >= optimalDistance
+  // *     - If Signal says to slow down, then brake to slow speed
+  // *     - If upcoming Signal is red, then start to smoothly slow so that we can be stopped by the time we get there
+  def update(deltaTime: Double): Unit = {
+    println("Updating intersection...  " + deltaTime)
+
+  }
 
   /**
    * For each port, create 2 nodes in a radial fashion around the center of the node.
