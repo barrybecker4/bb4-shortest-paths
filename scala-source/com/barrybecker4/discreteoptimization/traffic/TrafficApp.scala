@@ -7,10 +7,9 @@ import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficViewerFrame
 
 /**
  * Ideas:
- * - Each Intersection should have a SignalStrategy
+ * - Each Intersection should have a SignalStrategy / TrafficSignal
  *    - it can be configurable per node in the traffic config file
  *    - Enum like DumbTrafficLight, SmartTrafficLight, CollisionAvoidance
- * - Sprite attachment and detachment to/from edges will also make the Edge aware of which sprites are currently attached to it.
  * - Within an intersection, examine the sprites on intersection edges and the edges leading into the intersection
  * - Sprites should be aware of how distance the next sprite in front is, if any.
  *     - There should be an optimal distance to it
@@ -22,6 +21,9 @@ import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficViewerFrame
  * - For green lights, we can travel into an intersection, but there are still 2 cases where we may have to stop
  *     - when turning right, if there is a competing car or cars, then wait. Only go if you can make it through before next car
  *     - when turning left, consider oncoming traffic. It has the right of way. You can only go when there is a break sufficient to go.
+ *     
+ * Done
+ * - Sprite attachment and detachment to/from edges will also make the Edge aware of which sprites are currently attached to it.
  */
 object TrafficApp extends App {
 
