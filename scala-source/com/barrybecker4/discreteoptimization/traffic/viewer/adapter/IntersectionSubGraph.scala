@@ -2,7 +2,8 @@ package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 
 import com.barrybecker4.discreteoptimization.common.Location
 import com.barrybecker4.discreteoptimization.traffic.graph.model.Intersection
-import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraph.{LANE_SEP_ANGLE, INTERSECTION_RADIUS, angleToRads}
+import com.barrybecker4.discreteoptimization.traffic.signals.TrafficSignal
+import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraph.{INTERSECTION_RADIUS, LANE_SEP_ANGLE, angleToRads}
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
 
@@ -18,7 +19,7 @@ object IntersectionSubGraph {
  * Pupulates the graph with all the nodes and edges needed to represent the N-way intersection.
  * Provides convenient accessors for the streets that enter and exit the intersection.
  */
-case class IntersectionSubGraph(intersection: Intersection, graph: MultiGraph) {
+case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSignal, graph: MultiGraph) {
 
   private val incomingNodes: Array[Node] = Array.ofDim[Node](intersection.ports.size)
   private val outgoingNodes: Array[Node] = Array.ofDim[Node](intersection.ports.size)

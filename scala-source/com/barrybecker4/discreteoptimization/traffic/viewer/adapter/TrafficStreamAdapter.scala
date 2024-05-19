@@ -5,6 +5,7 @@ import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
 import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphStreamAdapter.LARGE_GRAPH_THRESH
 import com.barrybecker4.discreteoptimization.traffic.graph.TrafficGraph
 import com.barrybecker4.discreteoptimization.traffic.graph.model.{Intersection, Street}
+import com.barrybecker4.discreteoptimization.traffic.signals.DumbTrafficLight
 import org.graphstream.graph.{Edge, Graph}
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.ui.geom.Point3
@@ -46,8 +47,10 @@ case class TrafficStreamAdapter(trafficGraph: TrafficGraph) {
   }
 
   private def addIntersectionsToGraph(graph: MultiGraph): IndexedSeq[IntersectionSubGraph] = {
-    for (intersectionId <- 0 until trafficGraph.numIntersections)
-      yield IntersectionSubGraph(trafficGraph.getIntersection(intersectionId), graph)
+    for {
+      intersectionId <- 0 until trafficGraph.numIntersections
+      intersection = trafficGraph.getIntersection(intersectionId)
+    } yield IntersectionSubGraph(intersection, new DumbTrafficLight(intersection.ports.size), graph)
   }
 
   private def addStreetsToGraph(graph: MultiGraph): Unit = {
@@ -56,6 +59,5 @@ case class TrafficStreamAdapter(trafficGraph: TrafficGraph) {
     val streetSubGraphs: IndexedSeq[StreetSubGraph] =
       for (street <- trafficGraph.streets)
         yield StreetSubGraph(street, intersectionSubGraphs(street.intersectionIdx1), intersectionSubGraphs(street.intersectionIdx2), graph)
-
   }
 }
