@@ -10,8 +10,8 @@ import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSpriteManag
 object VehicleSprite {
   // The is dependent on the size of the window and the coordinates used to build the graph
   private val SCALE = 1.0
-  private val SLOWER_FACTOR = 0.9
-  private val FASTER_FACTOR = 1.1
+  private val SLOWER_FACTOR = 0.95
+  private val FASTER_FACTOR = 1.05
 }
 
 /**
@@ -19,6 +19,7 @@ object VehicleSprite {
  * @param initialSpeed initial speed of the sprite in meters per second
  */
 class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSpriteManager) extends Sprite(identifier, manager) {
+  private var positionPct: Double = 0.0
   private var step = 0.0
   private var speed = initialSpeed
 
@@ -35,6 +36,13 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
 
   override def attachToEdge(id: String): Unit = {
     super.attachToEdge(id)
+    val edge = manager.getEdge(id)
+    if (this.attachment != edge ) {
+      this.detach()
+      this.attachment = edge
+    }
+    this.attachment.setAttribute(this.completeId, new Array[AnyRef](0))
+
     manager.addVehicleToEdge(id, this)
   }
 
@@ -59,18 +67,26 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
 
     if (step > 0) node = edge.getTargetNode
     val nextEdge = randomEdge(node)
-    val offset = Math.abs(p % 1)
+    val offset: Double = Math.abs(p % 1)
     val pos = if (node eq nextEdge.getSourceNode) {
       step = calculateIncrement(nextEdge, deltaTime)
       offset
     } else {
+      // For the traffic sim, we never do this, because the vehicles always move forward.
       step = -calculateIncrement(nextEdge, deltaTime)
       1 - offset
     }
     attachToEdge(nextEdge.getId)
     setPosition(pos)
   }
-
+  
+  override def setPosition(pct: Double): Unit = {
+    positionPct = pct
+    super.setPosition(pct)
+  }
+  
+  def getPosition: Double = positionPct
+  
   /** Move in larger percentage steps across shorter edges */
   private def calculateIncrement(edge: Edge, deltaTime: Double): Double = {
     val edgeLen = edge.getAttribute("length", classOf[Object]).asInstanceOf[Double]

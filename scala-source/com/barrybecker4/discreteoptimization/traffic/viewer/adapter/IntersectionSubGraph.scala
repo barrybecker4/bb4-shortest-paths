@@ -3,9 +3,12 @@ package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 import com.barrybecker4.discreteoptimization.common.Location
 import com.barrybecker4.discreteoptimization.traffic.graph.model.Intersection
 import com.barrybecker4.discreteoptimization.traffic.signals.TrafficSignal
+import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
+
+import scala.collection.mutable
 
 
 object IntersectionSubGraph {
@@ -16,8 +19,7 @@ object IntersectionSubGraph {
  * Provides convenient accessors for the streets that enter and exit the intersection.
  */
 case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSignal, graph: MultiGraph) {
-
-  println("hi")
+  
   private val builder = new IntersectionSubGraphBuilder(intersection, graph)
 
   def getIncomingNode(portId: Int): Node = builder.incomingNodes(portId)
@@ -33,6 +35,15 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
   // *     - If Signal says to slow down, then brake to slow speed
   // *     - If upcoming Signal is red, then start to smoothly slow so that we can be stopped by the time we get there
   def update(deltaTime: Double): Unit = {
-    println("Updating intersection...  " + deltaTime)
+    // println("Updating intersection...  " + deltaTime)
+    // For incoming edge
+    //   try to get the vehicles to be an optimal distance apart by adjusting their speed
+    for (portId <- intersection.ports.indices) {
+      val node: Node = getIncomingNode(portId)
+      assert(node.getInDegree == 1)
+      val edge: Edge = node.getEnteringEdge(0)
+      //val sprites = edge.getAttribute("vehicles", classOf[mutable.Queue[VehicleSprite]])
+      //println("edge vehicles = " + sprites.toString)
+    }
   }
 }

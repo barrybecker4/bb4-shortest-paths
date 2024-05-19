@@ -17,7 +17,8 @@ object TrafficOrchestrator {
   private val DELTA_TIME_SECS = 0.01
 }
 
-class TrafficOrchestrator(graph: Graph, numSprites: Int, initialSpeed: Double, intersectionSubGraphs: IndexedSeq[IntersectionSubGraph], viewerPipe: ViewerPipe) {
+class TrafficOrchestrator(graph: Graph, numSprites: Int, initialSpeed: Double,
+                          intersectionSubGraphs: IndexedSeq[IntersectionSubGraph], viewerPipe: ViewerPipe) {
   final private val viewerListener = new ViewerAdapter
   final private val spriteGenerator: VehicleSpriteGenerator = new VehicleSpriteGenerator(numSprites, initialSpeed)
 

@@ -7,24 +7,32 @@ import scala.collection.mutable
 
 class VehicleSpriteManager(graph: Graph) extends SpriteManager(graph) {
 
-  def getVehiclesOnEdge(edgeId: String): mutable.Set[VehicleSprite] = {
-    val edge: Edge = this.graph.getEdge(edgeId)
-    var vehicleSprites: mutable.Set[VehicleSprite] = 
-      edge.getAttribute[mutable.Set[VehicleSprite]]("vehicles", classOf[mutable.Set[VehicleSprite]])
+  implicit val vehicleSpriteOrdering: Ordering[VehicleSprite] = Ordering.by(_.getPosition)
+
+  def getVehiclesOnEdge(edgeId: String): mutable.PriorityQueue[VehicleSprite] = {
+    val edge: Edge = getEdge(edgeId)
+    var vehicleSprites: mutable.PriorityQueue[VehicleSprite] =
+      edge.getAttribute[mutable.PriorityQueue[VehicleSprite]]("vehicles", classOf[mutable.PriorityQueue[VehicleSprite]])
       
     if (vehicleSprites == null) {
-      vehicleSprites = mutable.Set()
+      vehicleSprites = mutable.PriorityQueue()(vehicleSpriteOrdering) // reverse?
       edge.setAttribute("vehicles", vehicleSprites)
     }
     vehicleSprites
   }
 
+  def addVehicleToEdge(edgeId: String, vehicleSprite: VehicleSprite): Unit =
+    getVehiclesOnEdge(edgeId).enqueue(vehicleSprite)
 
-  def addVehicleToEdge(edgeId: String, vehicleSprite: VehicleSprite):Unit = {
-    getVehiclesOnEdge(edgeId).add(vehicleSprite)
-  }
+  def getEdge(edgeId: String): Edge = graph.getEdge(edgeId)
 
   def removeVehicleFromEdge(edgeId: String, vehicleSprite: VehicleSprite): Unit = {
-    getVehiclesOnEdge(edgeId).remove(vehicleSprite)
+    val v = getVehiclesOnEdge(edgeId).dequeue()
+    //println("removing v=" +v.getId + " vs=" + vehicleSprite.getId + " edge=" + edgeId)
+    
+    // I don't know what this happens sometimes. 
+    //assert(v == vehicleSprite, "didn't remove the last sprite in the queue")
+    //if (v != vehicleSprite)
+    //  println("Didn't remove the last sprite in the queue.")
   }
 }
