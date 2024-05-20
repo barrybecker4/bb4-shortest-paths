@@ -11,6 +11,8 @@ class VehicleSpriteGenerator(private val numSprites: Int, initialSpeed: Double) 
   /** The set of sprites. */
   private var spriteManager: VehicleSpriteManager = _
 
+  def getSpriteManager: VehicleSpriteManager = spriteManager
+
   def addSprites(graph: Graph): Unit = {
     spriteManager = new VehicleSpriteManager(graph)
     spriteManager.setSpriteFactory(new VehicleSpriteFactory(initialSpeed))

@@ -15,7 +15,7 @@ class VehicleSpriteManager(graph: Graph) extends SpriteManager(graph) {
       edge.getAttribute[mutable.PriorityQueue[VehicleSprite]]("vehicles", classOf[mutable.PriorityQueue[VehicleSprite]])
       
     if (vehicleSprites == null) {
-      vehicleSprites = mutable.PriorityQueue()(vehicleSpriteOrdering) // reverse?
+      vehicleSprites = mutable.PriorityQueue()(vehicleSpriteOrdering) 
       edge.setAttribute("vehicles", vehicleSprites)
     }
     vehicleSprites

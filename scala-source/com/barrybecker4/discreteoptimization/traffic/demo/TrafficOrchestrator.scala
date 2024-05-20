@@ -25,8 +25,6 @@ class TrafficOrchestrator(graph: Graph, numSprites: Int, initialSpeed: Double,
   def run(): Unit = {
     val pipeIn = new GraphViewerPipe("my pipe", viewerPipe)
     pipeIn.addViewerListener(viewerListener)
-    //pipeIn.pump()
-    //sleep(500) // give a chance to layout
 
     try {
       spriteGenerator.addSprites(graph)
@@ -39,9 +37,9 @@ class TrafficOrchestrator(graph: Graph, numSprites: Int, initialSpeed: Double,
   private def simulateTrafficFlow(pipeIn: ViewerPipe): Unit = {
     while (viewerListener.isLooping) {
       //pipeIn.pump()
-      intersectionSubGraphs.foreach(intersectionSubGraph => intersectionSubGraph.update(DELTA_TIME_SECS))
+      intersectionSubGraphs.foreach(intersectionSubGraph => intersectionSubGraph.update(DELTA_TIME_SECS, spriteGenerator.getSpriteManager))
       spriteGenerator.moveSprites(DELTA_TIME_SECS)
-      sleep(1)
+      sleep(2)
     }
   }
 }

@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.vehicles
 
-import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite.{SCALE, FASTER_FACTOR, SLOWER_FACTOR}
+import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite.{MAX_SPEED, SCALE}
 import org.graphstream.graph.Edge
 import org.graphstream.graph.Node
 import org.graphstream.ui.spriteManager.Sprite
@@ -10,8 +10,8 @@ import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSpriteManag
 object VehicleSprite {
   // The is dependent on the size of the window and the coordinates used to build the graph
   private val SCALE = 1.0
-  private val SLOWER_FACTOR = 0.95
-  private val FASTER_FACTOR = 1.05
+  // Meters/second
+  private val MAX_SPEED = 100
 }
 
 /**
@@ -23,25 +23,29 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
   private var step = 0.0
   private var speed = initialSpeed
 
-  def slower(): Unit =
-    speed *= SLOWER_FACTOR
+  def getSpeed: Double = speed
 
-  def faster(): Unit =
-    speed *= FASTER_FACTOR
-
-  /** @param distance the distance we have to com to a complete stop
+  /** @param percent a number between -100 and 100. The caller should be sure that the acceleration is not too great
    */
-  def brakeToStop(distance: Double): Unit =
-    speed
+  def changeSpeed(percent: Double): Unit = {
+    speed *= (1.0 + percent)
+    if (speed < 0) {
+      println("error: speed was less than 0 - " + speed)
+      speed = 0
+    } else if (speed > MAX_SPEED) {
+      println("error: speed was > MAX - " + speed)
+      speed = MAX_SPEED
+    }
+    println("new speed = " + speed)
+  }
 
   override def attachToEdge(id: String): Unit = {
-    super.attachToEdge(id)
     val edge = manager.getEdge(id)
     if (this.attachment != edge ) {
       this.detach()
       this.attachment = edge
     }
-    this.attachment.setAttribute(this.completeId, new Array[AnyRef](0))
+    this.attachment.setAttribute(this.completeId, Array(0.0: java.lang.Double))
 
     manager.addVehicleToEdge(id, this)
   }
@@ -79,14 +83,14 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
     attachToEdge(nextEdge.getId)
     setPosition(pos)
   }
-  
+
   override def setPosition(pct: Double): Unit = {
     positionPct = pct
     super.setPosition(pct)
   }
-  
+
   def getPosition: Double = positionPct
-  
+
   /** Move in larger percentage steps across shorter edges */
   private def calculateIncrement(edge: Edge, deltaTime: Double): Double = {
     val edgeLen = edge.getAttribute("length", classOf[Object]).asInstanceOf[Double]
