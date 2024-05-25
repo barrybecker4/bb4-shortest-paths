@@ -28,7 +28,6 @@ class VehicleSpriteManager(graph: Graph) extends SpriteManager(graph) {
 
   def removeVehicleFromEdge(edgeId: String, vehicleSprite: VehicleSprite): Unit = {
     val v = getVehiclesOnEdge(edgeId).dequeue()
-    //println("removing v=" +v.getId + " vs=" + vehicleSprite.getId + " edge=" + edgeId)
     
     // I don't know what this happens sometimes. 
     //assert(v == vehicleSprite, "didn't remove the last sprite in the queue")

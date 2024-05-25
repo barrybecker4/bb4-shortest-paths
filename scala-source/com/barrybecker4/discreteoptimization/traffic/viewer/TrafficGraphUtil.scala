@@ -1,5 +1,7 @@
 package com.barrybecker4.discreteoptimization.traffic.viewer
 
+import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.INTERSECTION_TYPE
+import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.StreetSubGraph.STREET_TYPE
 import org.graphstream.graph.{Edge, Graph, Node}
 
 object TrafficGraphUtil {
@@ -11,6 +13,9 @@ object TrafficGraphUtil {
   def addEdgeLengths(graph: Graph): Unit = {
     graph.edges.forEach((edge: Edge) => edge.setAttribute("length", computeEdgeLength(edge)))
   }
+  
+  def isStreet(edge: Edge): Boolean = edge.getAttribute("type") == STREET_TYPE
+  def isIntersection(edge: Edge): Boolean = edge.getAttribute("type") == INTERSECTION_TYPE
 
   private def computeEdgeLength(edge: Edge) = {
     val source = edge.getSourceNode

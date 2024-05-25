@@ -16,6 +16,6 @@ object TrafficDemoApplication {
 
     val graph = new TrafficGraphGenerator().generateGraph()
     val pipeIn = graph.display(false).newViewerPipe()
-    new TrafficOrchestrator(graph, SPRITE_COUNT, 10.0, IndexedSeq(), pipeIn).run()
+    new TrafficOrchestrator(graph, SPRITE_COUNT, 0.0, IndexedSeq(), pipeIn).run()
   }
 }

@@ -3,13 +3,14 @@ package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 import com.barrybecker4.discreteoptimization.common.Location
 import com.barrybecker4.discreteoptimization.traffic.graph.model.Intersection
 import com.barrybecker4.discreteoptimization.traffic.signals.TrafficSignal
-import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.{INTERSECTION_RADIUS, LANE_SEP_ANGLE, angleToRads}
+import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.{INTERSECTION_RADIUS, INTERSECTION_TYPE, LANE_SEP_ANGLE, angleToRads}
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
 
 
 object IntersectionSubGraphBuilder {
   val INTERSECTION_RADIUS = 90.0
+  val INTERSECTION_TYPE = "intersection"
   private val LANE_SEP_ANGLE = angleToRads(12)
 
   private def angleToRads(angle: Double): Double = angle.toFloat * Math.PI / 180.0
@@ -76,6 +77,7 @@ case class IntersectionSubGraphBuilder(intersection: Intersection, graph: MultiG
             srcVec(0), srcVec(1), 0,
             dstVec(0), dstVec(1), 0,
             dst(0), dst(1), 0.0)
+          edge.setAttribute("type", INTERSECTION_TYPE)
         }
       }
     }
@@ -86,8 +88,8 @@ case class IntersectionSubGraphBuilder(intersection: Intersection, graph: MultiG
   }
 
   private def getNodeName(portId: Int, direction:String): String =
-    s"${intersection.id}_${portId}_$direction"
+    s"i${intersection.id}:p${portId}_dir$direction"
 
   private def getEdgeName(fromPortId: Int, toPortId: Int) =
-    s"${intersection.id}_from${fromPortId}_to${toPortId}"
+    s"i${intersection.id}:from${fromPortId}-to${toPortId}"
 }

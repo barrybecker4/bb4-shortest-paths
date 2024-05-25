@@ -5,7 +5,11 @@ import com.barrybecker4.discreteoptimization.traffic.graph.model.{Intersection, 
 import org.graphstream.graph.Edge
 import org.graphstream.graph.implementations.MultiGraph
 import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass.PLAIN
+import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.StreetSubGraph.STREET_TYPE
 
+object StreetSubGraph {
+  val STREET_TYPE: String = "street" 
+}
 
 case class StreetSubGraph(street: Street,
                      intersectionSubGraph1: IntersectionSubGraph,
@@ -19,6 +23,8 @@ case class StreetSubGraph(street: Street,
 
   forwardEdge.setAttribute("ui.class", PLAIN.name)
   backwardEdge.setAttribute("ui.class", PLAIN.name)
+  forwardEdge.setAttribute("type", STREET_TYPE)
+  backwardEdge.setAttribute("type", STREET_TYPE)
 
   addCurvePoints(forwardEdge, street, forward = true)
   addCurvePoints(backwardEdge, street, forward = false)
@@ -62,9 +68,9 @@ case class StreetSubGraph(street: Street,
 
   private def getStreetEdgeId(street: Street, isForward: Boolean): String = {
     if (isForward)
-      s"${street.intersectionIdx1}_${street.portIdx1}-${street.intersectionIdx2}_${street.portIdx2}"
+      s"i${street.intersectionIdx1}:p${street.portIdx1}-i${street.intersectionIdx2}:p${street.portIdx2}"
     else
-      s"${street.intersectionIdx2}_${street.portIdx2}-${street.intersectionIdx1}_${street.portIdx1}"
+      s"i${street.intersectionIdx2}:p${street.portIdx2}-i${street.intersectionIdx1}:p${street.portIdx1}"
   }
 
   private def ptToString(array: Array[AnyRef]): String =

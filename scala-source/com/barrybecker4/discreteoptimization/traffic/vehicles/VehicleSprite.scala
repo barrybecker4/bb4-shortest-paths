@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.vehicles
 
-import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite.{MAX_SPEED, SCALE}
+import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite.{MAX_ACCELERATION, MAX_SPEED, SCALE}
 import org.graphstream.graph.Edge
 import org.graphstream.graph.Node
 import org.graphstream.ui.spriteManager.Sprite
@@ -11,7 +11,9 @@ object VehicleSprite {
   // The is dependent on the size of the window and the coordinates used to build the graph
   private val SCALE = 1.0
   // Meters/second
-  private val MAX_SPEED = 100
+  private val MAX_SPEED = 100.0
+  // Meters/ second^2
+  private val MAX_ACCELERATION = 5.0
 }
 
 /**
@@ -25,18 +27,12 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
 
   def getSpeed: Double = speed
 
-  /** @param percent a number between -100 and 100. The caller should be sure that the acceleration is not too great
+  /** @param acceleration requested amount of acceleration to change the current speed by. It has constraints.
    */
-  def changeSpeed(percent: Double): Unit = {
-    speed *= (1.0 + percent)
-    if (speed < 0) {
-      println("error: speed was less than 0 - " + speed)
-      speed = 0
-    } else if (speed > MAX_SPEED) {
-      println("error: speed was > MAX - " + speed)
-      speed = MAX_SPEED
-    }
-    println("new speed = " + speed)
+  def changeSpeed(acceleration: Double): Unit = {
+    speed += Math.max(-MAX_ACCELERATION, Math.min(acceleration, MAX_ACCELERATION))
+    speed = Math.max(0, Math.min(speed, MAX_SPEED))
+    println("speed =" + speed)
   }
 
   override def attachToEdge(id: String): Unit = {
