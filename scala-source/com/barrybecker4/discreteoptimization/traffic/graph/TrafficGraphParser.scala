@@ -25,14 +25,13 @@ case class TrafficGraphParser() extends Parser[TrafficGraph] {
     val numIntersections = firstLine(0).toInt
     val numStreets = firstLine(1).toInt
     val numVehicles = firstLine(2).toInt
-    val initialSpeed = firstLine(3).toDouble
 
     val intersections = parseIntersections(numIntersections, lines)
     
     val start = 1 + numIntersections
     val streets = parseStreets(start, numStreets, lines)
 
-    TrafficGraph(numVehicles, initialSpeed, intersections, streets)
+    TrafficGraph(numVehicles, intersections, streets)
   }
 
   private def parseIntersections(numIntersections: Int, lines: IndexedSeq[String]): IndexedSeq[Intersection] = {

@@ -14,7 +14,7 @@ import java.awt.{Dimension, Frame}
 import javax.swing.JFrame
 
 object TrafficOrchestrator {
-  private val DELTA_TIME_SECS = 0.01
+  private val DELTA_TIME_SECS = 0.1
 }
 
 class TrafficOrchestrator(graph: Graph, numSprites: Int, initialSpeed: Double,
@@ -37,7 +37,7 @@ class TrafficOrchestrator(graph: Graph, numSprites: Int, initialSpeed: Double,
   private def simulateTrafficFlow(pipeIn: ViewerPipe): Unit = {
     while (viewerListener.isLooping) {
       //pipeIn.pump()
-      intersectionSubGraphs.foreach(intersectionSubGraph => intersectionSubGraph.update(DELTA_TIME_SECS, spriteGenerator.getSpriteManager))
+      //intersectionSubGraphs.foreach(intersectionSubGraph => intersectionSubGraph.update(DELTA_TIME_SECS, spriteGenerator.getSpriteManager))
       spriteGenerator.moveSprites(DELTA_TIME_SECS)
       sleep(2)
     }

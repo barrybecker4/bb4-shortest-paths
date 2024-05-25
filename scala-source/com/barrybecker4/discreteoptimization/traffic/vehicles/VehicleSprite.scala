@@ -21,7 +21,7 @@ object VehicleSprite {
  * @param initialSpeed initial speed of the sprite in meters per second
  */
 class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSpriteManager) extends Sprite(identifier, manager) {
-  private var positionPct: Double = 0.0
+  private var positionPct: Double = 0.0 // 0 - 1.0
   private var step = 0.0
   private var speed = initialSpeed
 
@@ -32,7 +32,6 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
   def changeSpeed(acceleration: Double): Unit = {
     speed += Math.max(-MAX_ACCELERATION, Math.min(acceleration, MAX_ACCELERATION))
     speed = Math.max(0, Math.min(speed, MAX_SPEED))
-    println("speed =" + speed)
   }
 
   override def attachToEdge(id: String): Unit = {

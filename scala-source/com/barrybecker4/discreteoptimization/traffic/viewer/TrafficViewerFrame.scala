@@ -70,7 +70,8 @@ class TrafficViewerFrame extends GraphViewerFrame() {
 
       //val graph = TrafficGraphGenerator().generateGraph()
       //showTrafficGraph(graph)
-      setGraph(graph, trafficGraph.numVehicles, 0, adapter.intersectionSubGraphs, "Traffic Demo")
+      val initialSpeed = 1.0
+      setGraph(graph, trafficGraph.numVehicles, initialSpeed, adapter.intersectionSubGraphs, "Traffic Demo")
     }
   }
 

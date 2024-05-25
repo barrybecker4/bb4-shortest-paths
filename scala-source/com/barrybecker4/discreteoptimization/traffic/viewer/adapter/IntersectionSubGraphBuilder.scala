@@ -3,7 +3,7 @@ package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 import com.barrybecker4.discreteoptimization.common.Location
 import com.barrybecker4.discreteoptimization.traffic.graph.model.Intersection
 import com.barrybecker4.discreteoptimization.traffic.signals.TrafficSignal
-import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.{INTERSECTION_RADIUS, INTERSECTION_TYPE, LANE_SEP_ANGLE, angleToRads}
+import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.{INTERSECTION_RADIUS, INTERSECTION_TYPE, LANE_SEP_ANGLE}
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
 
@@ -11,9 +11,8 @@ import org.graphstream.graph.implementations.MultiGraph
 object IntersectionSubGraphBuilder {
   val INTERSECTION_RADIUS = 90.0
   val INTERSECTION_TYPE = "intersection"
-  private val LANE_SEP_ANGLE = angleToRads(12)
-
-  private def angleToRads(angle: Double): Double = angle.toFloat * Math.PI / 180.0
+  // How much to separate the incoming lanes on the intersection by (in radians).
+  private val LANE_SEP_ANGLE = 0.2
 }
 
 /**
@@ -43,7 +42,7 @@ case class IntersectionSubGraphBuilder(intersection: Intersection, graph: MultiG
       val inNode = graph.addNode(getNodeName(portId, "incoming"))
       val outNode = graph.addNode(getNodeName(portId, "outgoing"))
       val loc = intersection.location
-      val ang = angleToRads(port.angle)
+      val ang = port.angleRad
 
       inNode.setAttribute("xyz",
         loc.x + INTERSECTION_RADIUS * Math.cos(ang + LANE_SEP_ANGLE),

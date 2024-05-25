@@ -6,6 +6,7 @@ import org.graphstream.graph.Edge
 import org.graphstream.graph.implementations.MultiGraph
 import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass.PLAIN
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.StreetSubGraph.STREET_TYPE
+import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.INTERSECTION_RADIUS
 
 object StreetSubGraph {
   val STREET_TYPE: String = "street" 
@@ -61,8 +62,11 @@ case class StreetSubGraph(street: Street,
   private def getRadialPosition(intersection: Intersection, portId: Int): Location = {
     val port = intersection.ports(portId)
     //val len = IntersectionSubGraph.INTERSECTION_RADIUS + port.radialLength
-    val vecX = (Math.cos(port.angleRad) * port.radialLength).toFloat
-    val vecY = (Math.sin(port.angleRad) * port.radialLength).toFloat
+    // Instead of having each port have a radial length, just use half the intersection
+    // radius to keep the vectors consistent with those within the intersection.
+    val rad = INTERSECTION_RADIUS
+    val vecX = (Math.cos(port.angleRad) * rad).toFloat //port.radialLength).toFloat
+    val vecY = (Math.sin(port.angleRad) * rad).toFloat //port.radialLength).toFloat
     Location(vecX, vecY)
   }
 

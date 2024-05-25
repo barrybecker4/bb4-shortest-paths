@@ -8,8 +8,7 @@ import com.barrybecker4.discreteoptimization.traffic.graph.model.{Intersection, 
 /**
  * An immutable directed graph with optional node locations
  */
-case class TrafficGraph(numVehicles: Int, 
-                        initialSpeed: Double, 
+case class TrafficGraph(numVehicles: Int,
                         intersections: IndexedSeq[Intersection], 
                         streets: IndexedSeq[Street]) {
   
