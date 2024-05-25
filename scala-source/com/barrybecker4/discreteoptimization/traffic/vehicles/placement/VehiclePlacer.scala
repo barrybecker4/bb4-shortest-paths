@@ -153,6 +153,7 @@ class VehiclePlacer(private val sprites: SpriteManager, private val graph: Graph
       val color = VehiclePlacer.VEHICLE_COLORS((Math.random * VehiclePlacer.VEHICLE_COLORS.length).toInt)
       sprite.setAttribute("ui.style", s"fill-color: $color")
       spriteCount.incrementAndGet()
+      // for some reason there seems to be a problem with sprite orientation a the ver ends
       val pos = 0.01 + 0.98 * positionIdx.toDouble / spriteSlots.length
       println("setting sprite " + spriteCount.get() + " pos to " + pos + " and putting it in slot " + positionIdx)
       sprite.setPosition(pos)

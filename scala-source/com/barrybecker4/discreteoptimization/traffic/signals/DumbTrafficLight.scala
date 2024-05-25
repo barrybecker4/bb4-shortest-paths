@@ -6,7 +6,11 @@ import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 import concurrent.duration.DurationInt
 import com.barrybecker4.discreteoptimization.traffic.signals.DumbTrafficLight._
 
-
+/**
+ * Only one street is allowed to proceed at once (on green). 
+ * That should prevent the possibility of accidents.
+ * @param numStreets the number of streets leading into the intersection
+ */
 class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
   private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
   private var currentStreet: Int = 0
@@ -14,8 +18,6 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
 
   setInitialState()
 
-  override def getOptimalDistance: Double = 3.0
-  override def getFarDistance: Double = 30.0
   override def getLightState(street: Int): LightState = {
     if (street == currentStreet) lightState else RED
   }
@@ -46,8 +48,12 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
     currentStreet = (currentStreet + 1) % numStreets
     switchToGreen()
   }
-}
 
+  private def printLightStates(): Unit = {
+    val states = Range(0, numStreets).map(i => getLightState(i))
+    println(states)
+  }
+}
 
 
 object DumbTrafficLight {
@@ -56,21 +62,17 @@ object DumbTrafficLight {
   private val YELLOW_DURATION_SECS = 2
 
   def main(args: Array[String]): Unit = {
-    val trafficLight = new DumbTrafficLight(3)
+    val numStreets = 5
+    val trafficLight = new DumbTrafficLight(numStreets)
     val checkInterval = 1.second
 
     val executor = Executors.newScheduledThreadPool(1)
     executor.scheduleAtFixedRate(new Runnable {
-      def run(): Unit = printLightStates(trafficLight)
+      def run(): Unit = trafficLight.printLightStates()
     }, 0, checkInterval.toMillis, TimeUnit.MILLISECONDS)
 
     Thread.sleep(30000)
     executor.shutdown()
     trafficLight.shutdown()
-  }
-
-  private def printLightStates(trafficLight: DumbTrafficLight): Unit = {
-    val states = Range(0, 3).map(i => trafficLight.getLightState(i))
-    println(states)
   }
 }
