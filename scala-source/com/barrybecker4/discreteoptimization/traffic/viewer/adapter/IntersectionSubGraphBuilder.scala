@@ -3,7 +3,7 @@ package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 import com.barrybecker4.discreteoptimization.common.Location
 import com.barrybecker4.discreteoptimization.traffic.graph.model.Intersection
 import com.barrybecker4.discreteoptimization.traffic.signals.TrafficSignal
-import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.{INTERSECTION_RADIUS, INTERSECTION_TYPE, LANE_SEP_ANGLE}
+import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.{INTERSECTION_RADIUS, INTERSECTION_TYPE, LANE_SEP_ANGLE, VECTOR_SCALE}
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
 
@@ -13,6 +13,8 @@ object IntersectionSubGraphBuilder {
   val INTERSECTION_TYPE = "intersection"
   // How much to separate the incoming lanes on the intersection by (in radians).
   private val LANE_SEP_ANGLE = 0.2
+  // proportion of radial length to use for the vector. 0-1, where 1 is the full length of the radius
+  private val VECTOR_SCALE = 0.25
 }
 
 /**
@@ -69,8 +71,8 @@ case class IntersectionSubGraphBuilder(intersection: Intersection, graph: MultiG
 
           val src = fromNode.getAttribute("xyz", classOf[Array[AnyRef]])
           val dst = toNode.getAttribute("xyz", classOf[Array[AnyRef]])
-          val srcVec = halfway(src, intersection.location)
-          val dstVec = halfway(dst, intersection.location)
+          val srcVec = partway(src, intersection.location)
+          val dstVec = partway(dst, intersection.location)
           edge.setAttribute("ui.points",
             src(0), src(1), 0.0,
             srcVec(0), srcVec(1), 0,
@@ -82,8 +84,10 @@ case class IntersectionSubGraphBuilder(intersection: Intersection, graph: MultiG
     }
   }
 
-  private def halfway(pt1: Array[AnyRef], pt2: Location): Array[Double] = {
-    Array((pt1(0).toString.toDouble + pt2.x) / 2.0, (pt1(1).toString.toDouble + pt2.y) / 2.0)
+  private def partway(src: Array[AnyRef], dest: Location): Array[Double] = {
+    val srcX = src(0).toString.toDouble
+    val srcY = src(1).toString.toDouble
+    Array(srcX + (dest.x - srcX) * VECTOR_SCALE, srcY + (dest.y - srcY) * VECTOR_SCALE)
   }
 
   private def getNodeName(portId: Int, direction:String): String =

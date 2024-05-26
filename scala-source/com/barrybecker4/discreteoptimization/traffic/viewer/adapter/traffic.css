@@ -31,7 +31,7 @@ edge {
 
 sprite {
   shape: box;
-  size: 12px, 6px;
+  size: 16px, 8px;
   fill-mode: plain;
   stroke-mode: none;
   /* Rotate the sprite based on the direction of the edge */

@@ -22,6 +22,7 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
   def getIncomingNode(portId: Int): Node = builder.incomingNodes(portId)
   def getOutgoingNode(portId: Int): Node = builder.outgoingNodes(portId)
 
+
   // Called by the orchestrator to update the intersection every timeStep
   // * - Within an intersection, examine the sprites on intersection edges and the edges leading into the intersection.
   // * - Sprites should be aware of how distant the next sprite in front is, if any.
@@ -41,33 +42,31 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
       val edge: Edge = node.getEnteringEdge(0)
       val edgeLen = edge.getAttribute("length", classOf[Object]).asInstanceOf[Double]
       // spriteManager.getVehiclesOnEdge(edgeId)
-      val sprites = spriteManager.getVehiclesOnEdge(edge.getId) //edge.getAttribute("vehicles", classOf[mutable.PriorityQueue[VehicleSprite]])
+      val sprites = spriteManager.getVehiclesOnEdge(edge.getId)
       if (sprites.nonEmpty) {
-
-        assert(sprites != null, "sprites should not be null")
-        if (Math.random() < 0.001)
-          println(s"vehicles on edge ${edge.getId} = " + sprites.map(s => s.getId))
-
-        var nextSprite: VehicleSprite = null
-        val sortedSprites: Seq[VehicleSprite] = sprites.clone().dequeueAll
-        sortedSprites.foreach(sprite => {
-          if (nextSprite != null) {
-            val distanceToNext = (nextSprite.getPosition - sprite.getPosition) * edgeLen / 100.0
-            if (distanceToNext < 0)  // this is failing
-              println(s"distToNext=$distanceToNext optDist=${signal.getOptimalDistance}")
-            //assert(distanceToNext > 0, "The distance to the car in front should never be less than 0") // Hitting this
-            if (distanceToNext < signal.getFarDistance) {
-              if (distanceToNext < signal.getOptimalDistance / 2.0) {
-                sprite.changeSpeed(-4.0)
-              } else if (distanceToNext < signal.getOptimalDistance) {
-                sprite.changeSpeed(-2.0)
-              } else if (sprite.getSpeed <= nextSprite.getSpeed) {
-                sprite.changeSpeed(1.0)
-              }
-            }
-          }
-          nextSprite = sprite
-        })
+//        val sortedSprites: Seq[VehicleSprite] = sprites.clone().dequeueAll
+//        if (Math.random() < 0.001)
+//          println(s"vehicles on edge ${edge.getId} = " + sortedSprites.map(s => s.getId))
+//
+//        var nextSprite: VehicleSprite = null
+//        sortedSprites.foreach(sprite => {
+//          if (nextSprite == null) {
+//            val distanceToNext = (nextSprite.getPosition - sprite.getPosition) * edgeLen / 100.0
+//            if (distanceToNext < 0) // this is failing
+//              println(s"distToNext=$distanceToNext optDist=${signal.getOptimalDistance}")
+//            //assert(distanceToNext > 0, "The distance to the car in front should never be less than 0") // Hitting this
+////            if (distanceToNext < signal.getFarDistance) {
+////              if (distanceToNext < signal.getOptimalDistance / 2.0) {
+////                sprite.changeSpeed(-4.0)
+////              } else if (distanceToNext < signal.getOptimalDistance) {
+////                sprite.changeSpeed(-2.0)
+////              } else if (sprite.getSpeed <= nextSprite.getSpeed) {
+////                sprite.changeSpeed(1.0)
+////              }
+////            }
+//          }
+//          nextSprite = sprite
+//        })
       }
     }
   }
