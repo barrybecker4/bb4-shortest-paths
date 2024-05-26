@@ -7,6 +7,7 @@ import com.barrybecker4.discreteoptimization.traffic.vehicles.{VehicleSprite, Ve
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
+import com.barrybecker4.discreteoptimization.traffic.signals.LightState.*
 
 import scala.collection.mutable
 
@@ -41,32 +42,62 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
       assert(node.getInDegree == 1)
       val edge: Edge = node.getEnteringEdge(0)
       val edgeLen = edge.getAttribute("length", classOf[Object]).asInstanceOf[Double]
-      // spriteManager.getVehiclesOnEdge(edgeId)
       val sprites = spriteManager.getVehiclesOnEdge(edge.getId)
+
       if (sprites.nonEmpty) {
-        val sortedSprites: Seq[VehicleSprite] = sprites.clone().dequeueAll
-        if (Math.random() < 0.001)
-          println(s"vehicles on edge ${edge.getId} = " + sortedSprites.map(s => s.getId))
+        val sortedSprites: IndexedSeq[VehicleSprite] = sprites.toIndexedSeq.sortBy(-_.getPosition)
         var nextSprite: VehicleSprite = null
+        //handleTrafficSignal(sortedSprites, portId, edgeLen, deltaTime)
         sortedSprites.foreach(sprite => {
           if (nextSprite != null) {
             val distanceToNext = (nextSprite.getPosition - sprite.getPosition) * edgeLen
-            if (distanceToNext < 0) // this is failing
-              println(s"ERROR distToNext=$distanceToNext optDist=${signal.getOptimalDistance}")
-            //assert(distanceToNext > 0, "The distance to the car in front should never be less than 0") // Hitting this
-//            if (distanceToNext < signal.getFarDistance) {
-//              if (distanceToNext < signal.getOptimalDistance / 2.0) {
-//                sprite.changeSpeed(-0.4)
-//              } else if (distanceToNext < signal.getOptimalDistance) {
-//                sprite.changeSpeed(-0.2)
-//              } else if (sprite.getSpeed <= nextSprite.getSpeed) {
-//                sprite.changeSpeed(0.1)
-//              }
-//            }
+            assert(distanceToNext > 0, "The distance to the car in front should never be less than 0")
+            // the following is not working as expected
+            if (distanceToNext < signal.getFarDistance) {
+              if (distanceToNext < signal.getOptimalDistance) {
+                sprite.brake(distanceToNext / 2.0, deltaTime)
+              } else if (sprite.getSpeed <= nextSprite.getSpeed) {
+                sprite.changeSpeed(0.1)
+              }
+            }
           }
           nextSprite = sprite
         })
       }
+    }
+  }
+
+  /**
+   * if the light is red, then first car should already be stopped
+   * if the light is yellow,
+   *   then all cars closer than speed * yellowTime should continue
+   *   then the first car further than speed * yellowTime should prepare to stop
+   * if the light is green, then all cars should continue
+   *
+   * sprites with text
+   * draw straight edges
+   * draw the lights at intersection nodes
+   * sprite orientation - projection
+   */
+  private def handleTrafficSignal(sortedVehicles: IndexedSeq[VehicleSprite], portId: Int, edgeLen: Double, deltaTime: Double): Unit = {
+    val signalStatus = signal.getLightState(portId)
+    val vehicleClosestToLight = sortedVehicles.head
+    if (signalStatus == RED) {
+      // if the light is red, then first car should already be stopped
+      if (vehicleClosestToLight.getSpeed > 0.0)
+        println("vehicleClosestToLight.getSpeed=" + vehicleClosestToLight.getSpeed + " should have been 0")
+      vehicleClosestToLight.stop()
+    } else if (signalStatus == YELLOW) {
+      val yellowTime = signal.getYellowDurationSecs.toDouble
+      var vehicleIdx = 0
+      var vehicle = vehicleClosestToLight
+      while ((1.0 - vehicle.getPosition) * edgeLen < yellowTime * vehicle.getSpeed && vehicleIdx > 0) {
+        vehicleIdx += 1
+        vehicle = sortedVehicles(vehicleIdx)
+      }
+      vehicle.brake(yellowTime * vehicle.getSpeed * .9, deltaTime)
+    } else if (signalStatus == GREEN) {
+      vehicleClosestToLight.changeSpeed(0.2)
     }
   }
 }

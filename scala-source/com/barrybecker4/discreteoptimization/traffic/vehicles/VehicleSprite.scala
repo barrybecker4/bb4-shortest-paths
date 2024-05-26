@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.vehicles
 
-import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite.{MAX_ACCELERATION, MAX_SPEED, SCALE}
+import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite.{DEBUG, MAX_ACCELERATION, MAX_SPEED, SCALE}
 import org.graphstream.graph.Edge
 import org.graphstream.graph.Node
 import org.graphstream.ui.spriteManager.Sprite
@@ -14,6 +14,7 @@ object VehicleSprite {
   private val MAX_SPEED = 100.0
   // Meters/ second^2
   private val MAX_ACCELERATION = 5.0
+  private val DEBUG = true
 }
 
 /**
@@ -32,6 +33,17 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
   def changeSpeed(acceleration: Double): Unit = {
     speed += Math.max(-MAX_ACCELERATION, Math.min(acceleration, MAX_ACCELERATION))
     speed = Math.max(0, Math.min(speed, MAX_SPEED))
+  }
+
+  def brake(stoppingDistance: Double, deltaTime: Double): Unit = {
+    val brake = Math.min(MAX_ACCELERATION, speed * deltaTime / stoppingDistance) // not sure about this
+    // println("braking by " + brake + ";  stoppingDistance=" + stoppingDistance + " deltaTime=" + deltaTime + " speed=" + speed)
+    changeSpeed(-brake)
+  }
+
+  // This would be quite jarring to the driver. Avoid doing this unless going slow.
+  def stop(): Unit = {
+    speed = 0
   }
 
   override def attachToEdge(id: String): Unit = {
@@ -54,11 +66,18 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
   
   def move(deltaTime: Double): Unit = {
     var p = getX
-    if (step == 0) step = calculateIncrement(getAttachment.asInstanceOf[Edge], deltaTime)
+    if (step == 0)
+      step = calculateIncrement(getAttachment.asInstanceOf[Edge], deltaTime)
     p += step
     if (p < 0 || p > 1) chooseNextEdge(p, deltaTime)
     else setPosition(p)
+
+    if (DEBUG)
+      setAttribute("ui.label", "p: " + positionPct.toFloat + "    s: " + speed.toFloat)
   }
+
+  private def sutractVecs(v1: Array[Double], v2: Array[Double]): Array[Double] =
+    Array(v1(0) - v2(0), v1(1) - v2(1), 0)
 
   def chooseNextEdge(p: Double, deltaTime: Double): Unit = {
     val edge = getAttachment.asInstanceOf[Edge]

@@ -32,7 +32,7 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
     lightState = GREEN
     scheduler.schedule(new Runnable {
       def run(): Unit = switchToYellow()
-    }, GREEN_DURATION_SECS, TimeUnit.SECONDS)
+    }, getGreenDurationSecs, TimeUnit.SECONDS)
   }
 
   // Function to switch the light to yellow
@@ -40,7 +40,7 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
     lightState = YELLOW
     scheduler.schedule(new Runnable {
       def run(): Unit = switchToRed()
-    }, YELLOW_DURATION_SECS, TimeUnit.SECONDS)
+    }, getYellowDurationSecs, TimeUnit.SECONDS)
   }
 
   private def switchToRed(): Unit = {
@@ -57,9 +57,6 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
 
 
 object DumbTrafficLight {
-
-  private val GREEN_DURATION_SECS = 5
-  private val YELLOW_DURATION_SECS = 2
 
   def main(args: Array[String]): Unit = {
     val numStreets = 5
