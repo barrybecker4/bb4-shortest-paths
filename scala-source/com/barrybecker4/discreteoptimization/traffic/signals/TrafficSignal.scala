@@ -14,8 +14,9 @@ trait TrafficSignal {
   def getLightState(port: Int): LightState
 
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite], portId: Int,
-                    node: Node, edgeLen: Double, deltaTime: Double): Unit
-  def showLight(node: Node, lightState: LightState): Unit = {
+                    edgeLen: Double, deltaTime: Double): Unit
+  def showLight(node: Node, portId: Int): Unit = {
+    val lightState = getLightState(portId)
     node.setAttribute("ui.style", "size: 30px; z-index:0; fill-color: " + lightState.color)
   }
 

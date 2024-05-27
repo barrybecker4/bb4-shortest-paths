@@ -38,9 +38,8 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
    * draw the lights at intersection nodes
    */
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite],
-                    portId: Int, node: Node, edgeLen: Double, deltaTime: Double): Unit = {
+                    portId: Int, edgeLen: Double, deltaTime: Double): Unit = {
     val lightState = getLightState(portId)
-    showLight(node, lightState)
 //    val vehicleClosestToLight = sortedVehicles.head
 //    if (lightState == RED) {
 //      // if the light is red, then first car should already be stopped

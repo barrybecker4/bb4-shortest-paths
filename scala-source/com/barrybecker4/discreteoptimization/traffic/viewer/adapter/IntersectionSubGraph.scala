@@ -39,6 +39,7 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
     //println(" -- now updating vehicle positions on edges of intersection " + intersection.id)
     for (portId <- intersection.ports.indices) {
       val node: Node = getIncomingNode(portId)
+      signal.showLight(node, portId)
       assert(node.getInDegree == 1)
       val edge: Edge = node.getEnteringEdge(0)
       val edgeLen = edge.getAttribute("length", classOf[Object]).asInstanceOf[Double]
@@ -47,7 +48,7 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
       if (sprites.nonEmpty) {
         val sortedSprites: IndexedSeq[VehicleSprite] = sprites.toIndexedSeq.sortBy(-_.getPosition)
         var nextSprite: VehicleSprite = null
-        signal.handleTraffic(sortedSprites, portId, node, edgeLen, deltaTime)
+        signal.handleTraffic(sortedSprites, portId, edgeLen, deltaTime)
         sortedSprites.foreach(sprite => {
           if (nextSprite != null) {
             val distanceToNext = (nextSprite.getPosition - sprite.getPosition) * edgeLen
