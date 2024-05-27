@@ -40,24 +40,24 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite],
                     portId: Int, edgeLen: Double, deltaTime: Double): Unit = {
     val lightState = getLightState(portId)
-//    val vehicleClosestToLight = sortedVehicles.head
-//    if (lightState == RED) {
-//      // if the light is red, then first car should already be stopped
-//      if (vehicleClosestToLight.getSpeed > 0.0)
-//        println("vehicleClosestToLight.getSpeed=" + vehicleClosestToLight.getSpeed + " should have been 0")
-//      vehicleClosestToLight.stop()
-//    } else if (lightState == YELLOW) {
-//      val yellowTime = getYellowDurationSecs.toDouble
-//      var vehicleIdx = 0
-//      var vehicle = vehicleClosestToLight
-//      while ((1.0 - vehicle.getPosition) * edgeLen < yellowTime * vehicle.getSpeed && vehicleIdx > 0) {
-//        vehicleIdx += 1
-//        vehicle = sortedVehicles(vehicleIdx)
-//      }
-//      vehicle.brake(yellowTime * vehicle.getSpeed * .9, deltaTime)
-//    } else if (lightState == GREEN) {
-//      vehicleClosestToLight.changeSpeed(0.2)
-//    }
+    val vehicleClosestToLight = sortedVehicles.last
+    if (lightState == RED) {
+      // if the light is red, then first car should already be stopped or close to it
+      if (vehicleClosestToLight.getSpeed > 0.0)
+        println("vehicleClosestToLight.getSpeed=" + vehicleClosestToLight.getSpeed + " should have been 0")
+      vehicleClosestToLight.stop()
+    } else if (lightState == YELLOW) {
+      val yellowTime = getYellowDurationSecs.toDouble
+      var vehicleIdx = sortedVehicles.size - 1
+      var vehicle = vehicleClosestToLight
+      while ((1.0 - vehicle.getPosition) * edgeLen < yellowTime * vehicle.getSpeed && vehicleIdx > 0) {
+        vehicleIdx -= 1
+        vehicle = sortedVehicles(vehicleIdx)
+      }
+      vehicle.brake(yellowTime * vehicle.getSpeed * .9, deltaTime)
+    } else if (lightState == GREEN) {
+      vehicleClosestToLight.changeSpeed(0.2)
+    }
   }
 
   // Function to initialize the traffic light state and scheduling

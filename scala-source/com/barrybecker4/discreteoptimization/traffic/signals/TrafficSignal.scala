@@ -7,10 +7,10 @@ import org.graphstream.graph.Node
 
 trait TrafficSignal {
 
-  def getOptimalDistance: Double = 3.0
-  def getFarDistance: Double = 30.0
-  def getYellowDurationSecs: Int = 3
-  def getGreenDurationSecs: Int = 7
+  def getOptimalDistance: Double = 5.0
+  def getFarDistance: Double = 40.0
+  def getYellowDurationSecs: Int = 4
+  def getGreenDurationSecs: Int = 12
   def getLightState(port: Int): LightState
 
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite], portId: Int,
