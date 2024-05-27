@@ -1,10 +1,13 @@
 package com.barrybecker4.discreteoptimization.traffic.signals
 
 import com.barrybecker4.discreteoptimization.traffic.signals.{LightState, TrafficSignal}
-import com.barrybecker4.discreteoptimization.traffic.signals.LightState._
+import com.barrybecker4.discreteoptimization.traffic.signals.LightState.*
+
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 import concurrent.duration.DurationInt
-import com.barrybecker4.discreteoptimization.traffic.signals.DumbTrafficLight._
+import com.barrybecker4.discreteoptimization.traffic.signals.DumbTrafficLight.*
+import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite
+import org.graphstream.graph.Node
 
 /**
  * Only one street is allowed to proceed at once (on green). 
@@ -23,6 +26,40 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
   }
 
   def shutdown(): Unit = scheduler.shutdown()
+
+  /**
+   * if the light is red, then first car should already be stopped
+   * if the light is yellow,
+   *   then all cars closer than speed * yellowTime should continue
+   *   then the first car further than speed * yellowTime should prepare to stop
+   * if the light is green, then all cars should continue
+   * In builder, add disconnected nodes around the intersection node to represent the traffic light.
+   *
+   * draw the lights at intersection nodes
+   */
+  def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite],
+                    portId: Int, node: Node, edgeLen: Double, deltaTime: Double): Unit = {
+    val lightState = getLightState(portId)
+    showLight(node, lightState)
+//    val vehicleClosestToLight = sortedVehicles.head
+//    if (lightState == RED) {
+//      // if the light is red, then first car should already be stopped
+//      if (vehicleClosestToLight.getSpeed > 0.0)
+//        println("vehicleClosestToLight.getSpeed=" + vehicleClosestToLight.getSpeed + " should have been 0")
+//      vehicleClosestToLight.stop()
+//    } else if (lightState == YELLOW) {
+//      val yellowTime = getYellowDurationSecs.toDouble
+//      var vehicleIdx = 0
+//      var vehicle = vehicleClosestToLight
+//      while ((1.0 - vehicle.getPosition) * edgeLen < yellowTime * vehicle.getSpeed && vehicleIdx > 0) {
+//        vehicleIdx += 1
+//        vehicle = sortedVehicles(vehicleIdx)
+//      }
+//      vehicle.brake(yellowTime * vehicle.getSpeed * .9, deltaTime)
+//    } else if (lightState == GREEN) {
+//      vehicleClosestToLight.changeSpeed(0.2)
+//    }
+  }
 
   // Function to initialize the traffic light state and scheduling
   private def setInitialState(): Unit = switchToGreen()
