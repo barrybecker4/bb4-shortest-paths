@@ -18,7 +18,7 @@ object IntersectionSubGraphBuilder {
 }
 
 /**
- * Pupulates the graph with all the nodes and edges needed to represent the N-way intersection.
+ * Populates the graph with all the nodes and edges needed to represent the N-way intersection.
  * Provides convenient accessors for the streets that enter and exit the intersection.
  */
 case class IntersectionSubGraphBuilder(intersection: Intersection, graph: MultiGraph) {

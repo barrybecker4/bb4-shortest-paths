@@ -13,8 +13,8 @@ import scala.collection.mutable
 
 
 /**
- * Pupulates the graph with all the nodes and edges needed to represent the N-way intersection.
- * Provides convenient accessors for the streets that enter and exit the intersection.
+ * Represents the nodes and edges in an intersection.
+ * Regulates the movement of vehicles on the edges leading into the intersection
  */
 case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSignal, graph: MultiGraph) {
 
@@ -53,8 +53,8 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
     if (sprites.nonEmpty) {
       val sortedSprites: IndexedSeq[VehicleSprite] = sprites.toIndexedSeq.sortBy(_.getPosition)
       var nextSprite: VehicleSprite = null
-      signal.handleTraffic(sortedSprites, portId, edgeLen, deltaTime)
-      for (i <- 0 until sortedSprites.size - 2) {
+      //signal.handleTraffic(sortedSprites, portId, edgeLen, deltaTime)
+      for (i <- 0 until sortedSprites.size - 1) {
         val sprite = sortedSprites(i)
         val nextSprite = sortedSprites(i + 1)
         val distanceToNext = (nextSprite.getPosition - sprite.getPosition) * edgeLen
@@ -62,13 +62,11 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
         if (distanceToNext < signal.getFarDistance) {
           if (distanceToNext < signal.getOptimalDistance) {
             sprite.setSpeed(nextSprite.getSpeed * 0.9)
-            //sprite.brake(distanceToNext / 2.0, deltaTime)
           } else if (sprite.getSpeed <= nextSprite.getSpeed) {
-            sprite.setSpeed(nextSprite.getSpeed * 1.01)
+            sprite.setSpeed(nextSprite.getSpeed * 1.05)
           }
         }
       }
-      //println("Sprites on edge = \n" + sortedSprites.map(s => s.getId + " p:" + s.getPosition + " s:" + s.getSpeed).mkString("\n"))
     }
   }
 }

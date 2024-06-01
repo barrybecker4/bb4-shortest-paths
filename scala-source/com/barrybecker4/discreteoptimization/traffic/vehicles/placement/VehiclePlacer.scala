@@ -1,5 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.vehicles.placement
 
+import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSpriteManager
 import com.barrybecker4.discreteoptimization.traffic.vehicles.placement.VehiclePlacer.RND
 import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficGraphUtil
 import org.graphstream.graph.Edge
@@ -39,7 +40,7 @@ object VehiclePlacer {
   private val RND: Random = new Random(0)
 }
 
-class VehiclePlacer(private val sprites: SpriteManager, private val graph: Graph) {
+class VehiclePlacer(private val sprites: VehicleSpriteManager, private val graph: Graph) {
   private val streetEdges = graph.edges.filter(e => TrafficGraphUtil.isStreet(e)).toList
 
   private var totalAllocation: Integer = 0

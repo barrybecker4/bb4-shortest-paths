@@ -26,5 +26,6 @@ class VehicleSpriteManager(graph: Graph) extends SpriteManager(graph) {
 
   def removeVehicleFromEdge(edgeId: String, vehicleSprite: VehicleSprite): Unit = {
     val v = getVehiclesOnEdge(edgeId).remove(vehicleSprite)
+    assert(v)
   }
 }

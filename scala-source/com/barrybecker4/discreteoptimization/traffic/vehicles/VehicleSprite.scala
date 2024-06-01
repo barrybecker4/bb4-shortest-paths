@@ -11,7 +11,7 @@ object VehicleSprite {
   // The is dependent on the size of the window and the coordinates used to build the graph
   private val SCALE = 1.0
   // Meters/second
-  private val MAX_SPEED = 10.0
+  private val MAX_SPEED = 20.0
   // Meters/ second^2
   private val MAX_ACCELERATION = 5.0
   private val DEBUG = true
@@ -27,6 +27,7 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
   private var speed = initialSpeed
 
   def getSpeed: Double = speed
+  def getCurrentEdge: Edge = getAttachment.asInstanceOf[Edge]
 
   /** @param acceleration requested amount of acceleration to change the current speed by. It has constraints.
    */
@@ -50,26 +51,26 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
     speed = 0
   }
 
-  override def attachToEdge(id: String): Unit = {
-    val edge = manager.getEdge(id)
-    if (this.attachment != edge ) {
+  override def attachToEdge(edgeId: String): Unit = {
+    val edge = manager.getEdge(edgeId)
+    if (this.attachment != edge) {
       this.detach()
       this.attachment = edge
+      manager.addVehicleToEdge(edgeId, this)
     }
-    this.attachment.setAttribute(this.completeId, Array(0.0: java.lang.Double))
-
-    manager.addVehicleToEdge(id, this)
+    this.attachment.setAttribute(this.completeId, this.position)
+    //this.attachment.setAttribute(this.completeId, Array(0: java.lang.Double))
   }
 
   override def detach(): Unit = {
-    if (attachment != null) {
-      manager.removeVehicleFromEdge(attachment.getId, this)
+    if (getCurrentEdge != null) {
+      manager.removeVehicleFromEdge(getCurrentEdge.getId, this)
       super.detach()
     }
   }
   
   def move(deltaTime: Double): Unit = {
-    var p = getX
+    var p: Double = getX
     if (step == 0)
       step = calculateIncrement(getAttachment.asInstanceOf[Edge], deltaTime)
     p += step
@@ -77,12 +78,13 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
       chooseNextEdge(p, deltaTime)
     else setPosition(p)
 
-    if (DEBUG)
-      setAttribute("ui.label", s"id: ${getId} p: ${positionPct.toFloat}      s: ${speed.toFloat}")
+    val edgeId = getCurrentEdge.getId
+    if (DEBUG && this.getId == "60")// || edgeId == "i2:p0-i1:p0")
+      setAttribute("ui.label", s"id: $getId pct: ${positionPct.toFloat}        s: ${speed.toFloat} edge:${edgeId}")
   }
 
   def chooseNextEdge(p: Double, deltaTime: Double): Unit = {
-    val edge = getAttachment.asInstanceOf[Edge]
+    val edge = getCurrentEdge
     var node = edge.getSourceNode
 
     if (step > 0) node = edge.getTargetNode
@@ -94,7 +96,7 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
     } else {
       // For the traffic sim, we never do this, because the vehicles always move forward.
       step = -calculateIncrement(nextEdge, deltaTime)
-      1 - offset
+      1.0 - offset
     }
     attachToEdge(nextEdge.getId)
     setPosition(pos)
@@ -102,6 +104,8 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
 
   override def setPosition(pct: Double): Unit = {
     positionPct = pct
+    if (this.getId == "60")
+      println(s"id:$id p:$positionPct")
     super.setPosition(pct)
   }
 
@@ -112,11 +116,10 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
     val edgeLen = edge.getAttribute("length", classOf[Object]).asInstanceOf[Double]
     deltaTime * speed * SCALE / edgeLen
   }
-
   /**
    * select an edge other than the one we came from
    */
-  private def randomEdge(node: Node) = {
+  private def randomEdge(node: Node): Edge = {
     val rand = (Math.random * node.getOutDegree).toInt
     node.getLeavingEdge(rand)
   }
