@@ -145,7 +145,7 @@ class VehiclePlacer(private val sprites: VehicleSpriteManager, private val graph
     val maxAllocation = getMaxAllocation(edge)
     val spriteSlots = new Array[Sprite](maxAllocation)
     assert(numVehiclesToAdd <= spriteSlots.length)
-    System.out.println("now adding " + numVehiclesToAdd + " vehicles to edge " + edge.getId() + " total avail slots = " + spriteSlots.length + " with maxAllocation=" + maxAllocation);
+    System.out.println("now adding " + numVehiclesToAdd + " vehicles to edge " + edge.getId + " total avail slots = " + spriteSlots.length + " with maxAllocation=" + maxAllocation);
     for (i <- 0 until numVehiclesToAdd) {
       var positionIdx = RND.nextInt(spriteSlots.length)
       while (spriteSlots(positionIdx) != null)

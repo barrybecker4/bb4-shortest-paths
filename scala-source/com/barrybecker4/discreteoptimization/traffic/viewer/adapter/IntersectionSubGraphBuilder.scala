@@ -97,5 +97,5 @@ case class IntersectionSubGraphBuilder(intersection: Intersection, graph: MultiG
     s"i${intersection.id}:p${portId}_dir$direction"
 
   private def getEdgeName(fromPortId: Int, toPortId: Int) =
-    s"i${intersection.id}:from${fromPortId}-to${toPortId}"
+    s"i${intersection.id}:from$fromPortId-to$toPortId"
 }

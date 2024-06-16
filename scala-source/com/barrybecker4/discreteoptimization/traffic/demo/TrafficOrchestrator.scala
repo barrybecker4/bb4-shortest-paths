@@ -14,7 +14,7 @@ import java.awt.{Dimension, Frame}
 import javax.swing.JFrame
 
 object TrafficOrchestrator {
-  private val DELTA_TIME_SECS = 0.1
+  private val DELTA_TIME_SECS = 0.2
 }
 
 class TrafficOrchestrator(graph: Graph, numSprites: Int, initialSpeed: Double,
