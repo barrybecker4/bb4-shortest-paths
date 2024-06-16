@@ -9,8 +9,8 @@ trait TrafficSignal {
 
   def getOptimalDistance: Double = 30.0
   def getFarDistance: Double = 200.0
-  def getYellowDurationSecs: Int = 4
-  def getGreenDurationSecs: Int = 12
+  def getYellowDurationSecs: Int = 2
+  def getGreenDurationSecs: Int = 4
   def getLightState(port: Int): LightState
 
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite], portId: Int,

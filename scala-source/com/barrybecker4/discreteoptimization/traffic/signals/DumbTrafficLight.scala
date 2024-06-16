@@ -45,19 +45,21 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
     lightState match {
       case RED =>
         // if the light is red, then first car should already be stopped if it is close to the light
-        if (vehicleClosestToLight.getSpeed > 0.0 && vehicleClosestToLight.getPosition > 0.95) {
-          println("vehicleClosestToLight.getSpeed=" + vehicleClosestToLight.getSpeed + " should have been 0")
+        if (vehicleClosestToLight.getSpeed > 0.0 && vehicleClosestToLight.getPosition > 0.96) {
+          //println("vehicleClosestToLight.getSpeed=" + vehicleClosestToLight.getSpeed + " should have been 0")
           vehicleClosestToLight.stop()
+        } else if (vehicleClosestToLight.getPosition > 0.85) {
+          vehicleClosestToLight.setSpeed(vehicleClosestToLight.getSpeed * .98)
         }
       case YELLOW =>
         val yellowTime = getYellowDurationSecs.toDouble
         var vehicleIdx = sortedVehicles.size - 1
         var vehicle = vehicleClosestToLight
         while ((1.0 - vehicle.getPosition) * edgeLen < yellowTime * vehicle.getSpeed && vehicleIdx > 0) {
+          vehicle.brake(yellowTime * vehicle.getSpeed * 0.8, deltaTime)
           vehicleIdx -= 1
           vehicle = sortedVehicles(vehicleIdx)
         }
-        vehicle.brake(yellowTime * vehicle.getSpeed * 0.9, deltaTime)
       case GREEN =>
         vehicleClosestToLight.accelerate(0.01)
     }

@@ -38,17 +38,22 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
    *     - If upcoming Signal is red, then start to smoothly slow so that we can be stopped by the time we get there
    * Under no circumstances should a vehicle be able to pass another.
    */
-  def update(deltaTime: Double, spriteManager: VehicleSpriteManager): Unit = {
+  def update(deltaTime: Double, spriteManager: VehicleSpriteManager): Unit = synchronized {
     for (portId <- intersection.ports.indices) {
-      val node: Node = getIncomingNode(portId)
-      signal.showLight(node, portId)
-      assert(node.getInDegree == 1, "There should be exactly one edge entering the intersection on a port")
-      val edge: Edge = node.getEnteringEdge(0)
-      updateVehiclesOnEdge(edge, portId, deltaTime, spriteManager)
+      val inNode: Node = getIncomingNode(portId)
+      signal.showLight(inNode, portId)
+      assert(inNode.getInDegree == 1, "There should be exactly one edge entering the intersection on a port")
+      val incomingEdge: Edge = inNode.getEnteringEdge(0)
+      updateVehiclesOnEdge(true, incomingEdge, portId, deltaTime, spriteManager)
+
+//      for (i <- 0 until inNode.getOutDegree) {
+//        val innerOutEdge: Edge = inNode.getLeavingEdge(i)
+//        updateVehiclesOnEdge(false, innerOutEdge, portId, deltaTime, spriteManager)
+//      }
     }
   }
 
-  private def updateVehiclesOnEdge(edge: Edge, portId: Int, deltaTime: Double,
+  private def updateVehiclesOnEdge(handleSignal: Boolean, edge: Edge, portId: Int, deltaTime: Double,
                                    spriteManager: VehicleSpriteManager): Unit = {
     val edgeLen = edge.getAttribute("length", classOf[Object]).asInstanceOf[Double]
     val sprites = spriteManager.getVehiclesOnEdge(edge.getId)
@@ -56,7 +61,8 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
     if (sprites.nonEmpty) {
       val sortedSprites: IndexedSeq[VehicleSprite] = sprites.toIndexedSeq.sortBy(_.getPosition)
       var nextSprite: VehicleSprite = null
-      signal.handleTraffic(sortedSprites, portId, edgeLen, deltaTime)
+      if (handleSignal)
+        signal.handleTraffic(sortedSprites, portId, edgeLen, deltaTime)
       for (i <- 0 until sortedSprites.size - 1) {
         val sprite = sortedSprites(i)
         val nextSprite = sortedSprites(i + 1)
