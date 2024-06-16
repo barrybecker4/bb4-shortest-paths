@@ -107,6 +107,8 @@ class TrafficViewerFrame extends GraphViewerFrame() {
         println("TrafficDemo completed successfully.")
       case scala.util.Failure(exception) =>
         println(s"TrafficDemo run failed with exception: $exception")
+        val cause = exception.getCause()
+        cause.printStackTrace()
     }
   }
 

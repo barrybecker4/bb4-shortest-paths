@@ -7,9 +7,10 @@ import org.graphstream.graph.implementations.MultiGraph
 import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass.PLAIN
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.StreetSubGraph.STREET_TYPE
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.INTERSECTION_RADIUS
+import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.TrafficStreamAdapter.COMPUTE_CURVES
 
 object StreetSubGraph {
-  val STREET_TYPE: String = "street" 
+  val STREET_TYPE: String = "street"
 }
 
 case class StreetSubGraph(street: Street,
@@ -27,9 +28,11 @@ case class StreetSubGraph(street: Street,
   forwardEdge.setAttribute("type", STREET_TYPE)
   backwardEdge.setAttribute("type", STREET_TYPE)
 
-  addCurvePoints(forwardEdge, street, forward = true)
-  addCurvePoints(backwardEdge, street, forward = false)
-
+  if (COMPUTE_CURVES) {
+    addCurvePoints(forwardEdge, street, forward = true)
+    addCurvePoints(backwardEdge, street, forward = false)
+  }
+  
 
   private def addCurvePoints(edge: Edge, street: Street, forward: Boolean): Unit = {
     val src = edge.getSourceNode.getAttribute("xyz", classOf[Array[AnyRef]])
@@ -39,10 +42,8 @@ case class StreetSubGraph(street: Street,
     val intersection2 = if (forward) intersectionSubGraph2.intersection else intersectionSubGraph1.intersection
     val portIdx1 = if (forward) street.portIdx1 else street.portIdx2
     val portIdx2 = if (forward) street.portIdx2 else street.portIdx1
-
     val srcCtrlPt = getPortSpokePoint(src, intersection1, portIdx1)
     val dstCtrlPt = getPortSpokePoint(dst, intersection2, portIdx2)
-
     edge.setAttribute("ui.points",
       src(0), src(1), 0.0,
       srcCtrlPt.x, srcCtrlPt.y, 0,

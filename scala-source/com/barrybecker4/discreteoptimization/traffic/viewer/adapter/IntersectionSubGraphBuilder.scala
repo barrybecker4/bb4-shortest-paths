@@ -4,6 +4,7 @@ import com.barrybecker4.discreteoptimization.common.Location
 import com.barrybecker4.discreteoptimization.traffic.graph.model.Intersection
 import com.barrybecker4.discreteoptimization.traffic.signals.TrafficSignal
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.{INTERSECTION_RADIUS, INTERSECTION_TYPE, LANE_SEP_ANGLE, VECTOR_SCALE}
+import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.TrafficStreamAdapter.COMPUTE_CURVES
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
 
@@ -71,13 +72,15 @@ case class IntersectionSubGraphBuilder(intersection: Intersection, graph: MultiG
 
           val src = fromNode.getAttribute("xyz", classOf[Array[AnyRef]])
           val dst = toNode.getAttribute("xyz", classOf[Array[AnyRef]])
-          val srcVec = partway(src, intersection.location)
-          val dstVec = partway(dst, intersection.location)
-          edge.setAttribute("ui.points",
-            src(0), src(1), 0.0,
-            srcVec(0), srcVec(1), 0,
-            dstVec(0), dstVec(1), 0,
-            dst(0), dst(1), 0.0)
+          if (COMPUTE_CURVES) {
+            val srcVec = partway(src, intersection.location)
+            val dstVec = partway(dst, intersection.location)
+            edge.setAttribute("ui.points",
+              src(0), src(1), 0.0,
+              srcVec(0), srcVec(1), 0,
+              dstVec(0), dstVec(1), 0,
+              dst(0), dst(1), 0.0)
+          }
           edge.setAttribute("type", INTERSECTION_TYPE)
         }
       }

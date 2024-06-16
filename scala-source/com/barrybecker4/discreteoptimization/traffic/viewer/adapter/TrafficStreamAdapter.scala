@@ -17,6 +17,7 @@ import scala.util.Using
 
 object TrafficStreamAdapter {
   val LARGE_GRAPH_THRESH = 60
+  val COMPUTE_CURVES = true
   private val STYLE_SHEET_PATH =
     "scala-source/com/barrybecker4/discreteoptimization/traffic/viewer/adapter/traffic.css"
 

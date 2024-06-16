@@ -1,5 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 
+import com.barrybecker4.common.format.FormatUtil
 import com.barrybecker4.discreteoptimization.common.Location
 import com.barrybecker4.discreteoptimization.traffic.graph.model.Intersection
 import com.barrybecker4.discreteoptimization.traffic.signals.TrafficSignal
@@ -8,6 +9,8 @@ import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.Intersection
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
 import com.barrybecker4.discreteoptimization.traffic.signals.LightState.*
+import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite.DEBUG
+import com.barrybecker4.common.format.FormatUtil.formatNumber
 
 import scala.collection.mutable
 
@@ -61,8 +64,12 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
         assert(distanceToNext > 0, "The distance to the car in front should never be less than 0")
         if (distanceToNext < signal.getFarDistance) {
           if (distanceToNext < signal.getOptimalDistance) {
-            sprite.setSpeed(nextSprite.getSpeed * 0.9)
-          } else if (sprite.getSpeed <= nextSprite.getSpeed) {
+            if (sprite.getSpeed >= nextSprite.getSpeed) {
+              //println(s"sprite slowed from ${sprite.getSpeed} to ${nextSprite.getSpeed * 0.8}")
+              sprite.setSpeed(nextSprite.getSpeed * 0.9)
+            }
+          }
+          else if (sprite.getSpeed <= nextSprite.getSpeed) {
             sprite.setSpeed(nextSprite.getSpeed * 1.05)
           }
         }

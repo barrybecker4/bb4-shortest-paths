@@ -1,29 +1,29 @@
 package com.barrybecker4.discreteoptimization.traffic.vehicles
 
-import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite.{DEBUG, MAX_ACCELERATION, MAX_SPEED, SCALE}
+import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite.{DEBUG, MAX_ACCELERATION, MAX_SPEED, RND}
 import org.graphstream.graph.Edge
 import org.graphstream.graph.Node
 import org.graphstream.ui.spriteManager.Sprite
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSpriteManager
 
+import scala.util.Random
+
 
 object VehicleSprite {
-  // The is dependent on the size of the window and the coordinates used to build the graph
-  private val SCALE = 1.0
   // Meters/second
   private val MAX_SPEED = 20.0
   // Meters/ second^2
   private val MAX_ACCELERATION = 5.0
-  private val DEBUG = true
+  private val DEBUG = false
+  private val RND = Random(0)
 }
 
 /**
  * @param identifier name of the sprite
  * @param initialSpeed initial speed of the sprite in meters per second
  */
-class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSpriteManager) extends Sprite(identifier, manager) {
+class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSpriteManager, rnd: Random = RND) extends Sprite(identifier, manager) {
   private var positionPct: Double = 0.0 // 0 - 1.0
-  private var step = 0.0
   private var speed = initialSpeed
 
   def getSpeed: Double = speed
@@ -31,7 +31,7 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
 
   /** @param acceleration requested amount of acceleration to change the current speed by. It has constraints.
    */
-  def changeSpeed(acceleration: Double): Unit = {
+  def accelerate(acceleration: Double): Unit = {
     speed += Math.max(-MAX_ACCELERATION, Math.min(acceleration, MAX_ACCELERATION))
     speed = Math.max(0, Math.min(speed, MAX_SPEED))
   }
@@ -43,7 +43,7 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
   def brake(stoppingDistance: Double, deltaTime: Double): Unit = {
     val brake = Math.min(MAX_ACCELERATION, speed * deltaTime / stoppingDistance) // not sure about this
     // println("braking by " + brake + ";  stoppingDistance=" + stoppingDistance + " deltaTime=" + deltaTime + " speed=" + speed)
-    changeSpeed(-brake)
+    accelerate(-brake)
   }
 
   // This would be quite jarring to the driver. Avoid doing this unless going slow.
@@ -58,8 +58,7 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
       this.attachment = edge
       manager.addVehicleToEdge(edgeId, this)
     }
-    this.attachment.setAttribute(this.completeId, this.position)
-    //this.attachment.setAttribute(this.completeId, Array(0: java.lang.Double))
+    this.attachment.setAttribute(this.completeId, Array(0: java.lang.Double))
   }
 
   override def detach(): Unit = {
@@ -70,20 +69,25 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
   }
   
   def move(deltaTime: Double): Unit = {
-    var p: Double = getX
-    if (step == 0)
-      step = calculateIncrement(getAttachment.asInstanceOf[Edge], deltaTime)
+    var p: Double = getPosition
+    val step = calculateIncrement(getCurrentEdge, deltaTime)
     p += step
     if (p < 0 || p > 1)
-      chooseNextEdge(p, deltaTime)
+      chooseNextEdge(p, step, deltaTime)
     else setPosition(p)
 
     val edgeId = getCurrentEdge.getId
-    if (DEBUG && this.getId == "60")// || edgeId == "i2:p0-i1:p0")
+    if (DEBUG && (this.getId == "60" || edgeId == "i2:p0-i1:p0"))
       setAttribute("ui.label", s"id: $getId pct: ${positionPct.toFloat}        s: ${speed.toFloat} edge:${edgeId}")
+    else
+      setAttribute("ui.label", "")
+  }
+  
+  def predictNextPosition(deltaTime: Double): Double = {
+    getPosition + calculateIncrement(getAttachment.asInstanceOf[Edge], deltaTime)
   }
 
-  def chooseNextEdge(p: Double, deltaTime: Double): Unit = {
+  def chooseNextEdge(p: Double, step: Double, deltaTime: Double): Unit = {
     val edge = getCurrentEdge
     var node = edge.getSourceNode
 
@@ -91,11 +95,9 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
     val nextEdge = randomEdge(node)
     val offset: Double = Math.abs(p % 1)
     val pos = if (node eq nextEdge.getSourceNode) {
-      step = calculateIncrement(nextEdge, deltaTime)
       offset
     } else {
       // For the traffic sim, we never do this, because the vehicles always move forward.
-      step = -calculateIncrement(nextEdge, deltaTime)
       1.0 - offset
     }
     attachToEdge(nextEdge.getId)
@@ -103,10 +105,10 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
   }
 
   override def setPosition(pct: Double): Unit = {
-    positionPct = pct
-    if (this.getId == "60")
-      println(s"id:$id p:$positionPct")
-    super.setPosition(pct)
+    if (positionPct != pct) {
+      positionPct = pct
+      super.setPosition(pct)
+    }
   }
 
   def getPosition: Double = positionPct
@@ -114,13 +116,13 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
   /** Move in larger percentage steps across shorter edges */
   private def calculateIncrement(edge: Edge, deltaTime: Double): Double = {
     val edgeLen = edge.getAttribute("length", classOf[Object]).asInstanceOf[Double]
-    deltaTime * speed * SCALE / edgeLen
+    deltaTime * speed / edgeLen
   }
   /**
    * select an edge other than the one we came from
    */
   private def randomEdge(node: Node): Edge = {
-    val rand = (Math.random * node.getOutDegree).toInt
+    val rand = rnd.nextInt(node.getOutDegree)
     node.getLeavingEdge(rand)
   }
 }
