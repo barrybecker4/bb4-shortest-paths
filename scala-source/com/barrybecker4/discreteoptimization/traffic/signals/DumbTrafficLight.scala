@@ -61,7 +61,7 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
           vehicle = sortedVehicles(vehicleIdx)
         }
       case GREEN =>
-        vehicleClosestToLight.accelerate(0.01)
+        vehicleClosestToLight.accelerate(0.05)
     }
   }
 
