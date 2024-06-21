@@ -41,9 +41,13 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
   }
 
   def brake(stoppingDistance: Double, deltaTime: Double): Unit = {
-    val brake = Math.min(MAX_ACCELERATION, speed * deltaTime / stoppingDistance) // not sure about this
-    // println("braking by " + brake + ";  stoppingDistance=" + stoppingDistance + " deltaTime=" + deltaTime + " speed=" + speed)
-    accelerate(-brake)
+    if (stoppingDistance < 0.01) {
+      stop()
+    } else {
+      val brake = Math.min(MAX_ACCELERATION, speed * deltaTime / stoppingDistance) // not sure about this
+      //println("braking by " + brake + ";  stoppingDistance=" + stoppingDistance + " deltaTime=" + deltaTime + " speed=" + speed)
+      accelerate(-brake)
+    }
   }
 
   // This would be quite jarring to the driver. Avoid doing this unless going slow.

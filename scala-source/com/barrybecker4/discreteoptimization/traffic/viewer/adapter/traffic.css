@@ -33,7 +33,7 @@ edge {
 
 sprite {
   shape: box;
-  size: 16px, 8px;
+  size: 24px, 12px;
   fill-mode: plain;
   stroke-mode: none;
   text-mode: normal;

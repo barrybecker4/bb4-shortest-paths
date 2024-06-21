@@ -18,6 +18,7 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
   private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
   private var currentStreet: Int = 0
   private var lightState: LightState = RED
+  private var yellowStartTime = 0L
 
   setInitialState()
 
@@ -52,18 +53,30 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
           vehicleClosestToLight.setSpeed(vehicleClosestToLight.getSpeed * .98)
         }
       case YELLOW =>
-        val yellowTime = getYellowDurationSecs.toDouble
-        var vehicleIdx = sortedVehicles.size - 1
-        var vehicle = vehicleClosestToLight
-        while ((1.0 - vehicle.getPosition) * edgeLen < yellowTime * vehicle.getSpeed && vehicleIdx > 0) {
-          vehicle.brake(yellowTime * vehicle.getSpeed * 0.8, deltaTime)
+        val yellowElapsedTime = (System.currentTimeMillis() - yellowStartTime) / 1000.0
+        val yellowRemainingTime = getYellowDurationSecs.toDouble - yellowElapsedTime
+        var vehicleIdx = sortedVehicles.size
+        var found = false
+        var vehicle: VehicleSprite = null
+        while (!found && vehicleIdx > 0) {
           vehicleIdx -= 1
           vehicle = sortedVehicles(vehicleIdx)
+          val distanceToLight = (1.0 - vehicle.getPosition) * edgeLen
+          val distAtCurrentSpeed = yellowRemainingTime * vehicle.getSpeed
+          val distTillNextGreen = (yellowRemainingTime + getRedDurationSecs) * vehicle.getSpeed
+          if (distAtCurrentSpeed > distanceToLight && distAtCurrentSpeed < distTillNextGreen) {
+            found = true
+          }
+        }
+        if (found) {
+          vehicle.brake(yellowRemainingTime * vehicle.getSpeed, deltaTime)
         }
       case GREEN =>
         vehicleClosestToLight.accelerate(0.01)
     }
   }
+
+  def getRedDurationSecs: Int = (numStreets - 1) * (getGreenDurationSecs + getYellowDurationSecs)
 
   // Function to initialize the traffic light state and scheduling
   private def setInitialState(): Unit = switchToGreen()
@@ -79,6 +92,7 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
   // Function to switch the light to yellow
   private def switchToYellow(): Unit = {
     lightState = YELLOW
+    yellowStartTime = System.currentTimeMillis()
     scheduler.schedule(new Runnable {
       def run(): Unit = switchToRed()
     }, getYellowDurationSecs, TimeUnit.SECONDS)
