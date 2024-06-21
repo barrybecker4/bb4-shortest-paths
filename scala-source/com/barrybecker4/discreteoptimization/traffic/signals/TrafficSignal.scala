@@ -11,7 +11,6 @@ trait TrafficSignal {
   def getFarDistance: Double = 200.0
   def getYellowDurationSecs: Int = 2
   def getGreenDurationSecs: Int = 4
-  def getRedDurationSecs: Int
   def getLightState(port: Int): LightState
 
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite], portId: Int,
