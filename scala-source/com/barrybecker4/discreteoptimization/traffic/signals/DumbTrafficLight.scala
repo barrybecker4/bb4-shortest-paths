@@ -14,7 +14,7 @@ import org.graphstream.graph.Node
  * That should prevent the possibility of accidents.
  * @param numStreets the number of streets leading into the intersection
  */
-class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
+class DumbTrafficLight(numStreets: Int) extends TrafficSignal(numStreets) {
   private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
   private var currentStreet: Int = 0
   private var lightState: LightState = RED
@@ -102,11 +102,6 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
     lightState = RED
     currentStreet = (currentStreet + 1) % numStreets
     switchToGreen()
-  }
-
-  private def printLightStates(): Unit = {
-    val states = Range(0, numStreets).map(i => getLightState(i))
-    println(states)
   }
 }
 

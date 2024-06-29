@@ -45,11 +45,6 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
       assert(inNode.getInDegree == 1, "There should be exactly one edge entering the intersection on a port")
       val incomingEdge: Edge = inNode.getEnteringEdge(0)
       updateVehiclesOnEdge(true, incomingEdge, portId, deltaTime, spriteManager)
-
-//      for (i <- 0 until inNode.getOutDegree) {
-//        val innerOutEdge: Edge = inNode.getLeavingEdge(i)
-//        updateVehiclesOnEdge(false, innerOutEdge, portId, deltaTime, spriteManager)
-//      }
     }
   }
 
