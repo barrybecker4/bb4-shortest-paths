@@ -30,7 +30,7 @@ class SemaphoreTrafficLight(numStreets: Int) extends TrafficSignal(numStreets) {
   private val lightStates: Array[LightState] = Array.fill(numStreets)(RED)
   private var yellowStartTime = 0L
 
-  override def getGreenDurationSecs: Int = 10
+  override def getGreenDurationSecs: Int = 6
   override def getLightState(street: Int): LightState = lightStates(street)
 
   def shutdown(): Unit = scheduler.shutdown()
@@ -45,6 +45,7 @@ class SemaphoreTrafficLight(numStreets: Int) extends TrafficSignal(numStreets) {
   private def handleTrafficBasedOnLightState(sortedVehicles: IndexedSeq[VehicleSprite],
                                              portId: Int, edgeLen: Double, deltaTime: Double): Unit = {
     val lightState = getLightState(portId)
+    if (sortedVehicles.isEmpty) return
     val vehicleClosestToLight = sortedVehicles.last
 
     lightState match {
@@ -76,7 +77,7 @@ class SemaphoreTrafficLight(numStreets: Int) extends TrafficSignal(numStreets) {
           vehicle.brake(yellowRemainingTime * vehicle.getSpeed, deltaTime)
         }
       case GREEN =>
-        vehicleClosestToLight.accelerate(0.01)
+        vehicleClosestToLight.accelerate(0.005)
     }
   }
 
@@ -88,12 +89,12 @@ class SemaphoreTrafficLight(numStreets: Int) extends TrafficSignal(numStreets) {
         assert(lightState == RED, "The light state was unexpectedly " + lightState)
         switchToGreen(portId, sortedVehicles, edgeLen)
       case `portId` =>
-        assert(getLightState(portId) != RED, "The light state was unexpectedly " + lightState)
+        assert(lightState != RED, "The light state was unexpectedly " + lightState)
         if (areCarsComing(sortedVehicles, edgeLen)) {
           // already have it, stay yellow or green
-        } else if (currentSchedule != null) {
+        } else if (currentSchedule != null && lightState == GREEN) {
           // No cars are coming, so give up the semaphore
-          println("No cars coming so canceling schedule and switching to red")
+          println("No cars coming on street " + portId + " so canceling schedule and switching to red")
           currentSchedule.cancel(true)
           switchToRed(portId)
         }
@@ -124,13 +125,17 @@ class SemaphoreTrafficLight(numStreets: Int) extends TrafficSignal(numStreets) {
     lightStates(street) = YELLOW
     yellowStartTime = System.currentTimeMillis()
     assert(streetWithSemaphore == street)
-    assert(currentSchedule == null)
+    println("switched to yellow and scheduling switch to red for street " + street + " schedule=" + currentSchedule)
+    currentSchedule.cancel(true)
     currentSchedule = scheduler.schedule(new Runnable {
       def run(): Unit = switchToRed(street)
     }, getYellowDurationSecs, TimeUnit.SECONDS)
   }
 
   private def switchToRed(street: Int): Unit = {
+    if (lightStates(street) == YELLOW) {
+      println("switching to red from yellow on street " + street)
+    }
     lightStates(street) = RED
     assert(streetWithSemaphore == street)
     streetWithSemaphore = AVAILABLE
@@ -139,7 +144,8 @@ class SemaphoreTrafficLight(numStreets: Int) extends TrafficSignal(numStreets) {
   //private def getNextStreet(street: Int) = (street + 1) % numStreets
 
   private def areCarsComing(sortedVehicles: IndexedSeq[VehicleSprite], edgeLen: Double): Boolean =
-    sortedVehicles.exists(_.getPosition < getFarDistance / edgeLen)
+    //sortedVehicles.exists(_.getPosition < getFarDistance / edgeLen)
+    sortedVehicles.nonEmpty
 }
 
 
