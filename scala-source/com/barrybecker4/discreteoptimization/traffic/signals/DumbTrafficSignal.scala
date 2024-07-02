@@ -5,7 +5,7 @@ import com.barrybecker4.discreteoptimization.traffic.signals.SignalState.*
 
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 import concurrent.duration.DurationInt
-import com.barrybecker4.discreteoptimization.traffic.signals.DumbTrafficLight.*
+import com.barrybecker4.discreteoptimization.traffic.signals.DumbTrafficSignal.*
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite
 import org.graphstream.graph.Node
 
@@ -14,7 +14,7 @@ import org.graphstream.graph.Node
  * That should prevent the possibility of accidents.
  * @param numStreets the number of streets leading into the intersection
  */
-class DumbTrafficLight(numStreets: Int) extends TrafficSignal(numStreets) {
+class DumbTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) {
   private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
   private var currentStreet: Int = 0
   private var lightState: SignalState = RED
@@ -106,11 +106,11 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal(numStreets) {
 }
 
 
-object DumbTrafficLight {
+object DumbTrafficSignal {
 
   def main(args: Array[String]): Unit = {
     val numStreets = 5
-    val trafficLight = new DumbTrafficLight(numStreets)
+    val trafficLight = new DumbTrafficSignal(numStreets)
     val checkInterval = 1.second
 
     val executor = Executors.newScheduledThreadPool(1)

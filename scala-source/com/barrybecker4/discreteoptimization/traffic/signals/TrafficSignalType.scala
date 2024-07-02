@@ -1,6 +1,7 @@
 package com.barrybecker4.discreteoptimization.traffic.signals
 
-enum TrafficSignalType {
-  case DUMB_TRAFFIC_SIGNAL 
-  case SEMAPHORE_TRAFFIC_SIGNAL
+
+enum TrafficSignalType(val create: Int => TrafficSignal) {
+  case DUMB_TRAFFIC_SIGNAL extends TrafficSignalType(numStreets => new DumbTrafficSignal(numStreets))
+  case SEMAPHORE_TRAFFIC_SIGNAL extends TrafficSignalType(numStreets => new SemaphoreTrafficSignal(numStreets))
 }

@@ -2,7 +2,6 @@ package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 
 import com.barrybecker4.discreteoptimization.common.Location
 import com.barrybecker4.discreteoptimization.traffic.graph.model.Intersection
-import com.barrybecker4.discreteoptimization.traffic.signals.TrafficSignal
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.{INTERSECTION_RADIUS, INTERSECTION_TYPE, LANE_SEP_ANGLE, VECTOR_SCALE}
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.TrafficStreamAdapter.COMPUTE_CURVES
 import org.graphstream.graph.{Edge, Node}

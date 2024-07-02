@@ -19,8 +19,9 @@ import scala.collection.mutable
  * Represents the nodes and edges in an intersection.
  * Regulates the movement of vehicles on the edges leading into the intersection
  */
-case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSignal, graph: MultiGraph) {
+case class IntersectionSubGraph(intersection: Intersection, graph: MultiGraph) {
 
+  private val signal: TrafficSignal = intersection.signalType.create(intersection.ports.size)
   private val builder = new IntersectionSubGraphBuilder(intersection, graph)
 
   def getIncomingNode(portId: Int): Node = builder.incomingNodes(portId)
