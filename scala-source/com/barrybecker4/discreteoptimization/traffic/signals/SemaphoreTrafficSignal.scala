@@ -1,11 +1,11 @@
 package com.barrybecker4.discreteoptimization.traffic.signals
 
-import com.barrybecker4.discreteoptimization.traffic.signals.{LightState, TrafficSignal}
-import com.barrybecker4.discreteoptimization.traffic.signals.LightState.*
+import com.barrybecker4.discreteoptimization.traffic.signals.{SignalState, TrafficSignal}
+import com.barrybecker4.discreteoptimization.traffic.signals.SignalState.*
 
 import java.util.concurrent.{Executors, ScheduledExecutorService, ScheduledFuture, Semaphore, TimeUnit}
 import concurrent.duration.DurationInt
-import com.barrybecker4.discreteoptimization.traffic.signals.SemaphoreTrafficLight.*
+import com.barrybecker4.discreteoptimization.traffic.signals.SemaphoreTrafficSignal.*
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite
 import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficGraphUtil.sleep
 import org.graphstream.graph.Node
@@ -23,15 +23,15 @@ import scala.annotation.tailrec
  *
  * @param numStreets the number of streets leading into the intersection
  */
-class SemaphoreTrafficLight(numStreets: Int) extends TrafficSignal(numStreets) {
+class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) {
   private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
   private var currentSchedule: ScheduledFuture[?] = _
   private var streetWithSemaphore: Int = AVAILABLE
-  private val lightStates: Array[LightState] = Array.fill(numStreets)(RED)
+  private val lightStates: Array[SignalState] = Array.fill(numStreets)(RED)
   private var yellowStartTime = 0L
 
   override def getGreenDurationSecs: Int = 6
-  override def getLightState(street: Int): LightState = lightStates(street)
+  override def getLightState(street: Int): SignalState = lightStates(street)
 
   def shutdown(): Unit = scheduler.shutdown()
 
@@ -149,12 +149,12 @@ class SemaphoreTrafficLight(numStreets: Int) extends TrafficSignal(numStreets) {
 }
 
 
-object SemaphoreTrafficLight {
+object SemaphoreTrafficSignal {
 
   private val AVAILABLE = -1
   def main(args: Array[String]): Unit = {
     val numStreets = 5
-    val trafficLight = new SemaphoreTrafficLight(numStreets)
+    val trafficLight = new SemaphoreTrafficSignal(numStreets)
     val checkInterval = 1.second
 
     val executor = Executors.newScheduledThreadPool(1)

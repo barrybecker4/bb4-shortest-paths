@@ -1,7 +1,7 @@
 package com.barrybecker4.discreteoptimization.traffic.signals
 
-import com.barrybecker4.discreteoptimization.traffic.signals.{LightState, TrafficSignal}
-import com.barrybecker4.discreteoptimization.traffic.signals.LightState.*
+import com.barrybecker4.discreteoptimization.traffic.signals.{SignalState, TrafficSignal}
+import com.barrybecker4.discreteoptimization.traffic.signals.SignalState.*
 
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 import concurrent.duration.DurationInt
@@ -17,12 +17,12 @@ import org.graphstream.graph.Node
 class DumbTrafficLight(numStreets: Int) extends TrafficSignal(numStreets) {
   private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
   private var currentStreet: Int = 0
-  private var lightState: LightState = RED
+  private var lightState: SignalState = RED
   private var yellowStartTime = 0L
 
   setInitialState()
 
-  override def getLightState(street: Int): LightState = {
+  override def getLightState(street: Int): SignalState = {
     if (street == currentStreet) lightState else RED
   }
 

@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.signals
 
-import com.barrybecker4.discreteoptimization.traffic.signals.LightState
+import com.barrybecker4.discreteoptimization.traffic.signals.SignalState
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite
 import org.graphstream.graph.Node
 
@@ -11,7 +11,7 @@ trait TrafficSignal(numStreets: Int) {
   def getFarDistance: Double = 200.0
   def getYellowDurationSecs: Int = 2
   def getGreenDurationSecs: Int = 4
-  def getLightState(port: Int): LightState
+  def getLightState(port: Int): SignalState
 
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite], portId: Int,
                     edgeLen: Double, deltaTime: Double): Unit

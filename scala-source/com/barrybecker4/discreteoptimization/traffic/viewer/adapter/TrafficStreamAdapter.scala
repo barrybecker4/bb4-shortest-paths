@@ -5,7 +5,7 @@ import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
 import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphStreamAdapter.LARGE_GRAPH_THRESH
 import com.barrybecker4.discreteoptimization.traffic.graph.TrafficGraph
 import com.barrybecker4.discreteoptimization.traffic.graph.model.{Intersection, Street}
-import com.barrybecker4.discreteoptimization.traffic.signals.{DumbTrafficLight, SemaphoreTrafficLight}
+import com.barrybecker4.discreteoptimization.traffic.signals.{DumbTrafficLight, SemaphoreTrafficSignal}
 import org.graphstream.graph.{Edge, Graph}
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.ui.geom.Point3
@@ -51,7 +51,7 @@ case class TrafficStreamAdapter(trafficGraph: TrafficGraph) {
     for {
       intersectionId <- 0 until trafficGraph.numIntersections
       intersection = trafficGraph.getIntersection(intersectionId)
-    } yield IntersectionSubGraph(intersection, new SemaphoreTrafficLight(intersection.ports.size), graph)
+    } yield IntersectionSubGraph(intersection, new SemaphoreTrafficSignal(intersection.ports.size), graph)
   }
 
   private def addStreetsToGraph(graph: MultiGraph): Unit = {

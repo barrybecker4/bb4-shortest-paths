@@ -8,7 +8,7 @@ import com.barrybecker4.discreteoptimization.traffic.vehicles.{VehicleSprite, Ve
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
-import com.barrybecker4.discreteoptimization.traffic.signals.LightState.*
+import com.barrybecker4.discreteoptimization.traffic.signals.SignalState.*
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite.DEBUG
 import com.barrybecker4.common.format.FormatUtil.formatNumber
 
