@@ -18,7 +18,6 @@ class DumbTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) {
   private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
   private var currentStreet: Int = 0
   private var lightState: SignalState = RED
-  private var yellowStartTime = 0L
 
   setInitialState()
 
@@ -40,40 +39,7 @@ class DumbTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) {
    */
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite],
                     portId: Int, edgeLen: Double, deltaTime: Double): Unit = {
-    val lightState = getLightState(portId)
-    val vehicleClosestToLight = sortedVehicles.last
-
-    lightState match {
-      case RED =>
-        // if the light is red, then first car should already be stopped if it is close to the light
-        if (vehicleClosestToLight.getSpeed > 0.0 && vehicleClosestToLight.getPosition > 0.96) {
-          //println("vehicleClosestToLight.getSpeed=" + vehicleClosestToLight.getSpeed + " should have been 0")
-          vehicleClosestToLight.stop()
-        } else if (vehicleClosestToLight.getPosition > 0.85) {
-          vehicleClosestToLight.setSpeed(vehicleClosestToLight.getSpeed * .98)
-        }
-      case YELLOW =>
-        val yellowElapsedTime = (System.currentTimeMillis() - yellowStartTime) / 1000.0
-        val yellowRemainingTime = getYellowDurationSecs.toDouble - yellowElapsedTime
-        var vehicleIdx = sortedVehicles.size
-        var found = false
-        var vehicle: VehicleSprite = null
-        while (!found && vehicleIdx > 0) {
-          vehicleIdx -= 1
-          vehicle = sortedVehicles(vehicleIdx)
-          val distanceToLight = (1.0 - vehicle.getPosition) * edgeLen
-          val distAtCurrentSpeed = yellowRemainingTime * vehicle.getSpeed
-          val distTillNextGreen = (yellowRemainingTime + getRedDurationSecs) * vehicle.getSpeed
-          if (distAtCurrentSpeed > distanceToLight && distAtCurrentSpeed < distTillNextGreen) {
-            found = true
-          }
-        }
-        if (found) {
-          vehicle.brake(yellowRemainingTime * vehicle.getSpeed, deltaTime)
-        }
-      case GREEN =>
-        vehicleClosestToLight.accelerate(0.01)
-    }
+    handleTrafficBasedOnLightState(sortedVehicles, portId, edgeLen, deltaTime)
   }
 
   def getRedDurationSecs: Int = (numStreets - 1) * (getGreenDurationSecs + getYellowDurationSecs)

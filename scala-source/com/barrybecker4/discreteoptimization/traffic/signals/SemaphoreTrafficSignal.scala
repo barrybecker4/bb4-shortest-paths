@@ -28,7 +28,6 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
   private var currentSchedule: ScheduledFuture[?] = _
   private var streetWithSemaphore: Int = AVAILABLE
   private val lightStates: Array[SignalState] = Array.fill(numStreets)(RED)
-  private var yellowStartTime = 0L
 
   override def getGreenDurationSecs: Int = 6
   override def getLightState(street: Int): SignalState = lightStates(street)
@@ -37,48 +36,8 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
 
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite],
                     portId: Int, edgeLen: Double, deltaTime: Double): Unit = {
-
     handleTrafficBasedOnLightState(sortedVehicles, portId, edgeLen, deltaTime)
     updateSemaphore(sortedVehicles, portId, edgeLen)
-  }
-
-  private def handleTrafficBasedOnLightState(sortedVehicles: IndexedSeq[VehicleSprite],
-                                             portId: Int, edgeLen: Double, deltaTime: Double): Unit = {
-    val lightState = getLightState(portId)
-    if (sortedVehicles.isEmpty) return
-    val vehicleClosestToLight = sortedVehicles.last
-
-    lightState match {
-      case RED =>
-        // if the light is red, then first car should already be stopped if it is close to the light
-        if (vehicleClosestToLight.getSpeed > 0.0 && vehicleClosestToLight.getPosition > 0.96) {
-          //println("vehicleClosestToLight.getSpeed=" + vehicleClosestToLight.getSpeed + " should have been 0")
-          vehicleClosestToLight.stop()
-        } else if (vehicleClosestToLight.getPosition > 0.85) {
-          vehicleClosestToLight.setSpeed(vehicleClosestToLight.getSpeed * .98)
-        }
-      case YELLOW =>
-        val yellowElapsedTime = (System.currentTimeMillis() - yellowStartTime) / 1000.0
-        val yellowRemainingTime = getYellowDurationSecs.toDouble - yellowElapsedTime
-        var vehicleIdx = sortedVehicles.size
-        var found = false
-        var vehicle: VehicleSprite = null
-        while (!found && vehicleIdx > 0) {
-          vehicleIdx -= 1
-          vehicle = sortedVehicles(vehicleIdx)
-          val distanceToLight = (1.0 - vehicle.getPosition) * edgeLen
-          val distAtCurrentSpeed = yellowRemainingTime * vehicle.getSpeed
-          val distTillNextGreen = (yellowRemainingTime + 5) * vehicle.getSpeed
-          if (distAtCurrentSpeed > distanceToLight && distAtCurrentSpeed < distTillNextGreen) {
-            found = true
-          }
-        }
-        if (found) {
-          vehicle.brake(yellowRemainingTime * vehicle.getSpeed, deltaTime)
-        }
-      case GREEN =>
-        vehicleClosestToLight.accelerate(0.005)
-    }
   }
 
   private def updateSemaphore(sortedVehicles: IndexedSeq[VehicleSprite],
