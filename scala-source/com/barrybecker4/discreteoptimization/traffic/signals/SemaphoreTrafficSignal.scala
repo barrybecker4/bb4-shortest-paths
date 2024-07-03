@@ -37,7 +37,7 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
                     portId: Int, edgeLen: Double, deltaTime: Double): Unit = {
     handleTrafficBasedOnLightState(sortedVehicles, portId, edgeLen, deltaTime)
     updateSemaphore(sortedVehicles, portId, edgeLen)
-    //updateStreetState()
+    updateStreetState(sortedVehicles)
   }
 
   private def updateSemaphore(sortedVehicles: IndexedSeq[VehicleSprite],
@@ -100,7 +100,12 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
     streetWithSemaphore = AVAILABLE
   }
 
-  //private def getNextStreet(street: Int) = (street + 1) % numStreets
+  private def updateStreetState(sortedVehicles: IndexedSeq[VehicleSprite]): Unit = {
+    // check if there are any stopped vehicles withing 1.5 * yellow distance from the start of the street
+    // If so, then set state to JAMMED
+    
+  }
+  
 
   private def areCarsComing(sortedVehicles: IndexedSeq[VehicleSprite], edgeLen: Double): Boolean =
     //sortedVehicles.exists(_.getPosition < getFarDistance / edgeLen)

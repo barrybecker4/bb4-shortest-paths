@@ -57,8 +57,8 @@ trait TrafficSignal(numStreets: Int) {
           vehicle = sortedVehicles(vehicleIdx)
           val distanceToLight = (1.0 - vehicle.getPosition) * edgeLen
           val distAtCurrentSpeed = yellowRemainingTime * vehicle.getSpeed
-          val distTillNextGreen = (yellowRemainingTime + 5) * vehicle.getSpeed
-          if (distAtCurrentSpeed > distanceToLight && distAtCurrentSpeed < distTillNextGreen) {
+          val farDist = (yellowRemainingTime + getYellowDurationSecs) * vehicle.getSpeed
+          if (distAtCurrentSpeed > distanceToLight && distAtCurrentSpeed < farDist) {
             found = true
           }
         }

@@ -6,6 +6,7 @@ import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.Intersection
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.TrafficStreamAdapter.COMPUTE_CURVES
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
+import com.barrybecker4.discreteoptimization.traffic.graph.model.StreetState.CLEAR
 
 
 object IntersectionSubGraphBuilder {
@@ -81,6 +82,7 @@ case class IntersectionSubGraphBuilder(intersection: Intersection, graph: MultiG
               dst(0), dst(1), 0.0)
           }
           edge.setAttribute("type", INTERSECTION_TYPE)
+          edge.setAttribute("state", CLEAR)
         }
       }
     }
