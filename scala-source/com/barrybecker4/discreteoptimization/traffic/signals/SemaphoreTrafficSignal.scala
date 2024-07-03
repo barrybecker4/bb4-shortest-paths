@@ -37,6 +37,7 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
                     portId: Int, edgeLen: Double, deltaTime: Double): Unit = {
     handleTrafficBasedOnLightState(sortedVehicles, portId, edgeLen, deltaTime)
     updateSemaphore(sortedVehicles, portId, edgeLen)
+    //updateStreetState()
   }
 
   private def updateSemaphore(sortedVehicles: IndexedSeq[VehicleSprite],
