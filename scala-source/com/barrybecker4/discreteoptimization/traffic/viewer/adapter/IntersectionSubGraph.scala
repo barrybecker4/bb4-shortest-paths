@@ -57,7 +57,8 @@ case class IntersectionSubGraph(intersection: Intersection, graph: MultiGraph) {
     val sortedSprites: IndexedSeq[VehicleSprite] = sprites.toIndexedSeq.sortBy(_.getPosition)
     var nextSprite: VehicleSprite = null
     if (handleSignal)
-      signal.handleTraffic(sortedSprites, portId, edgeLen, deltaTime)
+      val state = signal.handleTraffic(sortedSprites, portId, edgeLen, deltaTime)
+      edge.setAttribute("state", state)
 
     if (sprites.nonEmpty) {
       for (i <- 0 until sortedSprites.size - 1) {

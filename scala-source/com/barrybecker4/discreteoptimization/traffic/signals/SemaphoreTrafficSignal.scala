@@ -9,6 +9,8 @@ import com.barrybecker4.discreteoptimization.traffic.signals.SemaphoreTrafficSig
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite
 import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficGraphUtil.sleep
 import org.graphstream.graph.Node
+import com.barrybecker4.discreteoptimization.traffic.graph.model.StreetState
+import com.barrybecker4.discreteoptimization.traffic.graph.model.StreetState.{CLEAR, JAMMED}
 
 import scala.annotation.tailrec
 
@@ -34,10 +36,10 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
   def shutdown(): Unit = scheduler.shutdown()
 
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite],
-                    portId: Int, edgeLen: Double, deltaTime: Double): Unit = {
+                    portId: Int, edgeLen: Double, deltaTime: Double): StreetState = {
     handleTrafficBasedOnLightState(sortedVehicles, portId, edgeLen, deltaTime)
     updateSemaphore(sortedVehicles, portId, edgeLen)
-    updateStreetState(sortedVehicles)
+    determineStreetState(sortedVehicles, edgeLen: Double)
   }
 
   private def updateSemaphore(sortedVehicles: IndexedSeq[VehicleSprite],
@@ -100,12 +102,28 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
     streetWithSemaphore = AVAILABLE
   }
 
-  private def updateStreetState(sortedVehicles: IndexedSeq[VehicleSprite]): Unit = {
-    // check if there are any stopped vehicles withing 1.5 * yellow distance from the start of the street
-    // If so, then set state to JAMMED
-    
+  /**
+   * check if there are any stopped vehicles withing 1.5 * yellow distance from the start of the street.
+   * If so, then set state to JAMMED.
+   */
+  private def determineStreetState(sortedVehicles: IndexedSeq[VehicleSprite], edgeLen: Double): StreetState = {
+    var found = false
+    if (sortedVehicles.isEmpty) return CLEAR
+    var vehicle: VehicleSprite = sortedVehicles.head
+    val yellowDistWithBuffer = 1.5 * getYellowDurationSecs * vehicle.getSpeed
+    var idx = 1
+    while (!found && idx < sortedVehicles.size) {
+      if (vehicle.getPosition * edgeLen < yellowDistWithBuffer) {
+        if (vehicle.getSpeed == 0) {
+          found = true
+        }
+      }
+      vehicle = sortedVehicles(idx)
+      idx += 1
+    }
+    if (found) JAMMED else CLEAR
   }
-  
+
 
   private def areCarsComing(sortedVehicles: IndexedSeq[VehicleSprite], edgeLen: Double): Boolean =
     //sortedVehicles.exists(_.getPosition < getFarDistance / edgeLen)

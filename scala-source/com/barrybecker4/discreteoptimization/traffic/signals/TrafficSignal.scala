@@ -1,5 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.signals
 
+import com.barrybecker4.discreteoptimization.traffic.graph.model.StreetState
 import com.barrybecker4.discreteoptimization.traffic.signals.SignalState
 import com.barrybecker4.discreteoptimization.traffic.signals.SignalState.{GREEN, RED, YELLOW}
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite
@@ -20,7 +21,8 @@ trait TrafficSignal(numStreets: Int) {
   def getLightState(port: Int): SignalState
 
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite], portId: Int,
-                    edgeLen: Double, deltaTime: Double): Unit
+                    edgeLen: Double, deltaTime: Double): StreetState
+  
   def showLight(node: Node, portId: Int): Unit = {
     val lightState = getLightState(portId)
     node.setAttribute("ui.style", "size: 30px; z-index:0; fill-color: " + lightState.color)
