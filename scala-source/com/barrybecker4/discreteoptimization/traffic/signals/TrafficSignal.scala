@@ -5,15 +5,19 @@ import com.barrybecker4.discreteoptimization.traffic.signals.SignalState.{GREEN,
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite
 import org.graphstream.graph.Node
 
+import java.util.concurrent.{Executors, ScheduledExecutorService}
+
 
 trait TrafficSignal(numStreets: Int) {
-
+  
+  protected val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
+  protected var yellowStartTime = 0L
+  
   def getOptimalDistance: Double = 30.0
   def getFarDistance: Double = 200.0
   def getYellowDurationSecs: Int = 2
   def getGreenDurationSecs: Int = 4
   def getLightState(port: Int): SignalState
-  protected var yellowStartTime = 0L
 
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite], portId: Int,
                     edgeLen: Double, deltaTime: Double): Unit

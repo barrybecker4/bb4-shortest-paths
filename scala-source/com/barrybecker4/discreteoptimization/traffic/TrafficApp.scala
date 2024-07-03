@@ -19,13 +19,15 @@ import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficViewerFrame
  *     - when turning right, if there is a competing car or cars, then wait. Only go if you can make it through before next car
  *     - when turning left, consider oncoming traffic. It has the right of way. You can only go when there is a break sufficient to go.
  *
- *  - Config file should allow specifying type of light at intersection
- *     - if none specified, then use DumbTrafficLight
  *  - Metrics in order to measure efficiency of the traffic system
  *     - Total distance traveled by all cars.
  *     - Mean, median distance
  *     - Min distance (should not be too low)
  *  - Avoid gridlock. If cars are stopped in one of the outgoing intersection streets, then we need to turn red.
+ *     - add a state attribute to streets:
+ *        - JAMMED if there is a stopped car closed than yellow distance from the start of the street
+ *        - CLEAR if there is no stopped car within 1.5 * yellow distance
+ *     - If a street is JAMMED, then the light should turn red.
  *  
  *
  * Done

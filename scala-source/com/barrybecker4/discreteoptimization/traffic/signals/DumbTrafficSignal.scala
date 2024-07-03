@@ -3,7 +3,7 @@ package com.barrybecker4.discreteoptimization.traffic.signals
 import com.barrybecker4.discreteoptimization.traffic.signals.{SignalState, TrafficSignal}
 import com.barrybecker4.discreteoptimization.traffic.signals.SignalState.*
 
-import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
+import java.util.concurrent.{Executors, TimeUnit}
 import concurrent.duration.DurationInt
 import com.barrybecker4.discreteoptimization.traffic.signals.DumbTrafficSignal.*
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite
@@ -15,7 +15,6 @@ import org.graphstream.graph.Node
  * @param numStreets the number of streets leading into the intersection
  */
 class DumbTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) {
-  private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
   private var currentStreet: Int = 0
   private var lightState: SignalState = RED
 
