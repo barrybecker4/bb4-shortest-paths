@@ -19,15 +19,19 @@ object VehicleSprite {
 }
 
 /**
+ * The vehicle sprite represents a vehicle on a road.
+ * It know which turn it will take at the next intersection.
  * @param identifier name of the sprite
  * @param initialSpeed initial speed of the sprite in meters per second
  */
 class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSpriteManager, rnd: Random = RND) extends Sprite(identifier, manager) {
   private var positionPct: Double = 0.0 // 0 - 1.0
   private var speed = initialSpeed
+  private var nextEdge: Edge = _
 
   def getSpeed: Double = speed
-  def getCurrentEdge: Edge = getAttachment.asInstanceOf[Edge]
+  def getNextEdge: Edge = nextEdge
+  private def getCurrentEdge: Edge = getAttachment.asInstanceOf[Edge]
 
   /** @param acceleration requested amount of acceleration to change the current speed by. It has constraints.
    */
@@ -55,12 +59,16 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
     speed = 0
   }
 
+  /** When we attach a vehicle to an edge,
+   * also select its next edge so we know how it will turn at the next intersection.
+   */
   override def attachToEdge(edgeId: String): Unit = {
     val edge = manager.getEdge(edgeId)
     if (this.attachment != edge) {
       this.detach()
       this.attachment = edge
       manager.addVehicleToEdge(edgeId, this)
+      nextEdge = randomEdge(edge.getTargetNode)
     }
     this.attachment.setAttribute(this.completeId, Array(0: java.lang.Double))
   }
@@ -77,7 +85,7 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
     val step = calculateIncrement(getCurrentEdge, deltaTime)
     p += step
     if (p < 0 || p > 1)
-      chooseNextEdge(p, step, deltaTime)
+      advanceToNextEdge(p, step, deltaTime)
     else setPosition(p)
 
     val edgeId = getCurrentEdge.getId
@@ -86,17 +94,16 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
     else
       setAttribute("ui.label", "")
   }
-  
+
   def predictNextPosition(deltaTime: Double): Double = {
     getPosition + calculateIncrement(getAttachment.asInstanceOf[Edge], deltaTime)
   }
 
-  def chooseNextEdge(p: Double, step: Double, deltaTime: Double): Unit = {
+  def advanceToNextEdge(p: Double, step: Double, deltaTime: Double): Unit = {
     val edge = getCurrentEdge
     var node = edge.getSourceNode
 
     if (step > 0) node = edge.getTargetNode
-    val nextEdge = randomEdge(node)
     val offset: Double = Math.abs(p % 1)
     val pos = if (node eq nextEdge.getSourceNode) {
       offset
