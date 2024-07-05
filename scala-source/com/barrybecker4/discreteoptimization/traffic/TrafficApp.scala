@@ -6,6 +6,8 @@ import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficViewerFrame
 
 
 /**
+ * Bugs
+ *  - why is light going from yellow to green
  * Ideas:
  * - Within an intersection, examine the sprites on intersection edges and the edges leading into the intersection.
  * - Sprites should be aware of how distant the next sprite in front is, if any.

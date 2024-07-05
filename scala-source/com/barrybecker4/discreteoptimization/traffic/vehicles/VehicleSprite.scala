@@ -11,9 +11,9 @@ import scala.util.Random
 
 object VehicleSprite {
   // Meters/second
-  private val MAX_SPEED = 20.0
+  private val MAX_SPEED = 10.0
   // Meters/ second^2
-  private val MAX_ACCELERATION = 5.0
+  private val MAX_ACCELERATION = 2.0
   private val DEBUG = false
   private val RND = Random(0)
 }

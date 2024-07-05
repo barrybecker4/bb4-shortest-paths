@@ -68,7 +68,7 @@ trait TrafficSignal(numStreets: Int) {
           vehicle.brake(yellowRemainingTime * vehicle.getSpeed, deltaTime)
         }
       case GREEN =>
-        vehicleClosestToLight.accelerate(0.005)
+        vehicleClosestToLight.accelerate(0.001)
     }
   }
 }

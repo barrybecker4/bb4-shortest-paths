@@ -46,6 +46,10 @@ case class IntersectionSubGraph(intersection: Intersection, graph: MultiGraph) {
       assert(inNode.getInDegree == 1, "There should be exactly one edge entering the intersection on a port")
       val incomingEdge: Edge = inNode.getEnteringEdge(0)
       updateVehiclesOnEdge(true, incomingEdge, portId, deltaTime, spriteManager)
+      for (j <- 0 until inNode.getOutDegree) {
+        val outgoingEdge = inNode.getLeavingEdge(j)
+        updateVehiclesOnEdge(false, outgoingEdge, portId, deltaTime, spriteManager)
+      }
     }
   }
 
@@ -56,11 +60,14 @@ case class IntersectionSubGraph(intersection: Intersection, graph: MultiGraph) {
 
     val sortedSprites: IndexedSeq[VehicleSprite] = sprites.toIndexedSeq.sortBy(_.getPosition)
     var nextSprite: VehicleSprite = null
-    if (handleSignal)
+    if (handleSignal) {
       val state = signal.handleTraffic(sortedSprites, portId, edgeLen, deltaTime)
       edge.setAttribute("state", state)
+    }
 
     if (sprites.nonEmpty) {
+      val leadVehicle = sortedSprites.last
+      leadVehicle.accelerate(0.01)
       for (i <- 0 until sortedSprites.size - 1) {
         val sprite = sortedSprites(i)
         val nextSprite = sortedSprites(i + 1)

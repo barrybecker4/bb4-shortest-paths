@@ -48,11 +48,18 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
     streetWithSemaphore match {
       case AVAILABLE =>
         assert(lightState == RED, "The light state was unexpectedly " + lightState)
-        switchToGreen(portId, sortedVehicles, edgeLen)
+        trySwitchingToGreen(portId, sortedVehicles, edgeLen)
       case `portId` =>
         assert(lightState != RED, "The light state was unexpectedly " + lightState)
         if (areCarsComing(sortedVehicles, edgeLen)) {
-          // already have it, stay yellow or green
+          // already have it, stay yellow or green, unless we are headed for a jammed street
+          // check if the last car is headed for a jammed street. If so, turn yellow.
+          val lastCar = sortedVehicles.last
+          val isJammed = isNextStreetJammed(lastCar)
+          if (isJammed && lightState == GREEN) {
+            println("Next street is jammed, so switching to yellow")
+            switchToYellow(portId, sortedVehicles, edgeLen)
+          }
         } else if (currentSchedule != null && lightState == GREEN) {
           // No cars are coming, so give up the semaphore
           println("No cars coming on street " + portId + " so canceling schedule and switching to red")
@@ -65,7 +72,13 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
     }
   }
 
-  private def switchToGreen(street: Int, sortedVehicles: IndexedSeq[VehicleSprite],
+  private def isNextStreetJammed(lastCar: VehicleSprite): Boolean = {
+    val nextNode = lastCar.getNextEdge.getTargetNode
+    assert(nextNode.getOutDegree == 1)
+    nextNode.getLeavingEdge(0).getAttribute("state") == StreetState.JAMMED
+  }
+
+  private def trySwitchingToGreen(street: Int, sortedVehicles: IndexedSeq[VehicleSprite],
                             edgeLen: Double): Unit = {
     assert(lightStates(street) == RED)
     assert(streetWithSemaphore == AVAILABLE, "semaphore was not available. It was " + streetWithSemaphore)
@@ -103,20 +116,18 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
   }
 
   /**
-   * check if there are any stopped vehicles withing 1.5 * yellow distance from the start of the street.
+   * check if there are any stopped vehicles withing JAM_FACTOR * yellow distance from the start of the street.
    * If so, then set state to JAMMED.
    */
   private def determineStreetState(sortedVehicles: IndexedSeq[VehicleSprite], edgeLen: Double): StreetState = {
     var found = false
     if (sortedVehicles.isEmpty) return CLEAR
     var vehicle: VehicleSprite = sortedVehicles.head
-    val yellowDistWithBuffer = 1.5 * getYellowDurationSecs * vehicle.getSpeed
+    val yellowDistWithBuffer = JAM_FACTOR * getYellowDurationSecs * vehicle.getSpeed
     var idx = 1
     while (!found && idx < sortedVehicles.size) {
-      if (vehicle.getPosition * edgeLen < yellowDistWithBuffer) {
-        if (vehicle.getSpeed == 0) {
-          found = true
-        }
+      if (vehicle.getPosition * edgeLen < yellowDistWithBuffer && vehicle.getSpeed < 0.1) {
+        found = true
       }
       vehicle = sortedVehicles(idx)
       idx += 1
@@ -124,9 +135,7 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
     if (found) JAMMED else CLEAR
   }
 
-
   private def areCarsComing(sortedVehicles: IndexedSeq[VehicleSprite], edgeLen: Double): Boolean =
-    //sortedVehicles.exists(_.getPosition < getFarDistance / edgeLen)
     sortedVehicles.nonEmpty
 }
 
@@ -134,6 +143,8 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
 object SemaphoreTrafficSignal {
 
   private val AVAILABLE = -1
+  private val JAM_FACTOR = 2.0
+
   def main(args: Array[String]): Unit = {
     val numStreets = 5
     val trafficLight = new SemaphoreTrafficSignal(numStreets)
