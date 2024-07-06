@@ -26,10 +26,8 @@ import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficViewerFrame
  *     - Mean, median distance
  *     - Min distance (should not be too low)
  *  - Avoid gridlock. If cars are stopped in one of the outgoing intersection streets, then we need to turn red.
- *     - add a state attribute to streets:
- *        - JAMMED if there is a stopped car closer than yellow distance from the start of the street
- *        - CLEAR if there is no stopped car within 1.5 * yellow distance
- *     - If a street outgoing from the intersection is JAMMED, then the light should turn red.
+ *     - add a lastVehicle attribute to streets.
+ *     - Use the lastVehicle in the traffic flow calculation.
  *  
  *
  * Done

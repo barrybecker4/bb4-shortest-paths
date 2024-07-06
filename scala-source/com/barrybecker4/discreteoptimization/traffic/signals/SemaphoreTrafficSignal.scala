@@ -9,8 +9,6 @@ import com.barrybecker4.discreteoptimization.traffic.signals.SemaphoreTrafficSig
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite
 import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficGraphUtil.sleep
 import org.graphstream.graph.Node
-import com.barrybecker4.discreteoptimization.traffic.graph.model.StreetState
-import com.barrybecker4.discreteoptimization.traffic.graph.model.StreetState.{CLEAR, JAMMED}
 
 import scala.annotation.tailrec
 
@@ -36,10 +34,9 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
   def shutdown(): Unit = scheduler.shutdown()
 
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite],
-                    portId: Int, edgeLen: Double, deltaTime: Double): StreetState = {
+                    portId: Int, edgeLen: Double, deltaTime: Double): Unit = {
     handleTrafficBasedOnLightState(sortedVehicles, portId, edgeLen, deltaTime)
     updateSemaphore(sortedVehicles, portId, edgeLen)
-    determineStreetState(sortedVehicles, edgeLen: Double)
   }
 
   private def updateSemaphore(sortedVehicles: IndexedSeq[VehicleSprite],
@@ -75,7 +72,9 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
   private def isNextStreetJammed(lastCar: VehicleSprite): Boolean = {
     val nextNode = lastCar.getNextEdge.getTargetNode
     assert(nextNode.getOutDegree == 1)
-    nextNode.getLeavingEdge(0).getAttribute("state") == StreetState.JAMMED
+    val lastVehicleOnNextStreet =
+      lastCar.getNextEdge.getAttribute("lastVehicle", classOf[Option[VehicleSprite]])
+    if (lastVehicleOnNextStreet.isEmpty) false else lastVehicleOnNextStreet.get.getSpeed < 0.1
   }
 
   private def trySwitchingToGreen(street: Int, sortedVehicles: IndexedSeq[VehicleSprite],
@@ -113,26 +112,6 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
     lightStates(street) = RED
     assert(streetWithSemaphore == street)
     streetWithSemaphore = AVAILABLE
-  }
-
-  /**
-   * check if there are any stopped vehicles withing JAM_FACTOR * yellow distance from the start of the street.
-   * If so, then set state to JAMMED.
-   */
-  private def determineStreetState(sortedVehicles: IndexedSeq[VehicleSprite], edgeLen: Double): StreetState = {
-    var found = false
-    if (sortedVehicles.isEmpty) return CLEAR
-    var vehicle: VehicleSprite = sortedVehicles.head
-    val yellowDistWithBuffer = JAM_FACTOR * getYellowDurationSecs * vehicle.getSpeed
-    var idx = 1
-    while (!found && idx < sortedVehicles.size) {
-      if (vehicle.getPosition * edgeLen < yellowDistWithBuffer && vehicle.getSpeed < 0.1) {
-        found = true
-      }
-      vehicle = sortedVehicles(idx)
-      idx += 1
-    }
-    if (found) JAMMED else CLEAR
   }
 
   private def areCarsComing(sortedVehicles: IndexedSeq[VehicleSprite], edgeLen: Double): Boolean =

@@ -8,8 +8,6 @@ import concurrent.duration.DurationInt
 import com.barrybecker4.discreteoptimization.traffic.signals.DumbTrafficSignal.*
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite
 import org.graphstream.graph.Node
-import com.barrybecker4.discreteoptimization.traffic.graph.model.StreetState
-import com.barrybecker4.discreteoptimization.traffic.graph.model.StreetState.{CLEAR, JAMMED}
 
 
 /**
@@ -40,9 +38,8 @@ class DumbTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) {
    * draw the lights at intersection nodes
    */
   def handleTraffic(sortedVehicles: IndexedSeq[VehicleSprite],
-                    portId: Int, edgeLen: Double, deltaTime: Double): StreetState = {
+                    portId: Int, edgeLen: Double, deltaTime: Double): Unit = {
     handleTrafficBasedOnLightState(sortedVehicles, portId, edgeLen, deltaTime)
-    CLEAR
   }
 
   def getRedDurationSecs: Int = (numStreets - 1) * (getGreenDurationSecs + getYellowDurationSecs)

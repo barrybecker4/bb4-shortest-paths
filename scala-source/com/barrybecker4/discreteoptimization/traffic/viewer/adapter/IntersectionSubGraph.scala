@@ -59,19 +59,21 @@ case class IntersectionSubGraph(intersection: Intersection, graph: MultiGraph) {
     val sprites = spriteManager.getVehiclesOnEdge(edge.getId)
 
     val sortedSprites: IndexedSeq[VehicleSprite] = sprites.toIndexedSeq.sortBy(_.getPosition)
-    var nextSprite: VehicleSprite = null
+    edge.setAttribute("lastVehicle", sortedSprites.headOption)
     if (handleSignal) {
-      val state = signal.handleTraffic(sortedSprites, portId, edgeLen, deltaTime)
-      edge.setAttribute("state", state)
+      signal.handleTraffic(sortedSprites, portId, edgeLen, deltaTime)
     }
 
     if (sprites.nonEmpty) {
       val leadVehicle = sortedSprites.last
-      leadVehicle.accelerate(0.01)
-      for (i <- 0 until sortedSprites.size - 1) {
+      val trailingVehicleOnNextStreet: Option[VehicleSprite] =
+        leadVehicle.getNextEdge.getAttribute("lastVehicle", classOf[Option[VehicleSprite]])
+      val endSize = if (trailingVehicleOnNextStreet.isEmpty) sortedSprites.size - 1 else sortedSprites.size
+      for (i <- 0 until endSize) {
         val sprite = sortedSprites(i)
-        val nextSprite = sortedSprites(i + 1)
-        val distanceToNext = (nextSprite.getPosition - sprite.getPosition) * edgeLen
+        val nextSprite = if (i == sortedSprites.size - 1) trailingVehicleOnNextStreet.get else sortedSprites(i + 1)
+        val nextPosition = if (i == sortedSprites.size - 1) 1.0 + nextSprite.getPosition else nextSprite.getPosition
+        val distanceToNext = (nextPosition - sprite.getPosition) * edgeLen
         assert(distanceToNext > 0, "The distance to the car in front should never be less than 0")
         if (distanceToNext < signal.getFarDistance) {
           if (distanceToNext < signal.getOptimalDistance) {
