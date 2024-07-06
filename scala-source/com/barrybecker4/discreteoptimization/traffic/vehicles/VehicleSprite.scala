@@ -14,7 +14,7 @@ object VehicleSprite {
   private val MAX_SPEED = 20.0
   // Meters/ second^2
   private val MAX_ACCELERATION = 4.0
-  private val DEBUG = true
+  private val DEBUG = false
   private val RND = Random(0)
 }
 
