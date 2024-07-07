@@ -85,6 +85,8 @@ case class IntersectionSubGraph(intersection: Intersection, graph: MultiGraph) {
           else if (sprite.getSpeed <= nextSprite.getSpeed) {
             sprite.setSpeed(nextSprite.getSpeed * 1.05)
           }
+        } else {
+          sprite.accelerate(0.05)
         }
       }
     }

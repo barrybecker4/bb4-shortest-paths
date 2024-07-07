@@ -27,9 +27,9 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
   private val lightStates: Array[SignalState] = Array.fill(numStreets)(RED)
   private var currentSchedule: ScheduledFuture[?] = _
   private var streetWithSemaphore: Int = AVAILABLE
-  private var redStartTime: Long = _
+  private var lastToBecomeRed: Int = -1
 
-  override def getGreenDurationSecs: Int = 6
+  override def getGreenDurationSecs: Int = 8
   override def getLightState(street: Int): SignalState = lightStates(street)
 
   def shutdown(): Unit = scheduler.shutdown()
@@ -83,16 +83,17 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
                             edgeLen: Double): Unit = {
     assert(lightStates(street) == RED)
     assert(streetWithSemaphore == AVAILABLE, "semaphore was not available. It was " + streetWithSemaphore)
-    val redElapsedTime = (System.currentTimeMillis() - redStartTime) / 1000.0
-    if (areCarsComing(sortedVehicles, edgeLen) && redElapsedTime > 1.0) {
-      lightStates(street) = GREEN
-      println("switched to green after " + redElapsedTime + "ms on street " + street)
-      streetWithSemaphore = street
-      val vehicleClosestToLight = sortedVehicles.last
-      vehicleClosestToLight.accelerate(0.05)
-      currentSchedule = scheduler.schedule(new Runnable {
-        def run(): Unit = switchToYellow(street, sortedVehicles, edgeLen)
-      }, getGreenDurationSecs, TimeUnit.SECONDS)
+    if (lastToBecomeRed != street) {
+      if (areCarsComing(sortedVehicles, edgeLen) && !isNextStreetJammed(sortedVehicles.last)) {
+        lightStates(street) = GREEN
+        streetWithSemaphore = street
+        sortedVehicles.last.accelerate(0.1)
+        currentSchedule = scheduler.schedule(new Runnable {
+          def run(): Unit = switchToYellow(street, sortedVehicles, edgeLen)
+        }, getGreenDurationSecs, TimeUnit.SECONDS)
+      } else {
+        lastToBecomeRed = -1
+      }
     }
   }
 
@@ -114,9 +115,9 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
       println("switching to red from yellow on street " + street)
     }
     lightStates(street) = RED
-    redStartTime = System.currentTimeMillis()
     assert(streetWithSemaphore == street)
     streetWithSemaphore = AVAILABLE
+    lastToBecomeRed = street
   }
 
   private def areCarsComing(sortedVehicles: IndexedSeq[VehicleSprite], edgeLen: Double): Boolean =
