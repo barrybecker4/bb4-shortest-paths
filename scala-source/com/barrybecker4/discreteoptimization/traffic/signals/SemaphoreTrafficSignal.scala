@@ -72,11 +72,20 @@ class SemaphoreTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) 
   }
 
   private def isNextStreetJammed(lastCar: VehicleSprite): Boolean = {
-    val nextNode = lastCar.getNextEdge.getTargetNode
-    assert(nextNode.getOutDegree == 1)
-    val lastVehicleOnNextStreet =
-      lastCar.getNextEdge.getAttribute("lastVehicle", classOf[Option[VehicleSprite]])
-    if (lastVehicleOnNextStreet.isEmpty) false else lastVehicleOnNextStreet.get.getSpeed < 0.1
+    // If any car on the intersection is stopped, then the next street is jammed.
+    val lastIntersectionCar = lastCar.getNextEdge.getAttribute("lastVehicle", classOf[Option[VehicleSprite]])
+    if (lastIntersectionCar.nonEmpty && lastIntersectionCar.get.getSpeed < 0.1) {
+      true
+    } else {
+      val nextNode = lastCar.getNextEdge.getTargetNode
+      assert(nextNode.getOutDegree == 1)
+      val nextStreet = nextNode.getLeavingEdge(0)
+      val len = nextStreet.getAttribute("length", classOf[Object]).asInstanceOf[Double]
+      val lastVehicleOnNextStreet =
+        nextStreet.getAttribute("lastVehicle", classOf[Option[VehicleSprite]])
+      if (lastVehicleOnNextStreet.isEmpty) false
+      else lastVehicleOnNextStreet.get.getSpeed < 0.1 && lastVehicleOnNextStreet.get.getPosition * len < getFarDistance
+    }
   }
 
   private def trySwitchingToGreen(street: Int, sortedVehicles: IndexedSeq[VehicleSprite],

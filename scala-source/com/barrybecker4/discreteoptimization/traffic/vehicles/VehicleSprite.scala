@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.vehicles
 
-import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite.{DEBUG, MAX_ACCELERATION, MAX_SPEED, RND}
+import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite.{DEBUG, MAX_ACCELERATION, MAX_SPEED, PREFERRED_SPEED, RND}
 import org.graphstream.graph.Edge
 import org.graphstream.graph.Node
 import org.graphstream.ui.spriteManager.Sprite
@@ -12,6 +12,7 @@ import scala.util.Random
 object VehicleSprite {
   // Meters/second
   private val MAX_SPEED = 20.0
+  private val PREFERRED_SPEED = 0.8 * MAX_SPEED
   // Meters/ second^2
   private val MAX_ACCELERATION = 4.0
   private val DEBUG = false
@@ -37,7 +38,7 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
    */
   def accelerate(acceleration: Double): Unit = {
     speed += Math.max(-MAX_ACCELERATION, Math.min(acceleration, MAX_ACCELERATION))
-    speed = Math.max(0, Math.min(speed, MAX_SPEED))
+    speed = Math.max(0, Math.min(speed, PREFERRED_SPEED))
   }
 
   def setSpeed(newSpeed: Double): Unit = {

@@ -41,11 +41,11 @@ trait TrafficSignal(numStreets: Int) {
     lightState match {
       case RED =>
         // if the light is red, then first car should already be stopped if it is close to the light
-        if (vehicleClosestToLight.getSpeed > 0.0 && vehicleClosestToLight.getPosition > 0.96) {
+        if (vehicleClosestToLight.getSpeed > 0.0 && vehicleClosestToLight.getPosition > 0.97) {
           //println("vehicleClosestToLight.getSpeed=" + vehicleClosestToLight.getSpeed + " should have been 0")
           vehicleClosestToLight.stop()
-        } else if (vehicleClosestToLight.getPosition > 0.85) {
-          vehicleClosestToLight.setSpeed(vehicleClosestToLight.getSpeed * .98)
+        } else if (vehicleClosestToLight.getPosition > 0.9) {
+          vehicleClosestToLight.setSpeed(vehicleClosestToLight.getSpeed * .9)
         }
       case YELLOW =>
         val yellowElapsedTime = (System.currentTimeMillis() - yellowStartTime) / 1000.0
@@ -67,7 +67,7 @@ trait TrafficSignal(numStreets: Int) {
           vehicle.brake(yellowRemainingTime * vehicle.getSpeed, deltaTime)
         }
       case GREEN =>
-        vehicleClosestToLight.accelerate(0.05)
+        vehicleClosestToLight.accelerate(0.1)
     }
   }
 }

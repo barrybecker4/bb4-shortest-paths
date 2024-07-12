@@ -71,19 +71,22 @@ case class IntersectionSubGraph(intersection: Intersection, graph: MultiGraph) {
       val endSize = if (trailingVehicleOnNextStreet.isEmpty) sortedSprites.size - 1 else sortedSprites.size
       for (i <- 0 until endSize) {
         val sprite = sortedSprites(i)
-        val nextSprite = if (i == sortedSprites.size - 1) trailingVehicleOnNextStreet.get else sortedSprites(i + 1)
-        val nextPosition = if (i == sortedSprites.size - 1) 1.0 + nextSprite.getPosition else nextSprite.getPosition
+        val nextSprite =
+          if (i == sortedSprites.size - 1) trailingVehicleOnNextStreet.get
+          else sortedSprites(i + 1)
+        val nextPosition =
+          if (i == sortedSprites.size - 1) 1.0 + nextSprite.getPosition
+          else nextSprite.getPosition
         val distanceToNext = (nextPosition - sprite.getPosition) * edgeLen
         assert(distanceToNext > 0, "The distance to the car in front should never be less than 0")
         if (distanceToNext < signal.getFarDistance) {
           if (distanceToNext < signal.getOptimalDistance) {
             if (sprite.getSpeed >= nextSprite.getSpeed) {
-              //println(s"sprite slowed from ${sprite.getSpeed} to ${nextSprite.getSpeed * 0.8}")
               sprite.setSpeed(nextSprite.getSpeed * 0.9)
             }
           }
-          else if (sprite.getSpeed <= nextSprite.getSpeed) {
-            sprite.setSpeed(nextSprite.getSpeed * 1.05)
+          else if (sprite.getSpeed <= nextSprite.getSpeed + 0.05) {
+            sprite.setSpeed(nextSprite.getSpeed + 0.1)
           }
         } else {
           sprite.accelerate(0.05)
