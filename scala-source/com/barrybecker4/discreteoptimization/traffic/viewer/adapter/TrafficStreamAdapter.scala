@@ -10,6 +10,7 @@ import org.graphstream.graph.{Edge, Graph}
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.ui.geom.Point3
 import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficGraphUtil.{addEdgeLengths, showNodeLabels}
+import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.TrafficStreamAdapter.SHOW_LABELS
 
 import scala.io.Source
 import scala.util.Using
@@ -18,6 +19,7 @@ import scala.util.Using
 object TrafficStreamAdapter {
   val LARGE_GRAPH_THRESH = 60
   val COMPUTE_CURVES = false
+  val SHOW_LABELS = false
   private val STYLE_SHEET_PATH =
     "scala-source/com/barrybecker4/discreteoptimization/traffic/viewer/adapter/traffic.css"
 
@@ -40,7 +42,8 @@ case class TrafficStreamAdapter(trafficGraph: TrafficGraph) {
     intersectionSubGraphs = addIntersectionsToGraph(graph)
     addStreetsToGraph(graph)
     addEdgeLengths(graph)
-    //showNodeLabels(graph)
+    if (SHOW_LABELS)
+      showNodeLabels(graph)
 
     graph.setAttribute("ui.stylesheet", TrafficStreamAdapter.loadStyleSheet())
     graph.setAttribute("ui.antialias", true)
