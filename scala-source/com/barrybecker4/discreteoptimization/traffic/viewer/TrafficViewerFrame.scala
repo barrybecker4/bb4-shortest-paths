@@ -22,7 +22,7 @@ import org.graphstream.ui.swing_viewer.{SwingViewer, ViewPanel}
 import org.graphstream.ui.view.{View, Viewer, ViewerListener, ViewerPipe}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import java.awt.Color
+import java.awt.{BorderLayout, Color}
 import java.io.File
 import javax.swing.*
 import scala.annotation.Annotation
@@ -84,7 +84,7 @@ class TrafficViewerFrame extends GraphViewerFrame() {
                initialSpeed: Double, 
                intersectionSubGraphs: IndexedSeq[IntersectionSubGraph], 
                title: String): Unit = {
-
+    
     if (viewer != null)
       remove(viewer.getViewPanel)
     viewer = new GraphViewer(graph)
@@ -94,7 +94,11 @@ class TrafficViewerFrame extends GraphViewerFrame() {
     if (graph.getNode(0).hasAttribute("xyz")) viewer.disableAutoLayout()
     else viewer.enableAutoLayout(SpringBox()) //SpringBox()) // LinLog()
 
-    add(viewer.getViewPanel)
+    this.setLayout(new BorderLayout())
+    val statsPanel = new StatisticsPanel(graph)
+    this.add(statsPanel, BorderLayout.NORTH)
+    this.add(viewer.getViewPanel, BorderLayout.CENTER)
+    
     this.repaint()
     setVisible(true)
 
@@ -110,6 +114,13 @@ class TrafficViewerFrame extends GraphViewerFrame() {
         val cause = exception.getCause
         cause.printStackTrace()
     }
+  }
+
+  private def createUI(): JPanel = {
+    val label = new JLabel("Label dsfadsfa")
+    val panel = new JPanel()
+    panel.add(label)
+    panel;
   }
 
   private def getGraphName(fileName: String): String = {

@@ -31,4 +31,5 @@ class VehicleSpriteManager(graph: Graph) extends SpriteManager(graph) {
     val v = getVehiclesOnEdge(edgeId).remove(vehicleSprite)
     assert(v)
   }
+
 }

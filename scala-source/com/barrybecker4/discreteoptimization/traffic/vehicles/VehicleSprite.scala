@@ -28,6 +28,8 @@ object VehicleSprite {
 class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSpriteManager, rnd: Random = RND) extends Sprite(identifier, manager) {
   private var positionPct: Double = 0.0 // 0 - 1.0
   private var speed = initialSpeed
+  private var incrementalDistance: Double = 0
+  private var totalDistance: Double = 0
   private var nextEdge: Edge = _
 
   def getSpeed: Double = speed
@@ -84,6 +86,8 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
   def move(deltaTime: Double): Unit = {
     var p: Double = getPosition
     val step = calculateIncrement(getCurrentEdge, deltaTime)
+
+    distanceAccounting(deltaTime)
     p += step
     if (p < 0 || p > 1)
       advanceToNextEdge(p, step, deltaTime)
@@ -124,12 +128,22 @@ class VehicleSprite(identifier: String, initialSpeed: Double, manager: VehicleSp
   }
 
   def getPosition: Double = positionPct
+  def getTotalDistance: Double = totalDistance
+  def getIncrementalDistance: Double = incrementalDistance
+  def resetIncrementalDistance(): Unit = incrementalDistance = 0
+
+  private def distanceAccounting(deltaTime: Double): Unit = {
+    val dist = deltaTime * speed
+    incrementalDistance += dist
+    totalDistance += dist
+  }
 
   /** Move in larger percentage steps across shorter edges */
   private def calculateIncrement(edge: Edge, deltaTime: Double): Double = {
     val edgeLen = edge.getAttribute("length", classOf[Object]).asInstanceOf[Double]
     deltaTime * speed / edgeLen
   }
+
   /**
    * select an edge other than the one we came from
    */
