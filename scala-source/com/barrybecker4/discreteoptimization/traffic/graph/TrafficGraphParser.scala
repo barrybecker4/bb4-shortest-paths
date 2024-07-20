@@ -2,7 +2,8 @@ package com.barrybecker4.discreteoptimization.traffic.graph
 
 import com.barrybecker4.discreteoptimization.common.{Location, Parser}
 import com.barrybecker4.discreteoptimization.traffic.graph.TrafficGraph
-import com.barrybecker4.discreteoptimization.traffic.graph.model.{Port, Street, Intersection}
+import com.barrybecker4.discreteoptimization.traffic.graph.model.{Intersection, Port, Street}
+import com.barrybecker4.discreteoptimization.traffic.signals.TrafficSignalType
 
 
 /**
@@ -35,16 +36,17 @@ case class TrafficGraphParser() extends Parser[TrafficGraph] {
   }
 
   private def parseIntersections(numIntersections: Int, lines: IndexedSeq[String]): IndexedSeq[Intersection] = {
-    // var locations: Option[Array[Location]] = None
     var intersections = IndexedSeq[Intersection]()
     for (i <- 0 until numIntersections) {
       val line = lines(i + 1)
       val parts = line.split("\\s+")
       val location = Location(parts(0).toFloat, parts(1).toFloat)
-      val numPorts = (parts.length - 2) / 2
-      val ports: IndexedSeq[Port] = for (j <- 0 until numPorts; idx = 2 + j * 2)
+      val signalType = TrafficSignalType.valueOf(parts(2))
+      val numPorts = (parts.length - 3) / 2
+      val ports: IndexedSeq[Port] = for (j <- 0 until numPorts; idx = 3 + j * 2)
         yield Port(j, parts(idx).toDouble, parts(idx + 1).toInt)
-      intersections :+= Intersection(i, location, ports)
+      
+      intersections :+= Intersection(i, location, ports, signalType)
     }
     intersections
   }

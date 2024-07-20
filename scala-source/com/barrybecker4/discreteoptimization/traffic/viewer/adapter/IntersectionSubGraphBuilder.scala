@@ -2,7 +2,6 @@ package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 
 import com.barrybecker4.discreteoptimization.common.Location
 import com.barrybecker4.discreteoptimization.traffic.graph.model.Intersection
-import com.barrybecker4.discreteoptimization.traffic.signals.TrafficSignal
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.{INTERSECTION_RADIUS, INTERSECTION_TYPE, LANE_SEP_ANGLE, VECTOR_SCALE}
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.TrafficStreamAdapter.COMPUTE_CURVES
 import org.graphstream.graph.{Edge, Node}
@@ -82,6 +81,7 @@ case class IntersectionSubGraphBuilder(intersection: Intersection, graph: MultiG
               dst(0), dst(1), 0.0)
           }
           edge.setAttribute("type", INTERSECTION_TYPE)
+          edge.setAttribute("lastVehicle", None)
         }
       }
     }
@@ -94,7 +94,7 @@ case class IntersectionSubGraphBuilder(intersection: Intersection, graph: MultiG
   }
 
   private def getNodeName(portId: Int, direction:String): String =
-    s"i${intersection.id}:p${portId}_dir$direction"
+    s"i${intersection.id}:p${portId}_dir:$direction"
 
   private def getEdgeName(fromPortId: Int, toPortId: Int) =
     s"i${intersection.id}:from$fromPortId-to$toPortId"

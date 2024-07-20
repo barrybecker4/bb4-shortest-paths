@@ -156,7 +156,7 @@ class VehiclePlacer(private val sprites: VehicleSpriteManager, private val graph
       spriteCount.incrementAndGet()
       // for some reason there seems to be a problem with sprite orientation a the ver ends
       val pos = 0.01 + 0.98 * positionIdx.toDouble / spriteSlots.length
-      println("setting sprite " + spriteCount.get() + " pos to " + pos + " and putting it in slot " + positionIdx)
+      //println("setting sprite " + spriteCount.get() + " pos to " + pos + " and putting it in slot " + positionIdx)
       sprite.setPosition(pos)
       spriteSlots(positionIdx) = sprite
       sprite.attachToEdge(edge.getId)

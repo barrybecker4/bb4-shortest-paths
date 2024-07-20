@@ -8,7 +8,7 @@ import com.barrybecker4.discreteoptimization.traffic.vehicles.{VehicleSprite, Ve
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
-import com.barrybecker4.discreteoptimization.traffic.signals.LightState.*
+import com.barrybecker4.discreteoptimization.traffic.signals.SignalState.*
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite.DEBUG
 import com.barrybecker4.common.format.FormatUtil.formatNumber
 
@@ -19,8 +19,9 @@ import scala.collection.mutable
  * Represents the nodes and edges in an intersection.
  * Regulates the movement of vehicles on the edges leading into the intersection
  */
-case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSignal, graph: MultiGraph) {
+case class IntersectionSubGraph(intersection: Intersection, graph: MultiGraph) {
 
+  private val signal: TrafficSignal = intersection.signalType.create(intersection.ports.size)
   private val builder = new IntersectionSubGraphBuilder(intersection, graph)
 
   def getIncomingNode(portId: Int): Node = builder.incomingNodes(portId)
@@ -45,11 +46,10 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
       assert(inNode.getInDegree == 1, "There should be exactly one edge entering the intersection on a port")
       val incomingEdge: Edge = inNode.getEnteringEdge(0)
       updateVehiclesOnEdge(true, incomingEdge, portId, deltaTime, spriteManager)
-
-//      for (i <- 0 until inNode.getOutDegree) {
-//        val innerOutEdge: Edge = inNode.getLeavingEdge(i)
-//        updateVehiclesOnEdge(false, innerOutEdge, portId, deltaTime, spriteManager)
-//      }
+      for (j <- 0 until inNode.getOutDegree) {
+        val outgoingEdge = inNode.getLeavingEdge(j)
+        updateVehiclesOnEdge(false, outgoingEdge, portId, deltaTime, spriteManager)
+      }
     }
   }
 
@@ -58,26 +58,38 @@ case class IntersectionSubGraph(intersection: Intersection, signal: TrafficSigna
     val edgeLen = edge.getAttribute("length", classOf[Object]).asInstanceOf[Double]
     val sprites = spriteManager.getVehiclesOnEdge(edge.getId)
 
+    val sortedSprites: IndexedSeq[VehicleSprite] = sprites.toIndexedSeq.sortBy(_.getPosition)
+    edge.setAttribute("lastVehicle", sortedSprites.headOption)
+    if (handleSignal) {
+      signal.handleTraffic(sortedSprites, portId, edgeLen, deltaTime)
+    }
+
     if (sprites.nonEmpty) {
-      val sortedSprites: IndexedSeq[VehicleSprite] = sprites.toIndexedSeq.sortBy(_.getPosition)
-      var nextSprite: VehicleSprite = null
-      if (handleSignal)
-        signal.handleTraffic(sortedSprites, portId, edgeLen, deltaTime)
-      for (i <- 0 until sortedSprites.size - 1) {
+      val leadVehicle = sortedSprites.last
+      val trailingVehicleOnNextStreet: Option[VehicleSprite] =
+        leadVehicle.getNextEdge.getAttribute("lastVehicle", classOf[Option[VehicleSprite]])
+      val endSize = if (trailingVehicleOnNextStreet.isEmpty) sortedSprites.size - 1 else sortedSprites.size
+      for (i <- 0 until endSize) {
         val sprite = sortedSprites(i)
-        val nextSprite = sortedSprites(i + 1)
-        val distanceToNext = (nextSprite.getPosition - sprite.getPosition) * edgeLen
+        val nextSprite =
+          if (i == sortedSprites.size - 1) trailingVehicleOnNextStreet.get
+          else sortedSprites(i + 1)
+        val nextPosition =
+          if (i == sortedSprites.size - 1) 1.0 + nextSprite.getPosition
+          else nextSprite.getPosition
+        val distanceToNext = (nextPosition - sprite.getPosition) * edgeLen
         assert(distanceToNext > 0, "The distance to the car in front should never be less than 0")
         if (distanceToNext < signal.getFarDistance) {
           if (distanceToNext < signal.getOptimalDistance) {
             if (sprite.getSpeed >= nextSprite.getSpeed) {
-              //println(s"sprite slowed from ${sprite.getSpeed} to ${nextSprite.getSpeed * 0.8}")
               sprite.setSpeed(nextSprite.getSpeed * 0.9)
             }
           }
-          else if (sprite.getSpeed <= nextSprite.getSpeed) {
-            sprite.setSpeed(nextSprite.getSpeed * 1.05)
+          else if (sprite.getSpeed <= nextSprite.getSpeed + 0.05) {
+            sprite.setSpeed(nextSprite.getSpeed + 0.1)
           }
+        } else {
+          sprite.accelerate(0.05)
         }
       }
     }

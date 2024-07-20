@@ -26,14 +26,14 @@ edge {
   fill-color: rgba(20, 20, 80, 30);
   stroke-mode: none;
   arrow-size: 24px, 6px;
-  /* shape: line;*/
-  shape: cubic-curve;
+  shape: line;
+  /*shape: cubic-curve;*/
   z-index:11;
 }
 
 sprite {
   shape: box;
-  size: 16px, 8px;
+  size: 24px, 12px;
   fill-mode: plain;
   stroke-mode: none;
   text-mode: normal;

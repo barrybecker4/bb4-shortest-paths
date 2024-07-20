@@ -1,27 +1,27 @@
 package com.barrybecker4.discreteoptimization.traffic.signals
 
-import com.barrybecker4.discreteoptimization.traffic.signals.{LightState, TrafficSignal}
-import com.barrybecker4.discreteoptimization.traffic.signals.LightState.*
+import com.barrybecker4.discreteoptimization.traffic.signals.{SignalState, TrafficSignal}
+import com.barrybecker4.discreteoptimization.traffic.signals.SignalState.*
 
-import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
+import java.util.concurrent.{Executors, TimeUnit}
 import concurrent.duration.DurationInt
-import com.barrybecker4.discreteoptimization.traffic.signals.DumbTrafficLight.*
+import com.barrybecker4.discreteoptimization.traffic.signals.DumbTrafficSignal.*
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSprite
 import org.graphstream.graph.Node
+
 
 /**
  * Only one street is allowed to proceed at once (on green). 
  * That should prevent the possibility of accidents.
  * @param numStreets the number of streets leading into the intersection
  */
-class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
-  private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
+class DumbTrafficSignal(numStreets: Int) extends TrafficSignal(numStreets) {
   private var currentStreet: Int = 0
-  private var lightState: LightState = RED
+  private var lightState: SignalState = RED
 
   setInitialState()
 
-  override def getLightState(street: Int): LightState = {
+  override def getLightState(street: Int): SignalState = {
     if (street == currentStreet) lightState else RED
   }
 
@@ -61,9 +61,11 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
           vehicle = sortedVehicles(vehicleIdx)
         }
       case GREEN =>
-        vehicleClosestToLight.accelerate(0.05)
+        vehicleClosestToLight.accelerate(0.01)
     }
   }
+
+  def getRedDurationSecs: Int = (numStreets - 1) * (getGreenDurationSecs + getYellowDurationSecs)
 
   // Function to initialize the traffic light state and scheduling
   private def setInitialState(): Unit = switchToGreen()
@@ -79,6 +81,7 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
   // Function to switch the light to yellow
   private def switchToYellow(): Unit = {
     lightState = YELLOW
+    yellowStartTime = System.currentTimeMillis()
     scheduler.schedule(new Runnable {
       def run(): Unit = switchToRed()
     }, getYellowDurationSecs, TimeUnit.SECONDS)
@@ -89,19 +92,14 @@ class DumbTrafficLight(numStreets: Int) extends TrafficSignal {
     currentStreet = (currentStreet + 1) % numStreets
     switchToGreen()
   }
-
-  private def printLightStates(): Unit = {
-    val states = Range(0, numStreets).map(i => getLightState(i))
-    println(states)
-  }
 }
 
 
-object DumbTrafficLight {
+object DumbTrafficSignal {
 
   def main(args: Array[String]): Unit = {
     val numStreets = 5
-    val trafficLight = new DumbTrafficLight(numStreets)
+    val trafficLight = new DumbTrafficSignal(numStreets)
     val checkInterval = 1.second
 
     val executor = Executors.newScheduledThreadPool(1)

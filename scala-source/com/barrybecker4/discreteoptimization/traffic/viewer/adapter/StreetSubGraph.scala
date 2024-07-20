@@ -2,12 +2,13 @@ package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 
 import com.barrybecker4.discreteoptimization.common.Location
 import com.barrybecker4.discreteoptimization.traffic.graph.model.{Intersection, Street}
-import org.graphstream.graph.Edge
+import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
 import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass.PLAIN
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.StreetSubGraph.STREET_TYPE
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.INTERSECTION_RADIUS
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.TrafficStreamAdapter.COMPUTE_CURVES
+
 
 object StreetSubGraph {
   val STREET_TYPE: String = "street"
@@ -18,21 +19,27 @@ case class StreetSubGraph(street: Street,
                      intersectionSubGraph2: IntersectionSubGraph,
                      graph: MultiGraph) {
 
-  private val forwardEdge = graph.addEdge(getStreetEdgeId(street, true),
-    intersectionSubGraph1.getOutgoingNode(street.portIdx1), intersectionSubGraph2.getIncomingNode(street.portIdx2), true)
-  private val backwardEdge = graph.addEdge(getStreetEdgeId(street, false),
-    intersectionSubGraph2.getOutgoingNode(street.portIdx2), intersectionSubGraph1.getIncomingNode(street.portIdx1), true)
+  private val forwardEdge = createEdge(
+    street, isForward = true,
+    intersectionSubGraph1.getOutgoingNode(street.portIdx1),
+    intersectionSubGraph2.getIncomingNode(street.portIdx2)
+  )
 
-  forwardEdge.setAttribute("ui.class", PLAIN.name)
-  backwardEdge.setAttribute("ui.class", PLAIN.name)
-  forwardEdge.setAttribute("type", STREET_TYPE)
-  backwardEdge.setAttribute("type", STREET_TYPE)
+  private val backwardEdge = createEdge(
+    street, isForward = false,
+    intersectionSubGraph2.getOutgoingNode(street.portIdx2),
+    intersectionSubGraph1.getIncomingNode(street.portIdx1)
+  )
 
-  if (COMPUTE_CURVES) {
-    addCurvePoints(forwardEdge, street, forward = true)
-    addCurvePoints(backwardEdge, street, forward = false)
+  private def createEdge(street: Street, isForward: Boolean, srcNode: Node, dstNode: Node): Edge = {
+    val edgeId = getStreetEdgeId(street, isForward)
+    val edge = graph.addEdge(edgeId, srcNode, dstNode, true)
+    edge.setAttribute("ui.class", PLAIN.name)
+    edge.setAttribute("type", STREET_TYPE)
+    edge.setAttribute("lastVehicle", None)
+    if (COMPUTE_CURVES) addCurvePoints(edge, street, isForward)
+    edge
   }
-  
 
   private def addCurvePoints(edge: Edge, street: Street, forward: Boolean): Unit = {
     val src = edge.getSourceNode.getAttribute("xyz", classOf[Array[AnyRef]])
