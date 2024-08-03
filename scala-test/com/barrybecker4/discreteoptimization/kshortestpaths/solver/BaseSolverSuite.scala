@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.kshortestpaths.solver
 
-import com.barrybecker4.discreteoptimization.common.graph.{Graph, GraphTstUtil}
+import com.barrybecker4.graph.{Graph, GraphTstUtil}
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution
 import com.barrybecker4.discreteoptimization.kshortestpaths.solver.KShortestPathsSolver
 import com.barrybecker4.discreteoptimization.kshortestpaths.KShortedPathsTstUtil

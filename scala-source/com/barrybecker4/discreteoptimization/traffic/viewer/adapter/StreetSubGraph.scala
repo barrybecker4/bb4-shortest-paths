@@ -1,10 +1,10 @@
 package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 
-import com.barrybecker4.discreteoptimization.common.graph.FloatLocation
+import com.barrybecker4.graph.FloatLocation
 import com.barrybecker4.discreteoptimization.traffic.graph.model.{Intersection, Street}
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
-import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass.PLAIN
+import com.barrybecker4.graph.visualization.render.UiClass.PLAIN
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.StreetSubGraph.STREET_TYPE
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.INTERSECTION_RADIUS
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.TrafficStreamAdapter.COMPUTE_CURVES

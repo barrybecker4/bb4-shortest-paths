@@ -1,8 +1,8 @@
 package com.barrybecker4.discreteoptimization.pathviewer
 
-import com.barrybecker4.discreteoptimization.common.graph.Path
-import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraphParser}
-import com.barrybecker4.discreteoptimization.common.graph.visualization.{GraphStreamAdapter, GraphViewer, GraphViewerFrame}
+import com.barrybecker4.graph.Path
+import com.barrybecker4.graph.directed.{DirectedEdge, DirectedGraphParser}
+import com.barrybecker4.graph.visualization.{GraphStreamAdapter, GraphViewer, GraphViewerFrame}
 import com.barrybecker4.discreteoptimization.kshortestpaths.KShortedPathsTstUtil
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution
 import com.barrybecker4.discreteoptimization.kshortestpaths.solver.YensKPathsSolver

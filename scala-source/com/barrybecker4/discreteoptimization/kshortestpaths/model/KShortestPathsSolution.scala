@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.kshortestpaths.model
 
-import com.barrybecker4.discreteoptimization.common.graph.Path
+import com.barrybecker4.graph.Path
 
 
 case class KShortestPathsSolution(totalCost: Double, destination: Int, k: Int, shortestPaths: Seq[Path]) {

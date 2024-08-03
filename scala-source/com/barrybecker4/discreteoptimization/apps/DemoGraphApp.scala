@@ -1,8 +1,8 @@
 package com.barrybecker4.discreteoptimization.apps
 
-import com.barrybecker4.discreteoptimization.common.graph.Graph
-import com.barrybecker4.discreteoptimization.common.graph.algorithms.kshortestpaths.YensAlgorithm
-import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraph}
+import com.barrybecker4.graph.Graph
+import com.barrybecker4.graph.algorithms.kshortestpaths.YensAlgorithm
+import com.barrybecker4.graph.directed.{DirectedEdge, DirectedGraph}
 
 object DemoGraphApp extends App {
 

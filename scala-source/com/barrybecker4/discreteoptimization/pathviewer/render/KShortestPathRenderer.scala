@@ -1,12 +1,12 @@
 package com.barrybecker4.discreteoptimization.pathviewer.render
 
-import com.barrybecker4.discreteoptimization.common.graph.Path
-import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphViewer
-import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass
+import com.barrybecker4.graph.Path
+import com.barrybecker4.graph.visualization.GraphViewer
+import com.barrybecker4.graph.visualization.render.UiClass
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution
 import com.barrybecker4.discreteoptimization.pathviewer.render.PathRenderer.{ANIMATION_DELAY, PAUSE}
 import com.barrybecker4.discreteoptimization.pathviewer.render.PathColors.*
-import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass.*
+import com.barrybecker4.graph.visualization.render.UiClass.*
 import org.graphstream.graph.implementations.MultiGraph
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.ui.view.ViewerPipe

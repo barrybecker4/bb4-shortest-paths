@@ -1,10 +1,10 @@
 package com.barrybecker4.discreteoptimization.traffic.viewer
 
-import com.barrybecker4.discreteoptimization.common.graph.Path
-import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraphParser}
+import com.barrybecker4.graph.Path
+import com.barrybecker4.graph.directed.{DirectedEdge, DirectedGraphParser}
 import TrafficViewerFrame.{PARSER, SUFFIX, TRAFFIC_GRAPHS_PREFIX}
-import com.barrybecker4.discreteoptimization.common.graph.visualization.render.GraphViewerPipe
-import com.barrybecker4.discreteoptimization.common.graph.visualization.{GraphStreamAdapter, GraphViewer, GraphViewerFrame}
+import com.barrybecker4.graph.visualization.render.GraphViewerPipe
+import com.barrybecker4.graph.visualization.{GraphStreamAdapter, GraphViewer, GraphViewerFrame}
 import com.barrybecker4.discreteoptimization.kshortestpaths.KShortedPathsTstUtil
 import com.barrybecker4.discreteoptimization.kshortestpaths.model.KShortestPathsSolution
 import com.barrybecker4.discreteoptimization.kshortestpaths.solver.YensKPathsSolver

@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.shortestpaths.solver
 
-import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
+import com.barrybecker4.graph.directed.DirectedGraph
 import com.barrybecker4.discreteoptimization.shortestpaths.model.ShortestPathsSolution
 
 /**

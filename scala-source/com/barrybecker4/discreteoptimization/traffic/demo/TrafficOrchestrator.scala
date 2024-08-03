@@ -2,7 +2,7 @@ package com.barrybecker4.discreteoptimization.traffic.demo
 
 import org.graphstream.graph.Graph
 import org.graphstream.ui.view.{Viewer, ViewerPipe}
-import com.barrybecker4.discreteoptimization.common.graph.visualization.render.GraphViewerPipe
+import com.barrybecker4.graph.visualization.render.GraphViewerPipe
 import com.barrybecker4.discreteoptimization.traffic.vehicles.VehicleSpriteGenerator
 import com.barrybecker4.discreteoptimization.traffic.viewer.TrafficGraphGenerator
 import org.graphstream.graph.implementations.MultiGraph
