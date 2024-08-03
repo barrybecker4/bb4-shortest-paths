@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.graph.model
 
-import com.barrybecker4.discreteoptimization.common.FloatLocation
+import com.barrybecker4.discreteoptimization.common.graph.FloatLocation
 import com.barrybecker4.discreteoptimization.traffic.signals.TrafficSignalType
 import com.barrybecker4.discreteoptimization.traffic.signals.TrafficSignalType.DUMB_TRAFFIC_SIGNAL
 

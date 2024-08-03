@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.graph
 
-import com.barrybecker4.discreteoptimization.common.FloatLocation
+import com.barrybecker4.discreteoptimization.common.graph.FloatLocation
 import com.barrybecker4.discreteoptimization.common.graph.Parser
 import com.barrybecker4.discreteoptimization.traffic.graph.TrafficGraph
 import com.barrybecker4.discreteoptimization.traffic.graph.model.{Intersection, Port, Street}
