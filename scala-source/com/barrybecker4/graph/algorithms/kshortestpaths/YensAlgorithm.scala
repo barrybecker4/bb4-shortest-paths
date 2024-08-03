@@ -1,7 +1,7 @@
 package com.barrybecker4.graph.algorithms.kshortestpaths
 
-import com.barrybecker4.graph.{BoundedPriorityQueue, Path}
-import com.barrybecker4.graph.algorithms.kshortestpaths.KShortestPathsFinder
+import com.barrybecker4.common.util.BoundedPriorityQueue
+import com.barrybecker4.graph.Path
 import com.barrybecker4.graph.algorithms.shortestpaths.ModifiedDijkstrasAlgorithm
 import com.barrybecker4.graph.directed.{ChangeableDirectedGraph, DirectedGraph}
 

@@ -1,7 +1,7 @@
 package com.barrybecker4.graph.directed
 
 import com.barrybecker4.graph.directed.{DirectedEdge, DirectedGraph}
-import com.barrybecker4.graph.FloatLocation
+import com.barrybecker4.common.geometry.FloatLocation
 import com.barrybecker4.graph.Parser
 
 

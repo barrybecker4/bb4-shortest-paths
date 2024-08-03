@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 
-import com.barrybecker4.graph.FloatLocation
+import com.barrybecker4.common.geometry.FloatLocation
 import com.barrybecker4.graph.directed.DirectedGraph
 import com.barrybecker4.graph.visualization.GraphStreamAdapter.LARGE_GRAPH_THRESH
 import com.barrybecker4.discreteoptimization.traffic.graph.TrafficGraph
