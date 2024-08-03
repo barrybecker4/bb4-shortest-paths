@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.common.graph.visualization
 
-import com.barrybecker4.discreteoptimization.common.Location
+import com.barrybecker4.discreteoptimization.common.FloatLocation
 import com.barrybecker4.discreteoptimization.common.graph.directed.DirectedGraph
 import com.barrybecker4.discreteoptimization.common.graph.visualization.GraphStreamAdapter.LARGE_GRAPH_THRESH
 import com.barrybecker4.discreteoptimization.common.graph.visualization.render.UiClass.*
@@ -42,7 +42,7 @@ case class GraphStreamAdapter(digraph: DirectedGraph) {
       val node = graph.addNode(nodeId.toString)
       node.setAttribute("ui.label", node.getId)
       if (digraph.locations.isDefined) {
-        val location: Location = digraph.locations.get(nodeId)
+        val location: FloatLocation = digraph.locations.get(nodeId)
         node.setAttribute("xy", location.x, location.y)
       }
     }

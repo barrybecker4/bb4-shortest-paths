@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 
-import com.barrybecker4.discreteoptimization.common.Location
+import com.barrybecker4.discreteoptimization.common.FloatLocation
 import com.barrybecker4.discreteoptimization.traffic.graph.model.Intersection
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.IntersectionSubGraphBuilder.{INTERSECTION_RADIUS, INTERSECTION_TYPE, LANE_SEP_ANGLE, VECTOR_SCALE}
 import com.barrybecker4.discreteoptimization.traffic.viewer.adapter.TrafficStreamAdapter.COMPUTE_CURVES
@@ -87,7 +87,7 @@ case class IntersectionSubGraphBuilder(intersection: Intersection, graph: MultiG
     }
   }
 
-  private def partway(src: Array[AnyRef], dest: Location): Array[Double] = {
+  private def partway(src: Array[AnyRef], dest: FloatLocation): Array[Double] = {
     val srcX = src(0).toString.toDouble
     val srcY = src(1).toString.toDouble
     Array(srcX + (dest.x - srcX) * VECTOR_SCALE, srcY + (dest.y - srcY) * VECTOR_SCALE)

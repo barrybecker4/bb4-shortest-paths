@@ -1,4 +1,4 @@
-package com.barrybecker4.discreteoptimization.common
+package com.barrybecker4.discreteoptimization.common.graph
 
 import scala.collection.mutable
 /*
@@ -18,10 +18,9 @@ import scala.collection.mutable
  * limitations under the License.
  */
 import java.io.Serializable
-import java.util.{PriorityQueue => JPriorityQueue}
-
+import java.util.PriorityQueue as JPriorityQueue
 import scala.collection.mutable.Growable
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 /**
  * Bounded priority queue. This class wraps the original PriorityQueue

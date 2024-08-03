@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.graph
 
-import com.barrybecker4.discreteoptimization.common.Location
+import com.barrybecker4.discreteoptimization.common.FloatLocation
 import com.barrybecker4.discreteoptimization.common.graph.NeighborMap
 import com.barrybecker4.discreteoptimization.traffic.graph.model.{Intersection, Street}
 
@@ -16,7 +16,7 @@ case class TrafficGraph(numVehicles: Int,
   computeNeighborsMap()
 
   def numIntersections: Int = intersections.size
-  def getLocation(intersectionIdx: Int): Location = intersections(intersectionIdx).location
+  def getLocation(intersectionIdx: Int): FloatLocation = intersections(intersectionIdx).location
   def getIntersection(intersectionIdx: Int): Intersection = intersections(intersectionIdx)
   def neighborsOf(v: Int): Set[Intersection] = neighborMap(v).map(i => intersections(i))
   

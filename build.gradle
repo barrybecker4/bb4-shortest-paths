@@ -4,7 +4,7 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
     dependencies {
-        classpath 'com.barrybecker4:bb4-gradle:1.8'
+        classpath 'com.barrybecker4:bb4-gradle:1.9-SNAPSHOT'
     }
 }
 
@@ -14,16 +14,16 @@ plugins {
 
 description = 'Implementations for shortest path algorithms'
 group = 'com.barrybecker4'
-version = '1.8'
+version = '1.9-SNAPSHOT'
 ext {
-    archivesBaseName = 'bb4-project-template'
+    archivesBaseName = 'bb4-shortest-paths'
     mainClass = "com.barrybecker4.discreteoptimization.pathviewer.PathViewerApp"
 }
 
 apply from: project.buildscript.classLoader.getResource('bb4.gradle').toURI()
 
 dependencies {
-    implementation 'com.barrybecker4:bb4-common:1.8'
+    implementation 'com.barrybecker4:bb4-common:1.9-SNAPSHOT'
     implementation 'org.scala-lang.modules:scala-parallel-collections_3:1.0.4'
     implementation 'com.barrybecker4:bb4-math:1.8'
     // for graph visualization
@@ -32,6 +32,6 @@ dependencies {
 }
 
 
-// This allows publishing of this project library to Sonatype
+// This allows publishing of this project library to Sonatype so that it can be used in other projects
 apply from: project.buildscript.classLoader.getResource('bb4-publish.gradle').toURI()
 

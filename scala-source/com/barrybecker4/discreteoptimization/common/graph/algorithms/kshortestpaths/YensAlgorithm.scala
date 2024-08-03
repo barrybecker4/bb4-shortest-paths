@@ -1,7 +1,6 @@
 package com.barrybecker4.discreteoptimization.common.graph.algorithms.kshortestpaths
 
-import com.barrybecker4.discreteoptimization.common.BoundedPriorityQueue
-import com.barrybecker4.discreteoptimization.common.graph.Path
+import com.barrybecker4.discreteoptimization.common.graph.{BoundedPriorityQueue, Path}
 import com.barrybecker4.discreteoptimization.common.graph.algorithms.kshortestpaths.KShortestPathsFinder
 import com.barrybecker4.discreteoptimization.common.graph.algorithms.shortestpaths.ModifiedDijkstrasAlgorithm
 import com.barrybecker4.discreteoptimization.common.graph.directed.{ChangeableDirectedGraph, DirectedGraph}

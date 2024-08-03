@@ -1,12 +1,12 @@
 package com.barrybecker4.discreteoptimization.common.graph.directed
 
-import com.barrybecker4.discreteoptimization.common.Location
+import com.barrybecker4.discreteoptimization.common.FloatLocation
 
 
 /** 
  * An immutable directed graph with optional node locations
  */
-case class DirectedGraph(numVertices: Int, edges: IndexedSeq[DirectedEdge], locations: Option[Array[Location]] = None) {
+case class DirectedGraph(numVertices: Int, edges: IndexedSeq[DirectedEdge], locations: Option[Array[FloatLocation]] = None) {
 
   // Map from vertex to its neighbors
   private val outgoingNeighborMap: DirectedNeighborMap = DirectedNeighborMap()

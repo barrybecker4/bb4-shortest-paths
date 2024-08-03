@@ -1,7 +1,8 @@
 package com.barrybecker4.discreteoptimization.common.graph.directed
 
 import com.barrybecker4.discreteoptimization.common.graph.directed.{DirectedEdge, DirectedGraph}
-import com.barrybecker4.discreteoptimization.common.{Location, Parser}
+import com.barrybecker4.discreteoptimization.common.FloatLocation
+import com.barrybecker4.discreteoptimization.common.graph.Parser
 
 
 case class DirectedGraphParser() extends Parser[DirectedGraph] {
@@ -12,7 +13,7 @@ case class DirectedGraphParser() extends Parser[DirectedGraph] {
     val numEdges = firstLine(1).toInt
     val hasLocations = firstLine(2).toBoolean
 
-    var locations: Option[Array[Location]] = None
+    var locations: Option[Array[FloatLocation]] = None
     if (hasLocations) {
       locations = Some(parseLocations(numVertices, lines))
     }
@@ -22,13 +23,13 @@ case class DirectedGraphParser() extends Parser[DirectedGraph] {
     DirectedGraph(numVertices, edges, locations)
   }
 
-  private def parseLocations(numVertices: Int, lines: IndexedSeq[String]): Array[Location] = {
-    val theLocations: Array[Location] = Array.fill(numVertices)(null)
+  private def parseLocations(numVertices: Int, lines: IndexedSeq[String]): Array[FloatLocation] = {
+    val theLocations: Array[FloatLocation] = Array.fill(numVertices)(null)
     var start = 1
     for (i <- 0 until numVertices) {
       val line = lines(i + start)
       val parts = line.split("\\s+")
-      theLocations(i) = Location(parts(0).toFloat, parts(1).toFloat)
+      theLocations(i) = FloatLocation(parts(0).toFloat, parts(1).toFloat)
     }
     start += numVertices
     theLocations

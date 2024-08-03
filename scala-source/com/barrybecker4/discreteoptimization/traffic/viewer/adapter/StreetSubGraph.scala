@@ -1,6 +1,6 @@
 package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 
-import com.barrybecker4.discreteoptimization.common.Location
+import com.barrybecker4.discreteoptimization.common.FloatLocation
 import com.barrybecker4.discreteoptimization.traffic.graph.model.{Intersection, Street}
 import org.graphstream.graph.{Edge, Node}
 import org.graphstream.graph.implementations.MultiGraph
@@ -58,16 +58,16 @@ case class StreetSubGraph(street: Street,
       dst(0), dst(1), 0.0)
   }
 
-  private def halfway(src: Array[AnyRef], dst: Array[AnyRef]): Location = {
-    Location((src(0).toString.toFloat + dst(0).toString.toFloat) / 2.0f, (src(1).toString.toFloat + dst(1).toString.toFloat) / 2.0f)
+  private def halfway(src: Array[AnyRef], dst: Array[AnyRef]): FloatLocation = {
+    FloatLocation((src(0).toString.toFloat + dst(0).toString.toFloat) / 2.0f, (src(1).toString.toFloat + dst(1).toString.toFloat) / 2.0f)
   }
 
-  private def getPortSpokePoint(pt: Array[AnyRef], intersection: Intersection, portId: Int): Location = {
+  private def getPortSpokePoint(pt: Array[AnyRef], intersection: Intersection, portId: Int): FloatLocation = {
     val radialPos = getRadialPosition(intersection, portId)
-    Location(pt(0).toString.toFloat + radialPos.x, pt(1).toString.toFloat + radialPos.y)
+    FloatLocation(pt(0).toString.toFloat + radialPos.x, pt(1).toString.toFloat + radialPos.y)
   }
 
-  private def getRadialPosition(intersection: Intersection, portId: Int): Location = {
+  private def getRadialPosition(intersection: Intersection, portId: Int): FloatLocation = {
     val port = intersection.ports(portId)
     //val len = IntersectionSubGraph.INTERSECTION_RADIUS + port.radialLength
     // Instead of having each port have a radial length, just use half the intersection
@@ -75,7 +75,7 @@ case class StreetSubGraph(street: Street,
     val rad = INTERSECTION_RADIUS
     val vecX = (Math.cos(port.angleRad) * rad).toFloat //port.radialLength).toFloat
     val vecY = (Math.sin(port.angleRad) * rad).toFloat //port.radialLength).toFloat
-    Location(vecX, vecY)
+    FloatLocation(vecX, vecY)
   }
 
   private def getStreetEdgeId(street: Street, isForward: Boolean): String = {

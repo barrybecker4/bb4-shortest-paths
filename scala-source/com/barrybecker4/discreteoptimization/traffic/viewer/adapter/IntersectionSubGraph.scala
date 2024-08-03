@@ -1,7 +1,7 @@
 package com.barrybecker4.discreteoptimization.traffic.viewer.adapter
 
 import com.barrybecker4.common.format.FormatUtil
-import com.barrybecker4.discreteoptimization.common.Location
+import com.barrybecker4.discreteoptimization.common.FloatLocation
 import com.barrybecker4.discreteoptimization.traffic.graph.model.Intersection
 import com.barrybecker4.discreteoptimization.traffic.signals.TrafficSignal
 import com.barrybecker4.discreteoptimization.traffic.vehicles.{VehicleSprite, VehicleSpriteManager}

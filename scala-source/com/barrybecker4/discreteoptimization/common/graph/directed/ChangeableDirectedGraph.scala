@@ -1,13 +1,13 @@
 package com.barrybecker4.discreteoptimization.common.graph.directed
 
-import com.barrybecker4.discreteoptimization.common.Location
+import com.barrybecker4.discreteoptimization.common.FloatLocation
 
 
 /**
  * A version of a directed graph that allows you to remove nodes and edges from the original graph.
  * You can also recover nodes and edges after they have been removed.
  */
-class ChangeableDirectedGraph(numVertices: Int, edges: IndexedSeq[DirectedEdge], locations: Option[Array[Location]] = None) 
+class ChangeableDirectedGraph(numVertices: Int, edges: IndexedSeq[DirectedEdge], locations: Option[Array[FloatLocation]] = None) 
   extends DirectedGraph(numVertices, edges, locations) {
 
   def this(graph: DirectedGraph) = {

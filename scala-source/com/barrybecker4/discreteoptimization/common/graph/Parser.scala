@@ -1,4 +1,4 @@
-package com.barrybecker4.discreteoptimization.common
+package com.barrybecker4.discreteoptimization.common.graph
 
 import java.io.File
 import scala.io.Source
@@ -12,8 +12,8 @@ trait Parser[M] {
   def parse(file: File, problemName: String): M =
     parse(Source.fromFile(file), problemName)
 
-  def parse(source: Source, problemName: String): M = {
-    val problem = parse(source.getLines().toIndexedSeq, problemName: String)
+  def parse(source: Source, name: String): M = {
+    val problem = parse(source.getLines().toIndexedSeq, name: String)
     source.close()
     problem
   }
